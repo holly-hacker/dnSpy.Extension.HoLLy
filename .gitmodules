@@ -1,0 +1,3 @@
+[submodule "dnSpy"]
+	path = dnSpy
+	url = https://github.com/0xd4d/dnSpy.git
