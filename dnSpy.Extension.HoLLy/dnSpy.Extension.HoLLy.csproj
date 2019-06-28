@@ -1,16 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+    <!-- Imports dnlib version -->
+    <Import Project="../dnSpy/DnSpyCommon.props" />
+
     <PropertyGroup>
         <Title>dnSpy Extension</Title>
         <Description>A dnSpy Extension</Description>
         <Authors>HoLLy</Authors>
+        <Copyright>Copyright © HoLLy 2019</Copyright>
         <PackageVersion>0.0.1</PackageVersion>
+        <FileVersion>0.0.1</FileVersion>
 
         <AssemblyName>dnSpy.Extension.HoLLy.x</AssemblyName>
         <RootNamespace>HoLLy.dnSpy.Extension</RootNamespace>
 
-        <TargetFrameworks>net472;netcoreapp3.0</TargetFrameworks>
+        <TargetFrameworks>net472</TargetFrameworks> <!-- TODO: update for .NET Core 3.0 -->
         <LangVersion>8</LangVersion>
+        <UseWPF>true</UseWPF>
     </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DebugType>none</DebugType>
+    </PropertyGroup>
+
+    <ItemGroup Condition=" '$(IsDotNetFramework)' == 'true' ">
+        <Reference Include="PresentationCore" />
+        <Reference Include="PresentationFramework" />
+        <Reference Include="System.Xaml" />
+        <Reference Include="WindowsBase" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="dnlib" Version="$(DnlibVersion)" />
+        <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf" Version="$(MSVSTextVersion)" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\dnSpy\dnSpy\dnSpy.Contracts.DnSpy\dnSpy.Contracts.DnSpy.csproj" Private="false" />
+        <ProjectReference Include="..\dnSpy\dnSpy\dnSpy.Contracts.Logic\dnSpy.Contracts.Logic.csproj" Private="false" />
+    </ItemGroup>
 
 </Project>
