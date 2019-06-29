@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using dnSpy.Contracts.Decompiler;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using dnSpy.Contracts.App;
+using dnSpy.Contracts.Decompiler;
+using HoLLy.dnSpy.Extension.Decompilers.Decorators;
 
-namespace HoLLy.dnSpy.Extension.Languages
+namespace HoLLy.dnSpy.Extension.Decompilers
 {
     [Export(typeof(IDecompilerCreator))]
     public class DecompilerCreator : IDecompilerCreator

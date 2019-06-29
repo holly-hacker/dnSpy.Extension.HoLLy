@@ -4,7 +4,7 @@ using dnlib.DotNet;
 using dnSpy.Contracts.Decompiler;
 using dnSpy.Contracts.Text;
 
-namespace HoLLy.dnSpy.Extension.Languages
+namespace HoLLy.dnSpy.Extension.Decompilers.Decorators
 {
     public class DecompilerDecorator : IDecompiler
     {

@@ -2,7 +2,7 @@ using System.Linq;
 using dnlib.DotNet;
 using dnSpy.Contracts.Decompiler;
 
-namespace HoLLy.dnSpy.Extension.Languages
+namespace HoLLy.dnSpy.Extension.Decompilers.Decorators
 {
     public class DecompilerOutputDecorator : IDecompilerOutput
     {
