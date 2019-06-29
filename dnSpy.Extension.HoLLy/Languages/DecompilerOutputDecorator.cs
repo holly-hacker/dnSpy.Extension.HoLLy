@@ -1,3 +1,5 @@
+using System.Linq;
+using dnlib.DotNet;
 using dnSpy.Contracts.Decompiler;
 
 namespace HoLLy.dnSpy.Extension.Languages
@@ -8,14 +10,19 @@ namespace HoLLy.dnSpy.Extension.Languages
 
         public DecompilerOutputDecorator(IDecompilerOutput implementation) => this.implementation = implementation;
 
-        public void Write(string text, object reference, DecompilerReferenceFlags flags, object color)
-        {
-            implementation.Write(text, reference, flags, color);
-        }
+        public void Write(string text, object reference, DecompilerReferenceFlags flags, object color) => implementation.Write(Modify(text, reference), reference, flags, color);
+        public void Write(string text, int index, int length, object reference, DecompilerReferenceFlags flags, object color) => implementation.Write(Modify(text, reference), index, length, reference, flags, color);
 
-        public void Write(string text, int index, int length, object reference, DecompilerReferenceFlags flags, object color)
+        private static string Modify(string text, object reference)
         {
-            implementation.Write(text, index, length, reference, flags, color);
+            switch (reference) {
+                case MethodDef _:
+                    return new string(text.Reverse().ToArray());
+                case NamespaceReference _:
+                    return $"<{text}>";
+                default:
+                    return text;
+            }
         }
 
         #region standard implementation
