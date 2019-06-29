@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dnSpy.Contracts.DnSpy", "dn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dnSpy.Contracts.Logic", "dnSpy\dnSpy\dnSpy.Contracts.Logic\dnSpy.Contracts.Logic.csproj", "{59387AA7-7DEC-41B5-9F82-13172A0C4058}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dnSpy", "dnSpy", "{AACF54E7-A947-4C62-A6A3-AEADE2777F14}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{59387AA7-7DEC-41B5-9F82-13172A0C4058}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59387AA7-7DEC-41B5-9F82-13172A0C4058}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59387AA7-7DEC-41B5-9F82-13172A0C4058}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{59387AA7-7DEC-41B5-9F82-13172A0C4058} = {AACF54E7-A947-4C62-A6A3-AEADE2777F14}
+		{48093B72-0FCE-47C7-893A-68F15F280031} = {AACF54E7-A947-4C62-A6A3-AEADE2777F14}
 	EndGlobalSection
 EndGlobal
