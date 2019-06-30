@@ -1,4 +1,4 @@
-using System.Linq;
+using System;
 using dnlib.DotNet;
 using dnSpy.Contracts.Decompiler;
 
@@ -7,19 +7,22 @@ namespace HoLLy.dnSpy.Extension.Decompilers.Decorators
     public class DecompilerOutputDecorator : IDecompilerOutput
     {
         private IDecompilerOutput implementation;
+        private readonly Func<IMemberDef, string> mappingFunc;
 
-        public DecompilerOutputDecorator(IDecompilerOutput implementation) => this.implementation = implementation;
+        public DecompilerOutputDecorator(IDecompilerOutput implementation, Func<IMemberDef, string> mappingFunc)
+        {
+            this.implementation = implementation;
+            this.mappingFunc = mappingFunc;
+        }
 
         public void Write(string text, object reference, DecompilerReferenceFlags flags, object color) => implementation.Write(Modify(text, reference), reference, flags, color);
         public void Write(string text, int index, int length, object reference, DecompilerReferenceFlags flags, object color) => implementation.Write(Modify(text, reference), index, length, reference, flags, color);
 
-        private static string Modify(string text, object reference)
+        private string Modify(string text, object reference)
         {
             switch (reference) {
-                case MethodDef _:
-                    return new string(text.Reverse().ToArray());
-                case NamespaceReference _:
-                    return $"<{text}>";
+                case IMemberDef memberDef:
+                    return mappingFunc(memberDef);
                 default:
                     return text;
             }

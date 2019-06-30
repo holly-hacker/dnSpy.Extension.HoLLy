@@ -9,10 +9,17 @@ namespace HoLLy.dnSpy.Extension.Decompilers.Decorators
     public class DecompilerDecorator : IDecompiler
     {
         private readonly IDecompiler decompiler;
+        private readonly Func<IMemberDef, string> mappingFunc;
 
-        public DecompilerDecorator(IDecompiler decompiler)
+        public DecompilerDecorator(IDecompiler decompiler, Func<IMemberDef, string> mappingFunc)
         {
             this.decompiler = decompiler;
+            this.mappingFunc = mappingFunc;
+        }
+
+        private IDecompilerOutput GetOutput(IDecompilerOutput output)
+        {
+            return new DecompilerOutputDecorator(output, mappingFunc);
         }
 
         public DecompilerSettingsBase Settings => decompiler.Settings;
@@ -36,14 +43,14 @@ namespace HoLLy.dnSpy.Extension.Decompilers.Decorators
         public void WriteCommentBegin(IDecompilerOutput output, bool addSpace) => decompiler.WriteCommentBegin(output, addSpace);
         public void WriteCommentEnd(IDecompilerOutput output, bool addSpace) => decompiler.WriteCommentEnd(output, addSpace);
 
-        public void Decompile(MethodDef method, IDecompilerOutput output, DecompilationContext ctx) => decompiler.Decompile(method, new DecompilerOutputDecorator(output), ctx);
-        public void Decompile(PropertyDef property, IDecompilerOutput output, DecompilationContext ctx) => decompiler.Decompile(property, new DecompilerOutputDecorator(output), ctx);
-        public void Decompile(FieldDef field, IDecompilerOutput output, DecompilationContext ctx) => decompiler.Decompile(field, new DecompilerOutputDecorator(output), ctx);
-        public void Decompile(EventDef ev, IDecompilerOutput output, DecompilationContext ctx) => decompiler.Decompile(ev, new DecompilerOutputDecorator(output), ctx);
-        public void Decompile(TypeDef type, IDecompilerOutput output, DecompilationContext ctx) => decompiler.Decompile(type, new DecompilerOutputDecorator(output), ctx);
-        public void DecompileNamespace(string @namespace, IEnumerable<TypeDef> types, IDecompilerOutput output, DecompilationContext ctx) => decompiler.DecompileNamespace(@namespace, types, new DecompilerOutputDecorator(output), ctx);
-        public void Decompile(AssemblyDef asm, IDecompilerOutput output, DecompilationContext ctx) => decompiler.Decompile(asm, new DecompilerOutputDecorator(output), ctx);
-        public void Decompile(ModuleDef mod, IDecompilerOutput output, DecompilationContext ctx) => decompiler.Decompile(mod, new DecompilerOutputDecorator(output), ctx);
+        public void Decompile(MethodDef method, IDecompilerOutput output, DecompilationContext ctx) => decompiler.Decompile(method, GetOutput(output), ctx);
+        public void Decompile(PropertyDef property, IDecompilerOutput output, DecompilationContext ctx) => decompiler.Decompile(property, GetOutput(output), ctx);
+        public void Decompile(FieldDef field, IDecompilerOutput output, DecompilationContext ctx) => decompiler.Decompile(field, GetOutput(output), ctx);
+        public void Decompile(EventDef ev, IDecompilerOutput output, DecompilationContext ctx) => decompiler.Decompile(ev, GetOutput(output), ctx);
+        public void Decompile(TypeDef type, IDecompilerOutput output, DecompilationContext ctx) => decompiler.Decompile(type, GetOutput(output), ctx);
+        public void DecompileNamespace(string @namespace, IEnumerable<TypeDef> types, IDecompilerOutput output, DecompilationContext ctx) => decompiler.DecompileNamespace(@namespace, types, GetOutput(output), ctx);
+        public void Decompile(AssemblyDef asm, IDecompilerOutput output, DecompilationContext ctx) => decompiler.Decompile(asm, GetOutput(output), ctx);
+        public void Decompile(ModuleDef mod, IDecompilerOutput output, DecompilationContext ctx) => decompiler.Decompile(mod, GetOutput(output), ctx);
         public bool ShowMember(IMemberRef member) => decompiler.ShowMember(member);
         public bool CanDecompile(DecompilationType decompilationType) => decompiler.CanDecompile(decompilationType);
         public void Decompile(DecompilationType decompilationType, object data) => decompiler.Decompile(decompilationType, data);
