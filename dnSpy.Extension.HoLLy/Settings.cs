@@ -16,13 +16,13 @@ namespace HoLLy.dnSpy.Extension
             }
         }
 
-        private StorageLocation sourceMapStorageLocation;
+        private StorageLocation sourceMapStorageLocation = StorageLocation.AssemblyLocation;
     }
 
     public enum StorageLocation
     {
         None,
-        // AssemblyLocation,
+        AssemblyLocation,
         // AppData,
     }
 }
