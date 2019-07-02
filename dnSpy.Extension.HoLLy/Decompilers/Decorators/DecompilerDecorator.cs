@@ -3,23 +3,24 @@ using System.Collections.Generic;
 using dnlib.DotNet;
 using dnSpy.Contracts.Decompiler;
 using dnSpy.Contracts.Text;
+using HoLLy.dnSpy.Extension.SourceMap;
 
 namespace HoLLy.dnSpy.Extension.Decompilers.Decorators
 {
-    public class DecompilerDecorator : IDecompiler
+    internal class DecompilerDecorator : IDecompiler
     {
         private readonly IDecompiler decompiler;
-        private readonly Func<IMemberDef, string> mappingFunc;
+        private readonly ISourceMapStorage sourceMap;
 
-        public DecompilerDecorator(IDecompiler decompiler, Func<IMemberDef, string> mappingFunc)
+        public DecompilerDecorator(IDecompiler decompiler, ISourceMapStorage sourceMap)
         {
             this.decompiler = decompiler;
-            this.mappingFunc = mappingFunc;
+            this.sourceMap = sourceMap;
         }
 
         private IDecompilerOutput GetOutput(IDecompilerOutput output)
         {
-            return new DecompilerOutputDecorator(output, mappingFunc);
+            return new DecompilerOutputDecorator(output, sourceMap);
         }
 
         public DecompilerSettingsBase Settings => decompiler.Settings;

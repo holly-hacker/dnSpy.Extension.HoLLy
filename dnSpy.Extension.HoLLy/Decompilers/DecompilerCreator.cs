@@ -7,14 +7,22 @@ using System.Reflection;
 using dnSpy.Contracts.App;
 using dnSpy.Contracts.Decompiler;
 using HoLLy.dnSpy.Extension.Decompilers.Decorators;
+using HoLLy.dnSpy.Extension.SourceMap;
 
 namespace HoLLy.dnSpy.Extension.Decompilers
 {
     [Export(typeof(IDecompilerCreator))]
-    public class DecompilerCreator : IDecompilerCreator
+    internal class DecompilerCreator : IDecompilerCreator
     {
+        private readonly ISourceMapStorage sourceMapStorage;
         private const string DLLName = "dnSpy.Decompiler.ILSpy.Core.dll";
         private const string TypeName = "dnSpy.Decompiler.ILSpy.Core.CSharp.DecompilerProvider";
+
+        [ImportingConstructor]
+        public DecompilerCreator(ISourceMapStorage sourceMapStorage)
+        {
+            this.sourceMapStorage = sourceMapStorage;
+        }
 
         public IEnumerable<IDecompiler> Create()
         {
@@ -27,7 +35,7 @@ namespace HoLLy.dnSpy.Extension.Decompilers
             }
 
             foreach (IDecompiler dec in provider.Create()) {
-                yield return new DecompilerDecorator(dec, TempRenameCache.GetNameOrDefault);
+                yield return new DecompilerDecorator(dec, sourceMapStorage);
             }
         }
         internal static IDecompilerProvider TryCreateDecompilerProvider()

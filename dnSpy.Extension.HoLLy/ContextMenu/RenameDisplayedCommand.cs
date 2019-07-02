@@ -1,13 +1,23 @@
+using System.ComponentModel.Composition;
 using dnlib.DotNet;
 using dnSpy.Contracts.App;
 using dnSpy.Contracts.Documents.Tabs.DocViewer;
 using dnSpy.Contracts.Menus;
+using HoLLy.dnSpy.Extension.SourceMap;
 
 namespace HoLLy.dnSpy.Extension.ContextMenu
 {
     [ExportMenuItem(Header = "Change displayed name", Group = Constants.ContextMenuGroupEdit)]
-    public class RenameDisplayedCommand : MenuItemBase
+    internal class RenameDisplayedCommand : MenuItemBase
     {
+        private readonly ISourceMapStorage sourceMapStorage;
+
+        [ImportingConstructor]
+        public RenameDisplayedCommand(ISourceMapStorage sourceMapStorage)
+        {
+            this.sourceMapStorage = sourceMapStorage;
+        }
+
         public override void Execute(IMenuItemContext context)
         {
             var textReference = context.Find<TextReference>();
@@ -16,7 +26,7 @@ namespace HoLLy.dnSpy.Extension.ContextMenu
 
             string newName = MsgBox.Instance.Ask<string>($"New name for {m.Name}:");
             if (!string.IsNullOrEmpty(newName))
-                TempRenameCache.SetName(m, newName);
+                sourceMapStorage.SetName(m, newName);
 
             var documentTabService = docViewer.DocumentTab.DocumentTabService;
             documentTabService.RefreshModifiedDocument(documentTabService.DocumentTreeView.FindNode(m.Module).Document);

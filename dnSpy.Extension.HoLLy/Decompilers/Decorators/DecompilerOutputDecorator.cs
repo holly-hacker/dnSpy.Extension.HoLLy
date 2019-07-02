@@ -1,18 +1,19 @@
 using System;
 using dnlib.DotNet;
 using dnSpy.Contracts.Decompiler;
+using HoLLy.dnSpy.Extension.SourceMap;
 
 namespace HoLLy.dnSpy.Extension.Decompilers.Decorators
 {
-    public class DecompilerOutputDecorator : IDecompilerOutput
+    internal class DecompilerOutputDecorator : IDecompilerOutput
     {
         private IDecompilerOutput implementation;
-        private readonly Func<IMemberDef, string> mappingFunc;
+        private readonly ISourceMapStorage sourceMap;
 
-        public DecompilerOutputDecorator(IDecompilerOutput implementation, Func<IMemberDef, string> mappingFunc)
+        public DecompilerOutputDecorator(IDecompilerOutput implementation, ISourceMapStorage sourceMap)
         {
             this.implementation = implementation;
-            this.mappingFunc = mappingFunc;
+            this.sourceMap = sourceMap;
         }
 
         public void Write(string text, object reference, DecompilerReferenceFlags flags, object color) => implementation.Write(Modify(text, reference), reference, flags, color);
@@ -22,7 +23,7 @@ namespace HoLLy.dnSpy.Extension.Decompilers.Decorators
         {
             switch (reference) {
                 case IMemberDef memberDef:
-                    return mappingFunc(memberDef);
+                    return sourceMap.GetName(memberDef) ?? text;
                 default:
                     return text;
             }
