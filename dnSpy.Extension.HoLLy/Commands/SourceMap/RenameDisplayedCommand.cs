@@ -5,7 +5,7 @@ using dnSpy.Contracts.Documents.Tabs.DocViewer;
 using dnSpy.Contracts.Menus;
 using HoLLy.dnSpy.Extension.SourceMap;
 
-namespace HoLLy.dnSpy.Extension.ContextMenu
+namespace HoLLy.dnSpy.Extension.Commands.SourceMap
 {
     [ExportMenuItem(Header = "Change displayed name", Group = Constants.ContextMenuGroupEdit)]
     internal class RenameDisplayedCommand : MenuItemBase
