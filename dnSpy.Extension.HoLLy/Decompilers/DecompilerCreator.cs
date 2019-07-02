@@ -14,10 +14,11 @@ namespace HoLLy.dnSpy.Extension.Decompilers
     [Export(typeof(IDecompilerCreator))]
     internal class DecompilerCreator : IDecompilerCreator
     {
-        private readonly ISourceMapStorage sourceMapStorage;
         private const string DLLName = "dnSpy.Decompiler.ILSpy.Core.dll";
         private const string TypeNameFormat = "dnSpy.Decompiler.ILSpy.Core.{0}.DecompilerProvider";
         private static readonly string[] LanguageNames = { "CSharp", "IL", "ILAst", "VisualBasic" };
+
+        private readonly ISourceMapStorage sourceMapStorage;
 
         [ImportingConstructor]
         public DecompilerCreator(ISourceMapStorage sourceMapStorage)
@@ -42,7 +43,7 @@ namespace HoLLy.dnSpy.Extension.Decompilers
             }
         }
 
-        internal static IDecompilerProvider TryCreateDecompilerProvider(string languageName)
+        private static IDecompilerProvider TryCreateDecompilerProvider(string languageName)
         {
             var dnSpyDir = Path.GetDirectoryName(typeof(IDecompilerCreator).Assembly.Location);
             if (dnSpyDir is null) return null;

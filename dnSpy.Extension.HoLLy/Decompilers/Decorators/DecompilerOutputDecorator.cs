@@ -1,4 +1,3 @@
-using System;
 using dnlib.DotNet;
 using dnSpy.Contracts.Decompiler;
 using HoLLy.dnSpy.Extension.SourceMap;
@@ -7,7 +6,7 @@ namespace HoLLy.dnSpy.Extension.Decompilers.Decorators
 {
     internal class DecompilerOutputDecorator : IDecompilerOutput
     {
-        private IDecompilerOutput implementation;
+        private readonly IDecompilerOutput implementation;
         private readonly ISourceMapStorage sourceMap;
 
         public DecompilerOutputDecorator(IDecompilerOutput implementation, ISourceMapStorage sourceMap)
@@ -29,7 +28,7 @@ namespace HoLLy.dnSpy.Extension.Decompilers.Decorators
             }
         }
 
-        #region standard implementation
+        #region default implementation
         public int Length => implementation.Length;
         public int NextPosition => implementation.NextPosition;
 
