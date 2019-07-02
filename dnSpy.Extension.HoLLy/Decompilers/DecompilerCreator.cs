@@ -16,7 +16,8 @@ namespace HoLLy.dnSpy.Extension.Decompilers
     {
         private readonly ISourceMapStorage sourceMapStorage;
         private const string DLLName = "dnSpy.Decompiler.ILSpy.Core.dll";
-        private const string TypeName = "dnSpy.Decompiler.ILSpy.Core.CSharp.DecompilerProvider";
+        private const string TypeNameFormat = "dnSpy.Decompiler.ILSpy.Core.{0}.DecompilerProvider";
+        private static readonly string[] LanguageNames = { "CSharp", "IL", "ILAst", "VisualBasic" };
 
         [ImportingConstructor]
         public DecompilerCreator(ISourceMapStorage sourceMapStorage)
@@ -26,19 +27,22 @@ namespace HoLLy.dnSpy.Extension.Decompilers
 
         public IEnumerable<IDecompiler> Create()
         {
-            var provider = TryCreateDecompilerProvider();
+            foreach (string languageName in LanguageNames) {
+                var provider = TryCreateDecompilerProvider(languageName);
 
-            if (provider is null) {
-                if (Utils.IsDebugBuild)
-                    MsgBox.Instance.Show("Couldn't load decompiler provider, was null");
-                yield break;
-            }
+                if (provider is null) {
+                    if (Utils.IsDebugBuild)
+                        MsgBox.Instance.Show("Couldn't load decompiler provider, was null");
 
-            foreach (IDecompiler dec in provider.Create()) {
-                yield return new DecompilerDecorator(dec, sourceMapStorage);
+                    yield break;
+                }
+
+                foreach (IDecompiler dec in provider.Create())
+                    yield return new DecompilerDecorator(dec, sourceMapStorage);
             }
         }
-        internal static IDecompilerProvider TryCreateDecompilerProvider()
+
+        internal static IDecompilerProvider TryCreateDecompilerProvider(string languageName)
         {
             var dnSpyDir = Path.GetDirectoryName(typeof(IDecompilerCreator).Assembly.Location);
             if (dnSpyDir is null) return null;
@@ -46,7 +50,7 @@ namespace HoLLy.dnSpy.Extension.Decompilers
             string dllPath = Path.Combine(dnSpyDir, DLLName);
 
             var asm = Assembly.LoadFile(dllPath);
-            var type = asm.GetTypes().SingleOrDefault(x => x.FullName == TypeName);
+            var type = asm.GetTypes().SingleOrDefault(x => x.FullName == String.Format(TypeNameFormat, languageName));
             if (type is null) return null;
 
             return (IDecompilerProvider)Activator.CreateInstance(type);
