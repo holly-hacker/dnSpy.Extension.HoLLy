@@ -9,6 +9,8 @@ namespace HoLLy.dnSpy.Extension.Decompilers.Decorators
 {
     internal class DecompilerDecorator : IDecompiler
     {
+        private const string UniqueNameFormat = "{0} (w/ SourceMap)";
+
         private readonly IDecompiler implementation;
         private readonly ISourceMapStorage sourceMap;
 
@@ -24,8 +26,8 @@ namespace HoLLy.dnSpy.Extension.Decompilers.Decorators
         public MetadataTextColorProvider MetadataTextColorProvider => implementation.MetadataTextColorProvider;
         public string ContentTypeString => implementation.ContentTypeString;
         public string GenericNameUI => implementation.GenericNameUI;
-        public string UniqueNameUI => implementation.UniqueNameUI + " - Decorated";
-        public double OrderUI => implementation.OrderUI + double.Epsilon * 10;
+        public string UniqueNameUI => string.Format(UniqueNameFormat, implementation.UniqueNameUI);
+        public double OrderUI => implementation.OrderUI + 0.5;
         public Guid GenericGuid => implementation.GenericGuid;
         public Guid UniqueGuid => implementation.UniqueGuid.XorGuid(Constants.DecompilerGuid);
         public string FileExtension => implementation.FileExtension;

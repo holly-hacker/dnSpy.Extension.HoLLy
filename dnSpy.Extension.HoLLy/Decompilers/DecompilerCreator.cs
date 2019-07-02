@@ -33,7 +33,7 @@ namespace HoLLy.dnSpy.Extension.Decompilers
 
                 if (provider is null) {
                     if (Utils.IsDebugBuild)
-                        MsgBox.Instance.Show("Couldn't load decompiler provider, was null");
+                        MsgBox.Instance.Show($"Couldn't load decompiler provider for '{languageName}', was null");
 
                     yield break;
                 }

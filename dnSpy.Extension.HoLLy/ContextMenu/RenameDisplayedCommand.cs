@@ -24,7 +24,7 @@ namespace HoLLy.dnSpy.Extension.ContextMenu
             var docViewer = context.Find<IDocumentViewer>();
             var m = (IMemberDef)textReference.Reference;
 
-            string newName = MsgBox.Instance.Ask<string>($"New name for {m.Name}:");
+            string newName = MsgBox.Instance.Ask<string>(string.Empty, title: $"New name for {m.Name}");
             if (!string.IsNullOrEmpty(newName)) {
                 sourceMapStorage.SetName(m, newName);
                 sourceMapStorage.Save();
