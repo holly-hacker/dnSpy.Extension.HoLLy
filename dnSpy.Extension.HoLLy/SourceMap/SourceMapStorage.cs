@@ -4,7 +4,7 @@ using System.ComponentModel.Composition;
 using dnlib.DotNet;
 using System.IO;
 using System.Xml;
-using dnSpy.Contracts.Documents;
+using dnSpy.Contracts.App;
 
 namespace HoLLy.dnSpy.Extension.SourceMap
 {
@@ -19,15 +19,7 @@ namespace HoLLy.dnSpy.Extension.SourceMap
     internal class SourceMapStorage : ISourceMapStorage
     {
         private readonly Dictionary<AssemblyDef, Dictionary<(MapType, string), string>> loadedMaps = new Dictionary<AssemblyDef, Dictionary<(MapType, string), string>>();
-        private readonly Settings settings;
-        private readonly IDsDocumentService docService;
 
-        [ImportingConstructor]
-        public SourceMapStorage(Settings s, IDsDocumentService docService)
-        {
-            settings = s;
-            this.docService = docService;
-        }
         public string GetName(IMemberDef member)
         {
             var asm = member.Module.Assembly;
@@ -61,9 +53,6 @@ namespace HoLLy.dnSpy.Extension.SourceMap
         public void Save()
         {
             // TODO: handle inability to save
-            if (settings.SourceMapStorageLocation == StorageLocation.None)
-                return;
-
             foreach (var asmMap in loadedMaps) {
                 (AssemblyDef asm, Dictionary<(MapType, string), string> map) = (asmMap.Key, asmMap.Value);
                 string path = GetStorageLocation(asm);
@@ -89,16 +78,13 @@ namespace HoLLy.dnSpy.Extension.SourceMap
 
         private string GetStorageLocation(AssemblyDef asm)
         {
-            // TODO: handle null
-            string directory = settings.SourceMapStorageLocation switch {
-                StorageLocation.AssemblyLocation => Path.GetDirectoryName(GetAssemblyLocation(asm)),
-                _ => throw new ArgumentOutOfRangeException(nameof(settings.SourceMapStorageLocation), "Unknown storage type: " + settings.SourceMapStorageLocation),
-            };
+            string directory = Path.Combine(AppDirectories.DataDirectory, "SourceMaps");
 
-            return Path.Combine(directory, $"{asm.FullName}.sourcemap.xml");
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+
+            return Path.Combine(directory, $"{asm.FullName}.xml");
         }
-
-        private string GetAssemblyLocation(AssemblyDef asm) => docService.FindAssembly(asm).Filename;
 
         private static MapType GetMapType(IMemberDef member) =>
             member switch {
