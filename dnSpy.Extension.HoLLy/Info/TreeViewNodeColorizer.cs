@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Windows.Media;
 using dnSpy.Contracts.Documents.TreeView;
 using dnSpy.Contracts.Text.Classification;
 using dnSpy.Contracts.TreeView.Text;

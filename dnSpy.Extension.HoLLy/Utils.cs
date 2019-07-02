@@ -11,6 +11,18 @@ namespace HoLLy.dnSpy.Extension
 
         private static readonly Lazy<bool> IsDebugBuildLazy = new Lazy<bool>(() => IsAssemblyDebugBuild(typeof(Utils).Assembly));
 
+        public static Guid XorGuid(this Guid g1, Guid g2)
+        {
+            byte[] bytes1 = g1.ToByteArray();
+            byte[] bytes2 = g2.ToByteArray();
+
+            for (var i = 0; i < bytes1.Length; i++) {
+                bytes2[i] ^= bytes1[i];
+            }
+
+            return new Guid(bytes2);
+        }
+
         /// <remarks>https://stackoverflow.com/a/2186634</remarks>
         private static bool IsAssemblyDebugBuild(Assembly assembly)
         {
