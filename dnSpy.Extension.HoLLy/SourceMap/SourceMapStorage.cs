@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using dnlib.DotNet;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using dnSpy.Contracts.App;
 
@@ -24,7 +25,10 @@ namespace HoLLy.dnSpy.Extension.SourceMap
         {
             var asm = member.Module.Assembly;
 
-            if (!loadedMaps.ContainsKey(asm))
+            if (!loadedMaps.ContainsKey(asm) && !Load(asm))
+                return null;
+
+            if (loadedMaps[asm] == null)
                 return null;
 
             var map = loadedMaps[asm];
@@ -41,7 +45,7 @@ namespace HoLLy.dnSpy.Extension.SourceMap
         {
             var asm = member.Module.Assembly;
 
-            if (!loadedMaps.ContainsKey(asm))
+            if (!loadedMaps.ContainsKey(asm) || loadedMaps[asm] == null)
                 loadedMaps[asm] = new Dictionary<(MapType, string), string>();
 
             var map = loadedMaps[asm];
@@ -53,7 +57,7 @@ namespace HoLLy.dnSpy.Extension.SourceMap
         public void Save()
         {
             // TODO: handle inability to save
-            foreach (var asmMap in loadedMaps) {
+            foreach (var asmMap in loadedMaps.Where(x => x.Value != null)) {
                 (AssemblyDef asm, Dictionary<(MapType, string), string> map) = (asmMap.Key, asmMap.Value);
                 string path = GetStorageLocation(asm);
 
@@ -74,6 +78,34 @@ namespace HoLLy.dnSpy.Extension.SourceMap
                 writer.WriteEndElement();
                 writer.WriteEndDocument();
             }
+        }
+
+        private bool Load(AssemblyDef asm)
+        {
+            // TODO: gracefully fail
+            string path = GetStorageLocation(asm);
+
+            if (!File.Exists(path)) {
+                loadedMaps[asm] = null;
+                return false;
+            }
+
+            var dic = new Dictionary<(MapType, string), string>();
+
+            using var reader = XmlReader.Create(path);
+            while (reader.Read()) {
+                if (reader.IsStartElement()) {
+                    if (Enum.TryParse(reader.Name, true, out MapType type)) {
+                        string orig = reader["original"];
+                        string mapped = reader["mapped"];
+
+                        dic[(type, orig)] = mapped;
+                    }
+                }
+            }
+
+            loadedMaps[asm] = dic;
+            return true;
         }
 
         private string GetStorageLocation(AssemblyDef asm)
