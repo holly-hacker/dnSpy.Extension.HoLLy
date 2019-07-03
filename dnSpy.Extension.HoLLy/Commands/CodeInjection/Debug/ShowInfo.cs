@@ -1,0 +1,34 @@
+using System;
+using System.ComponentModel.Composition;
+using dnSpy.Contracts.App;
+using dnSpy.Contracts.Debugger;
+using dnSpy.Contracts.Menus;
+
+namespace HoLLy.dnSpy.Extension.Commands.CodeInjection.Debug
+{
+    [ExportMenuItem(Header = "DBG: Show Process Info", OwnerGuid = MenuConstants.APP_MENU_DEBUG_GUID, Group = Constants.AppMenuGroupDebuggerDebug)]
+    internal class ShowInfo : MenuItemBase
+    {
+        private DbgManager DbgManager => dbgManagerLazy.Value;
+        private readonly Lazy<DbgManager> dbgManagerLazy;
+
+        [ImportingConstructor]
+        public ShowInfo(Lazy<DbgManager> dbgManager)
+        {
+            dbgManagerLazy = dbgManager;
+        }
+
+        public override void Execute(IMenuItemContext context)
+        {
+            var proc = DbgManager.CurrentProcess.Current;
+
+            MsgBox.Instance.Show($"Process ID: {proc.Id} (0x{proc.Id:x})\n" +
+                                 $"Architecture: {proc.Architecture} ({proc.Bitness}bit, {proc.PointerSize} byte pointers)\n" +
+                                 $"Runtime: {proc.Runtimes[0].Name}\n" +
+                                 $"File name: {proc.Filename}");
+        }
+
+        public override bool IsVisible(IMenuItemContext context) => Utils.IsDebugBuild && DbgManager.IsDebugging;
+        public override bool IsEnabled(IMenuItemContext context) => DbgManager.CurrentProcess?.Current != null;
+    }
+}
