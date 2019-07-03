@@ -9,3 +9,6 @@ A dnSpy extension to aid reversing of obfuscated assemblies.
 
 ### License
 Because dnSpy is licensed under the GPL3 license, this plugin has to be as well. I like it as little as you do :(
+
+### Attribution
+- [dnSpy](https://github.com/0xd4d/dnSpy), licensed under [GPLv3](https://github.com/0xd4d/dnSpy/blob/master/dnSpy/dnSpy/LicenseInfo/LICENSE.txt)
