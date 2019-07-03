@@ -33,9 +33,11 @@
     <ItemGroup>
         <PackageReference Include="dnlib" Version="$(DnlibVersion)" />
         <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf" Version="$(MSVSTextVersion)" />
+        <PackageReference Include="Iced" Version="$(IcedVersion)" />
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\dnSpy\dnSpy\dnSpy.Contracts.Debugger\dnSpy.Contracts.Debugger.csproj" Private="false" />
         <ProjectReference Include="..\dnSpy\dnSpy\dnSpy.Contracts.DnSpy\dnSpy.Contracts.DnSpy.csproj" Private="false" />
         <ProjectReference Include="..\dnSpy\dnSpy\dnSpy.Contracts.Logic\dnSpy.Contracts.Logic.csproj" Private="false" />
     </ItemGroup>
