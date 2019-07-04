@@ -6,10 +6,10 @@ using System.Linq;
 using System.Reflection;
 using dnSpy.Contracts.App;
 using dnSpy.Contracts.Decompiler;
-using HoLLy.dnSpy.Extension.Decompilers.Decorators;
-using HoLLy.dnSpy.Extension.SourceMap;
+using HoLLy.dnSpyExtension.Decompilers.Decorators;
+using HoLLy.dnSpyExtension.SourceMap;
 
-namespace HoLLy.dnSpy.Extension.Decompilers
+namespace HoLLy.dnSpyExtension.Decompilers
 {
     [Export(typeof(IDecompilerCreator))]
     internal class DecompilerCreator : IDecompilerCreator

@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using dnlib.DotNet;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using dnlib.DotNet;
 using dnSpy.Contracts.App;
 
-namespace HoLLy.dnSpy.Extension.SourceMap
+namespace HoLLy.dnSpyExtension.SourceMap
 {
     internal interface ISourceMapStorage
     {

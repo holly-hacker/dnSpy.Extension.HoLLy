@@ -1,8 +1,8 @@
 using dnlib.DotNet;
 using dnSpy.Contracts.Decompiler;
-using HoLLy.dnSpy.Extension.SourceMap;
+using HoLLy.dnSpyExtension.SourceMap;
 
-namespace HoLLy.dnSpy.Extension.Decompilers.Decorators
+namespace HoLLy.dnSpyExtension.Decompilers.Decorators
 {
     internal class DecompilerOutputDecorator : IDecompilerOutput
     {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using dnSpy.Contracts.Extension;
 
-namespace HoLLy.dnSpy.Extension
+namespace HoLLy.dnSpyExtension
 {
     [ExportExtension]
     public class Extension : IExtension

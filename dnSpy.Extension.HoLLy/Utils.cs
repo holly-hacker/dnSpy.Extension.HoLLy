@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
-namespace HoLLy.dnSpy.Extension
+namespace HoLLy.dnSpyExtension
 {
     internal static class Utils
     {
