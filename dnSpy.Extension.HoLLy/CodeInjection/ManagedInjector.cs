@@ -24,7 +24,9 @@ namespace HoLLy.dnSpy.Extension.CodeInjection
 
         public void Inject()
         {
-            DbgProcess dbgProc = DbgManager.CurrentProcess.Current;
+            DbgProcess dbgProc = DbgManager.CurrentProcess.Current
+                                 ?? DbgManager.Processes.FirstOrDefault()
+                                 ?? throw new Exception("Couldn't find process");
             IntPtr hProc = Native.OpenProcess(Native.ProcessAccessFlags.AllForDllInject, false, dbgProc.Id);
 
             if (hProc == IntPtr.Zero)
@@ -34,7 +36,7 @@ namespace HoLLy.dnSpy.Extension.CodeInjection
             var bindToRuntimeAddr = GetCorBindToRuntimeExAddress(dbgProc, hProc);
             DbgManager.WriteMessage("CurBindToRuntimeEx: " + bindToRuntimeAddr.ToInt32().ToString("X8"));
 
-            var hStub = AllocateStub(hProc, @"D:\internal.dll", "internal.Program", "Main", "", bindToRuntimeAddr);
+            var hStub = AllocateStub(hProc, @"D:\NET40_x86.dll", "NET40_x86.Program", "Main", "Parameter", bindToRuntimeAddr);
             DbgManager.WriteMessage("Created stub at: " + hStub.ToInt32().ToString("X8"));
 
             var hThread = Native.CreateRemoteThread(hProc, IntPtr.Zero, 0u, hStub, IntPtr.Zero, 0u, IntPtr.Zero);

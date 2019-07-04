@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.Composition;
+using System.Linq;
 using dnSpy.Contracts.App;
 using dnSpy.Contracts.Debugger;
 using dnSpy.Contracts.Menus;
@@ -20,7 +21,9 @@ namespace HoLLy.dnSpy.Extension.Commands.CodeInjection.Debug
 
         public override void Execute(IMenuItemContext context)
         {
-            var proc = DbgManager.CurrentProcess.Current;
+            var proc = DbgManager.CurrentProcess.Current
+                       ?? DbgManager.Processes.FirstOrDefault()
+                       ?? throw new Exception("Couldn't find process");
 
             MsgBox.Instance.Show($"Process ID: {proc.Id} (0x{proc.Id:x})\n" +
                                  $"Architecture: {proc.Architecture} ({proc.Bitness}bit, {proc.PointerSize} byte pointers)\n" +
@@ -29,6 +32,6 @@ namespace HoLLy.dnSpy.Extension.Commands.CodeInjection.Debug
         }
 
         public override bool IsVisible(IMenuItemContext context) => Utils.IsDebugBuild && DbgManager.IsDebugging;
-        public override bool IsEnabled(IMenuItemContext context) => DbgManager.CurrentProcess?.Current != null;
+        public override bool IsEnabled(IMenuItemContext context) => DbgManager.Processes.Any();
     }
 }
