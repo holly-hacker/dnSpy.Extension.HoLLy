@@ -1,6 +1,6 @@
 using System;
 
-namespace HoLLy.dnSpy.Extension
+namespace HoLLy.dnSpyExtension
 {
     public static class Constants
     {

@@ -2,7 +2,7 @@ using System.Text;
 using dnSpy.Contracts.App;
 using dnSpy.Contracts.Menus;
 
-namespace HoLLy.dnSpy.Extension.Commands.Debug
+namespace HoLLy.dnSpyExtension.Commands.Debug
 {
     [ExportMenuItem(Header = "DBG: View context", Group = Constants.ContextMenuGroupDebug)]
     public class ShowContext : MenuItemBase

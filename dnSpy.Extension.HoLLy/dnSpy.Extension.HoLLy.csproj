@@ -12,7 +12,7 @@
         <FileVersion>0.1.0</FileVersion>
 
         <AssemblyName>dnSpy.Extension.HoLLy.x</AssemblyName>
-        <RootNamespace>HoLLy.dnSpy.Extension</RootNamespace>
+        <RootNamespace>HoLLy.dnSpyExtension</RootNamespace>
 
         <TargetFrameworks>net472</TargetFrameworks> <!-- TODO: update for .NET Core 3.0 -->
         <LangVersion>8</LangVersion>
