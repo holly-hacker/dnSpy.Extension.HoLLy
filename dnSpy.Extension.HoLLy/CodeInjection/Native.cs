@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace HoLLy.dnSpy.Extension.CodeInjection
+namespace HoLLy.dnSpyExtension.CodeInjection
 {
     internal static class Native
     {

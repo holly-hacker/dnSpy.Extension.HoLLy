@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace HoLLy.dnSpy.Extension.CodeInjection
+namespace HoLLy.dnSpyExtension.CodeInjection
 {
     internal class PE
     {

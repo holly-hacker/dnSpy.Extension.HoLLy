@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using dnSpy.Contracts.Debugger;
 using Iced.Intel;
 
-namespace HoLLy.dnSpy.Extension.CodeInjection
+namespace HoLLy.dnSpyExtension.CodeInjection
 {
     [Export(typeof(ManagedInjector))]
     internal class ManagedInjector

@@ -2,9 +2,9 @@ using System;
 using System.ComponentModel.Composition;
 using dnSpy.Contracts.Debugger;
 using dnSpy.Contracts.Menus;
-using HoLLy.dnSpy.Extension.CodeInjection;
+using HoLLy.dnSpyExtension.CodeInjection;
 
-namespace HoLLy.dnSpy.Extension.Commands.CodeInjection
+namespace HoLLy.dnSpyExtension.Commands.CodeInjection
 {
     [ExportMenuItem(Header = "Inject DLL", OwnerGuid = MenuConstants.APP_MENU_DEBUG_GUID, Group = Constants.AppMenuGroupDebuggerInject)]
     internal class InjectDllCommand : MenuItemBase

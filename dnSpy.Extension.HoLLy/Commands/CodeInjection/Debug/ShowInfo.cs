@@ -5,7 +5,7 @@ using dnSpy.Contracts.App;
 using dnSpy.Contracts.Debugger;
 using dnSpy.Contracts.Menus;
 
-namespace HoLLy.dnSpy.Extension.Commands.CodeInjection.Debug
+namespace HoLLy.dnSpyExtension.Commands.CodeInjection.Debug
 {
     [ExportMenuItem(Header = "DBG: Show Process Info", OwnerGuid = MenuConstants.APP_MENU_DEBUG_GUID, Group = Constants.AppMenuGroupDebuggerDebug)]
     internal class ShowInfo : MenuItemBase
