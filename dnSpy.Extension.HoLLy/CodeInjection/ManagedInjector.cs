@@ -21,7 +21,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             this.dbgManagerLazy = dbgManagerLazy;
         }
 
-        public void Inject()
+        public void Inject(string path, string typeName, string methodName, string parameter)
         {
             DbgProcess dbgProc = DbgManager.CurrentProcess.Current
                                  ?? DbgManager.Processes.FirstOrDefault()
@@ -35,7 +35,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             var bindToRuntimeAddr = GetCorBindToRuntimeExAddress(dbgProc, hProc);
             DbgManager.WriteMessage("CurBindToRuntimeEx: " + bindToRuntimeAddr.ToInt32().ToString("X8"));
 
-            var hStub = AllocateStub(hProc, @"D:\NET40_x86.dll", "NET40_x86.Program", "Main", "Parameter", bindToRuntimeAddr);
+            var hStub = AllocateStub(hProc, path, typeName, methodName, parameter, bindToRuntimeAddr);
             DbgManager.WriteMessage("Created stub at: " + hStub.ToInt32().ToString("X8"));
 
             var hThread = Native.CreateRemoteThread(hProc, IntPtr.Zero, 0u, hStub, IntPtr.Zero, 0u, IntPtr.Zero);
