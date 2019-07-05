@@ -58,7 +58,11 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection
             if (new DLLEntryPointSelection(vm).ShowDialog() != true)
                 return;
 
-            injector.Inject(path, vm.SelectedMethod.DeclaringType.FullName, vm.SelectedMethod.Name, "Parameter");
+            DbgProcess dbgProc = DbgManager.CurrentProcess.Current
+                                 ?? DbgManager.Processes.FirstOrDefault()
+                                 ?? throw new Exception("Couldn't find process");
+
+            injector.Inject(dbgProc.Id, path, vm.SelectedMethod.DeclaringType.FullName, vm.SelectedMethod.Name, "Parameter", dbgProc.Bitness == 32);
         }
 
         public override bool IsVisible(IMenuItemContext context) => DbgManager.IsDebugging;

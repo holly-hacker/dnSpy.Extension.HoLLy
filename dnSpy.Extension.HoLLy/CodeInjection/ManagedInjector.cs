@@ -21,19 +21,15 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             this.dbgManagerLazy = dbgManagerLazy;
         }
 
-        public void Inject(string path, string typeName, string methodName, string parameter)
+        public void Inject(int pid, string path, string typeName, string methodName, string parameter, bool x86)
         {
-            DbgProcess dbgProc = DbgManager.CurrentProcess.Current
-                                 ?? DbgManager.Processes.FirstOrDefault()
-                                 ?? throw new Exception("Couldn't find process");
-            IntPtr hProc = Native.OpenProcess(Native.ProcessAccessFlags.AllForDllInject, false, dbgProc.Id);
-            bool x86 = dbgProc.Bitness == 32;
+            IntPtr hProc = Native.OpenProcess(Native.ProcessAccessFlags.AllForDllInject, false, pid);
 
             if (hProc == IntPtr.Zero)
                 throw new Exception("Couldn't open process");
             DbgManager.WriteMessage("Handle: " + hProc.ToInt32().ToString("X8"));
 
-            var bindToRuntimeAddr = GetCorBindToRuntimeExAddress(dbgProc, hProc, x86);
+            var bindToRuntimeAddr = GetCorBindToRuntimeExAddress(pid, hProc, x86);
             DbgManager.WriteMessage("CurBindToRuntimeEx: " + bindToRuntimeAddr.ToInt64().ToString("X8"));
 
             var hStub = AllocateStub(hProc, path, typeName, methodName, parameter, bindToRuntimeAddr);
@@ -49,9 +45,9 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             Native.CloseHandle(hProc);
         }
 
-        private static IntPtr GetCorBindToRuntimeExAddress(DbgProcess dbgProc, IntPtr hProc, bool x86)
+        private static IntPtr GetCorBindToRuntimeExAddress(int pid, IntPtr hProc, bool x86)
         {
-            var proc = Process.GetProcessById(dbgProc.Id);
+            var proc = Process.GetProcessById(pid);
             var mod = proc.Modules.OfType<ProcessModule>().FirstOrDefault(m => m.ModuleName.Equals("mscoree.dll", StringComparison.InvariantCultureIgnoreCase));
 
             if (mod is null)
