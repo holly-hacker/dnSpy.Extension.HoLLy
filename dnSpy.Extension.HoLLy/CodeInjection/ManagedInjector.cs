@@ -27,13 +27,14 @@ namespace HoLLy.dnSpyExtension.CodeInjection
                                  ?? DbgManager.Processes.FirstOrDefault()
                                  ?? throw new Exception("Couldn't find process");
             IntPtr hProc = Native.OpenProcess(Native.ProcessAccessFlags.AllForDllInject, false, dbgProc.Id);
+            bool x86 = dbgProc.Bitness == 32;
 
             if (hProc == IntPtr.Zero)
                 throw new Exception("Couldn't open process");
             DbgManager.WriteMessage("Handle: " + hProc.ToInt32().ToString("X8"));
 
-            var bindToRuntimeAddr = GetCorBindToRuntimeExAddress(dbgProc, hProc);
-            DbgManager.WriteMessage("CurBindToRuntimeEx: " + bindToRuntimeAddr.ToInt32().ToString("X8"));
+            var bindToRuntimeAddr = GetCorBindToRuntimeExAddress(dbgProc, hProc, x86);
+            DbgManager.WriteMessage("CurBindToRuntimeEx: " + bindToRuntimeAddr.ToInt64().ToString("X8"));
 
             var hStub = AllocateStub(hProc, path, typeName, methodName, parameter, bindToRuntimeAddr);
             DbgManager.WriteMessage("Created stub at: " + hStub.ToInt32().ToString("X8"));
@@ -48,7 +49,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             Native.CloseHandle(hProc);
         }
 
-        private static IntPtr GetCorBindToRuntimeExAddress(DbgProcess dbgProc, IntPtr hProc)
+        private static IntPtr GetCorBindToRuntimeExAddress(DbgProcess dbgProc, IntPtr hProc, bool x86)
         {
             var proc = Process.GetProcessById(dbgProc.Id);
             var mod = proc.Modules.OfType<ProcessModule>().FirstOrDefault(m => m.ModuleName.Equals("mscoree.dll", StringComparison.InvariantCultureIgnoreCase));
@@ -56,7 +57,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             if (mod is null)
                 throw new Exception("Couldn't find MSCOREE.DLL, arch mismatch?");
 
-            int fnAddr = PE.GetExportAddress(hProc, mod.BaseAddress, "CorBindToRuntimeEx");
+            int fnAddr = PE.GetExportAddress(hProc, mod.BaseAddress, "CorBindToRuntimeEx", x86);
 
             return mod.BaseAddress + fnAddr;
         }
