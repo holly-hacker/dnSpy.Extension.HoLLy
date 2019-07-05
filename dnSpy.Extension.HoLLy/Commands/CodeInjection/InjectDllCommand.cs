@@ -28,23 +28,35 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection
 
         public override void Execute(IMenuItemContext context)
         {
+            if (!AskForEntryPoint(out MethodDef m))
+                return;
+
+            DbgProcess dbgProc = DbgManager.CurrentProcess.Current
+                                 ?? DbgManager.Processes.FirstOrDefault()
+                                 ?? throw new Exception("Couldn't find process");
+
+            injector.Inject(dbgProc.Id, m, "Parameter", dbgProc.Bitness == 32);
+        }
+
+        public static bool AskForEntryPoint(out MethodDef method)
+        {
+            method = default;
+
             var ofd = new OpenFileDialog {
                 Filter = PickFilenameConstants.DotNetAssemblyOrModuleFilter,
                 Title = "Select .NET assembly to inject",
             };
 
             if (ofd.ShowDialog() != DialogResult.OK)
-                return;
-
-            var path = ofd.FileName;
+                return false;
 
             AssemblyDef asm;
             try {
-                asm = AssemblyDef.Load(path);
+                asm = AssemblyDef.Load(ofd.FileName);
             } catch (BadImageFormatException e) {
                 MsgBox.Instance.Show("I couldn't load that binary. Are you sure it is a .NET assembly?\n" +
                                      "Reason: " + e.Message);
-                return;
+                return false;
             }
 
             var vm = new DLLEntryPointSelectionVM { Assembly = asm, };
@@ -52,17 +64,14 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection
             if (!vm.AllItems.Any()) {
                 MsgBox.Instance.Show("Couldn't find any suitable entry points in that assembly.\n" +
                                      "Please make a method with the following signature: static int MethodName(string)");
-                return;
+                return false;
             }
 
             if (new DLLEntryPointSelection(vm).ShowDialog() != true)
-                return;
+                return false;
 
-            DbgProcess dbgProc = DbgManager.CurrentProcess.Current
-                                 ?? DbgManager.Processes.FirstOrDefault()
-                                 ?? throw new Exception("Couldn't find process");
-
-            injector.Inject(dbgProc.Id, path, vm.SelectedMethod.DeclaringType.FullName, vm.SelectedMethod.Name, "Parameter", dbgProc.Bitness == 32);
+            method = vm.SelectedMethod;
+            return true;
         }
 
         public override bool IsVisible(IMenuItemContext context) => DbgManager.IsDebugging;
