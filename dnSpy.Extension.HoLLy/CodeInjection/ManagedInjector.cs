@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using dnlib.DotNet;
 using dnSpy.Contracts.Debugger;
 using Iced.Intel;
 
@@ -20,6 +21,9 @@ namespace HoLLy.dnSpyExtension.CodeInjection
         {
             this.dbgManagerLazy = dbgManagerLazy;
         }
+
+        public void Inject(int pid, MethodDef method, string parameter, bool x86)
+            => Inject(pid, method.Module.Location, method.DeclaringType.FullName, method.Name, parameter, x86);
 
         public void Inject(int pid, string path, string typeName, string methodName, string parameter, bool x86)
         {
