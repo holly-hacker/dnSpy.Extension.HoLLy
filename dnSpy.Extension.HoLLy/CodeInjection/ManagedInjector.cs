@@ -36,8 +36,8 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             var bindToRuntimeAddr = GetCorBindToRuntimeExAddress(pid, hProc, x86);
             DbgManager.WriteMessage("CurBindToRuntimeEx: " + bindToRuntimeAddr.ToInt64().ToString("X8"));
 
-            var hStub = AllocateStub(hProc, path, typeName, methodName, parameter, bindToRuntimeAddr);
-            DbgManager.WriteMessage("Created stub at: " + hStub.ToInt32().ToString("X8"));
+            var hStub = AllocateStub(hProc, path, typeName, methodName, parameter, bindToRuntimeAddr, x86);
+            DbgManager.WriteMessage("Created stub at: " + hStub.ToInt64().ToString("X8"));
 
             var hThread = Native.CreateRemoteThread(hProc, IntPtr.Zero, 0u, hStub, IntPtr.Zero, 0u, IntPtr.Zero);
             DbgManager.WriteMessage("Thread handle: " + hThread.ToInt32().ToString("X8"));
@@ -62,7 +62,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             return mod.BaseAddress + fnAddr;
         }
 
-        private static IntPtr AllocateStub(IntPtr hProc, string asmPath, string typeName, string methodName, string args, IntPtr fnAddr)
+        private static IntPtr AllocateStub(IntPtr hProc, string asmPath, string typeName, string methodName, string args, IntPtr fnAddr, bool x86)
         {
             const string ClrVersion2 = "v2.0.50727";
             const string ClrVersion4 = "v4.0.30319";
@@ -98,40 +98,89 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 
             var instructions = new InstructionList();
 
-            // call CorBindtoRuntimeEx
-            instructions.Add(Instruction.Create(Code.Pushd_imm32, clrHost.ToInt32()));
-            instructions.Add(Instruction.Create(Code.Pushd_imm32, riid.ToInt32()));
-            instructions.Add(Instruction.Create(Code.Pushd_imm32, rclsid.ToInt32()));
-            instructions.Add(Instruction.Create(Code.Pushd_imm8,  0));    // startupFlags
-            instructions.Add(Instruction.Create(Code.Pushd_imm32, buildFlavor.ToInt32()));
-            instructions.Add(Instruction.Create(Code.Pushd_imm32, clrVersion.ToInt32()));
-            instructions.Add(Instruction.Create(Code.Mov_r32_imm32, Register.EAX, fnAddr.ToInt32()));
-            instructions.Add(Instruction.Create(Code.Call_rm32, Register.EAX));
+            if (x86) {
+                // call CorBindtoRuntimeEx
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, clrHost.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, riid.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, rclsid.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Pushd_imm8,  0));    // startupFlags
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, buildFlavor.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, clrVersion.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Mov_r32_imm32, Register.EAX, fnAddr.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Call_rm32, Register.EAX));
 
-            // call pClrHost->Start();
-            instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.None, clrHost.ToInt32())));
-            instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.ECX, new MemoryOperand(Register.EAX)));
-            instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EDX, new MemoryOperand(Register.ECX, 0x0C)));
-            instructions.Add(Instruction.Create(Code.Push_r32, Register.EAX));
-            instructions.Add(Instruction.Create(Code.Call_rm32, Register.EDX));
+                // call pClrHost->Start();
+                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.None, clrHost.ToInt32())));
+                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.ECX, new MemoryOperand(Register.EAX)));
+                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EDX, new MemoryOperand(Register.ECX, 0x0C)));
+                instructions.Add(Instruction.Create(Code.Push_r32, Register.EAX));
+                instructions.Add(Instruction.Create(Code.Call_rm32, Register.EDX));
 
-            // call pClrHost->ExecuteInDefaultAppDomain()
-            instructions.Add(Instruction.Create(Code.Pushd_imm32, ptrRet.ToInt32()));
-            instructions.Add(Instruction.Create(Code.Pushd_imm32, ptrArgs.ToInt32()));
-            instructions.Add(Instruction.Create(Code.Pushd_imm32, ptrMethodName.ToInt32()));
-            instructions.Add(Instruction.Create(Code.Pushd_imm32, ptrTypeName.ToInt32()));
-            instructions.Add(Instruction.Create(Code.Pushd_imm32, ptrAsmPath.ToInt32()));
-            instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.None, clrHost.ToInt32())));
-            instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.ECX, new MemoryOperand(Register.EAX)));
-            instructions.Add(Instruction.Create(Code.Push_r32, Register.EAX));
-            instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.ECX, 0x2C)));
-            instructions.Add(Instruction.Create(Code.Call_rm32, Register.EAX));
+                // call pClrHost->ExecuteInDefaultAppDomain()
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, ptrRet.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, ptrArgs.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, ptrMethodName.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, ptrTypeName.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, ptrAsmPath.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.None, clrHost.ToInt32())));
+                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.ECX, new MemoryOperand(Register.EAX)));
+                instructions.Add(Instruction.Create(Code.Push_r32, Register.EAX));
+                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.ECX, 0x2C)));
+                instructions.Add(Instruction.Create(Code.Call_rm32, Register.EAX));
 
-            instructions.Add(Instruction.Create(Code.Retnd));
+                instructions.Add(Instruction.Create(Code.Retnd));
+            } else {
+                int lowerHalf(IntPtr ptr) => (int)(ptr.ToInt64() & 0xFFFFFFFF);
+                int upperHalf(IntPtr ptr) => (int)(ptr.ToInt64() >> 32);
+
+                // call CorBindtoRuntimeEx
+                // https://docs.microsoft.com/en-us/cpp/build/x64-calling-convention?view=vs-2019
+                // TODO: crashes at first Call
+                // TODO: why does Pushq_imm32 push 64 bits??
+                // TODO: still using 32bit pointers in places
+                // TODO: only up to first call is tested
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(clrHost)));    // rbp+30h
+                // instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(clrHost)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(riid)));       // rbp+28h
+                // instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(riid)));
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.R9, rclsid.ToInt64()));
+                instructions.Add(Instruction.Create(Code.Mov_r32_imm32, Register.R8D,  0));    // startupFlags, perhaps 1 for concurrent gc?
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RDX, buildFlavor.ToInt64()));
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RCX, clrVersion.ToInt64()));
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RAX, fnAddr.ToInt64()));
+                for (int i = 0; i < 8/2; i++) instructions.Add(Instruction.Create(Code.Pushq_imm32, 0));    // push shadow space because x64
+                instructions.Add(Instruction.Create(Code.Call_rm64, Register.RAX));    // this crashes
+
+                // call pClrHost->Start();
+                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RAX, new MemoryOperand(Register.None, clrHost.ToInt32())));
+                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RCX, new MemoryOperand(Register.RAX)));
+                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RDX, new MemoryOperand(Register.RCX, 0x0C)));
+                instructions.Add(Instruction.Create(Code.Push_r64, Register.RAX));
+                instructions.Add(Instruction.Create(Code.Call_rm64, Register.RDX));
+
+                // call pClrHost->ExecuteInDefaultAppDomain()
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(ptrRet)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(ptrRet)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(ptrArgs)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(ptrArgs)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(ptrMethodName)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(ptrMethodName)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(ptrTypeName)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(ptrTypeName)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(ptrAsmPath)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(ptrAsmPath)));
+                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RAX, new MemoryOperand(Register.None, clrHost.ToInt32())));
+                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RCX, new MemoryOperand(Register.RAX)));
+                instructions.Add(Instruction.Create(Code.Push_r64, Register.RAX));
+                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RAX, new MemoryOperand(Register.RCX, 0x2C)));
+                instructions.Add(Instruction.Create(Code.Call_rm64, Register.RAX));
+
+                instructions.Add(Instruction.Create(Code.Retnq));
+            }
 
             var cw = new CodeWriterImpl();
             var ib = new InstructionBlock(cw, instructions, 0);
-            bool success = BlockEncoder.TryEncode(32, ib, out string errMsg);
+            bool success = BlockEncoder.TryEncode(x86 ? 32 : 64, ib, out string errMsg);
             if (!success)
                 throw new Exception("Error during Iced encode: " + errMsg);
             byte[] bytes = cw.ToArray();
