@@ -123,24 +123,16 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             var  iidICLRRuntimeHost = new Guid(0x90F1A06C, 0x7712, 0x4762, 0x86, 0xB5, 0x7A, 0x5E, 0xBA, 0x6B, 0xDB, 0x02);
 
             IntPtr ppv = alloc(IntPtr.Size);
-            IntPtr riid = alloc(16);    // sizeof(GUID). originally 64, not sure why
-            IntPtr rcslid = alloc(16);
-            IntPtr pwszBuildFlavor = alloc(buildFlavor.Length * 2 + 2);
-            IntPtr pwszVersion = alloc(clrVersion.Length * 2 + 2);
-            writeBytes(riid, iidICLRRuntimeHost.ToByteArray());
-            writeBytes(rcslid, clsidCLRRuntimeHost.ToByteArray());
-            writeString(pwszBuildFlavor, buildFlavor);
-            writeString(pwszVersion, clrVersion);
+            IntPtr riid = allocBytes(iidICLRRuntimeHost.ToByteArray());
+            IntPtr rcslid = allocBytes(clsidCLRRuntimeHost.ToByteArray());
+            IntPtr pwszBuildFlavor = allocString(buildFlavor);
+            IntPtr pwszVersion = allocString(clrVersion);
 
             IntPtr pReturnValue = alloc(4);
-            IntPtr pwzArgument = alloc(args.Length * 2 + 2);
-            IntPtr pwzMethodName = alloc(methodName.Length * 2 + 2);
-            IntPtr pwzTypeName = alloc(typeName.Length * 2 + 2);
-            IntPtr pwzAssemblyPath = alloc(asmPath.Length * 2 + 2);
-            writeString(pwzArgument, args);
-            writeString(pwzMethodName, methodName);
-            writeString(pwzTypeName, typeName);
-            writeString(pwzAssemblyPath, asmPath);
+            IntPtr pwzArgument = allocString(args);
+            IntPtr pwzMethodName = allocString(methodName);
+            IntPtr pwzTypeName = allocString(typeName);
+            IntPtr pwzAssemblyPath = allocString(asmPath);
 
             var instructions = new InstructionList();
 
@@ -239,6 +231,20 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             IntPtr alloc(int size, int protection = 0x04) => Native.VirtualAllocEx(hProc, IntPtr.Zero, (uint)size, 0x1000, protection);
             void writeBytes(IntPtr address, byte[] b) => Native.WriteProcessMemory(hProc, address, b, (uint)b.Length, out _);
             void writeString(IntPtr address, string str) => writeBytes(address, new UnicodeEncoding().GetBytes(str));
+
+            IntPtr allocString(string str)
+            {
+                IntPtr pString = alloc(str.Length * 2 + 2);
+                writeString(pString, str);
+                return pString;
+            }
+
+            IntPtr allocBytes(byte[] buffer)
+            {
+                IntPtr pBuffer = alloc(buffer.Length);
+                writeBytes(pBuffer, buffer);
+                return pBuffer;
+            }
         }
 
         sealed class CodeWriterImpl : CodeWriter {
