@@ -117,23 +117,19 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             const string clrVersion4 = "v4.0.30319";
             string clrVersion = isV4 ? clrVersion4 : clrVersion2;
 
-            byte[] CLSID = {
-                0x6E, 0xA0, 0xF1, 0x90, 0x12, 0x77, 0x62, 0x47,
-                0x86, 0xB5, 0x7A, 0x5E, 0xBA, 0x6B, 0xDB, 0x02
-            };
-            byte[] IID = {
-                0x6C, 0xA0, 0xF1, 0x90, 0x12, 0x77, 0x62, 0x47,
-                0x86, 0xB5, 0x7A, 0x5E, 0xBA, 0x6B, 0xDB, 0x02
-            };
+            const string buildFlavor = "wks";    // WorkStation
 
-            IntPtr clrHost = alloc(4);
-            IntPtr riid = alloc(IID.Length * 4);
-            IntPtr rclsid = alloc(CLSID.Length * 4);
-            IntPtr buildFlavor = alloc(16);
+            var clsidCLRRuntimeHost = new Guid(0x90F1A06E, 0x7712, 0x4762, 0x86, 0xB5, 0x7A, 0x5E, 0xBA, 0x6B, 0xDB, 0x02);
+            var  iidICLRRuntimeHost = new Guid(0x90F1A06C, 0x7712, 0x4762, 0x86, 0xB5, 0x7A, 0x5E, 0xBA, 0x6B, 0xDB, 0x02);
+
+            IntPtr clrHost = alloc(IntPtr.Size);
+            IntPtr riid = alloc(16);    // sizeof(GUID). originally 64, not sure why
+            IntPtr rclsid = alloc(16);
+            IntPtr buildFlavorPtr = alloc(buildFlavor.Length * 2 + 2);
             IntPtr clrVersionPtr = alloc(clrVersion.Length * 2 + 2);
-            writeBytes(riid, IID);
-            writeBytes(rclsid, CLSID);
-            writeString(buildFlavor, "wks");    // WorkStation
+            writeBytes(riid, iidICLRRuntimeHost.ToByteArray());
+            writeBytes(rclsid, clsidCLRRuntimeHost.ToByteArray());
+            writeString(buildFlavorPtr, buildFlavor);
             writeString(clrVersionPtr, clrVersion);
 
             IntPtr ptrRet = alloc(4);
@@ -154,7 +150,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
                 instructions.Add(Instruction.Create(Code.Pushd_imm32, riid.ToInt32()));
                 instructions.Add(Instruction.Create(Code.Pushd_imm32, rclsid.ToInt32()));
                 instructions.Add(Instruction.Create(Code.Pushd_imm8,  0));    // startupFlags
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, buildFlavor.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, buildFlavorPtr.ToInt32()));
                 instructions.Add(Instruction.Create(Code.Pushd_imm32, clrVersionPtr.ToInt32()));
                 instructions.Add(Instruction.Create(Code.Mov_r32_imm32, Register.EAX, fnAddr.ToInt32()));
                 instructions.Add(Instruction.Create(Code.Call_rm32, Register.EAX));
@@ -195,7 +191,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
                 // instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(riid)));
                 instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.R9, rclsid.ToInt64()));
                 instructions.Add(Instruction.Create(Code.Mov_r32_imm32, Register.R8D,  0));    // startupFlags, perhaps 1 for concurrent gc?
-                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RDX, buildFlavor.ToInt64()));
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RDX, buildFlavorPtr.ToInt64()));
                 instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RCX, clrVersionPtr.ToInt64()));
                 instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RAX, fnAddr.ToInt64()));
                 for (int i = 0; i < 8/2; i++) instructions.Add(Instruction.Create(Code.Pushq_imm32, 0));    // push shadow space because x64
