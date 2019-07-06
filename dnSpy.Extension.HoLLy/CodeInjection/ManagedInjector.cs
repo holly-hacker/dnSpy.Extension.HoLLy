@@ -55,7 +55,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
                 reason = "no process found";
                 return false;
             }
-            
+
             if (process.OperatingSystem != DbgOperatingSystem.Windows) {
                 reason = "Windows only";
                 return false;
@@ -66,7 +66,17 @@ namespace HoLLy.dnSpyExtension.CodeInjection
                 return false;
             }
 
-            // TODO: check for runtime type (CoreCLR, Mono, Unity Mono, etc)
+            var runtimeType = process.Runtimes.First().GetRuntimeType();
+            var rtSupported = runtimeType switch {
+                RuntimeType.FrameworkV2 => true,
+                RuntimeType.FrameworkV4 => true,
+                _ => false,
+            };
+
+            if (!rtSupported) {
+                reason = $"Unsupported runtime '{process.Runtimes.First().Name}'";
+                return false;
+            }
 
             reason = null;
             return true;
