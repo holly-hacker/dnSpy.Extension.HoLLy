@@ -16,6 +16,10 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection
     internal class InjectDllCommand : MenuItemBase
     {
         private DbgManager DbgManager => dbgManagerLazy.Value;
+        private DbgProcess CurrentProcess => DbgManager.CurrentProcess.Current
+                                             ?? DbgManager.Processes.FirstOrDefault()
+                                             ?? throw new Exception("Couldn't find process");
+
         private readonly Lazy<DbgManager> dbgManagerLazy;
         private readonly ManagedInjector injector;
 
@@ -31,11 +35,7 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection
             if (!AskForEntryPoint(out MethodDef m))
                 return;
 
-            DbgProcess dbgProc = DbgManager.CurrentProcess.Current
-                                 ?? DbgManager.Processes.FirstOrDefault()
-                                 ?? throw new Exception("Couldn't find process");
-
-            injector.Inject(dbgProc.Id, m, "Parameter", dbgProc.Bitness == 32);
+            injector.Inject(CurrentProcess.Id, m, "Parameter", CurrentProcess.Bitness == 32);
         }
 
         public static bool AskForEntryPoint(out MethodDef method)
@@ -74,7 +74,8 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection
             return true;
         }
 
+        public override string GetHeader(IMenuItemContext context) => "Inject .NET DLL" + ((CurrentProcess.Bitness != 32) ? " (x86 only)" : string.Empty);
         public override bool IsVisible(IMenuItemContext context) => DbgManager.IsDebugging;
-        public override bool IsEnabled(IMenuItemContext context) => true;    // TODO: check if supported
+        public override bool IsEnabled(IMenuItemContext context) => injector.IsProcessSupported(CurrentProcess);
     }
 }

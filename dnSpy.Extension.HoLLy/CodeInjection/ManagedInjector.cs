@@ -49,6 +49,12 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             Native.CloseHandle(hProc);
         }
 
+        public bool IsProcessSupported(DbgProcess process)
+        {
+            // TODO: check for runtime type (CoreCLR, Mono, Unity Mono, etc)
+            return process?.Bitness == 32;
+        }
+
         private static IntPtr GetCorBindToRuntimeExAddress(int pid, IntPtr hProc, bool x86)
         {
             var proc = Process.GetProcessById(pid);
