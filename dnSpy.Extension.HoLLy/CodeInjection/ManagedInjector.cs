@@ -122,53 +122,53 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             var clsidCLRRuntimeHost = new Guid(0x90F1A06E, 0x7712, 0x4762, 0x86, 0xB5, 0x7A, 0x5E, 0xBA, 0x6B, 0xDB, 0x02);
             var  iidICLRRuntimeHost = new Guid(0x90F1A06C, 0x7712, 0x4762, 0x86, 0xB5, 0x7A, 0x5E, 0xBA, 0x6B, 0xDB, 0x02);
 
-            IntPtr clrHost = alloc(IntPtr.Size);
+            IntPtr ppv = alloc(IntPtr.Size);
             IntPtr riid = alloc(16);    // sizeof(GUID). originally 64, not sure why
-            IntPtr rclsid = alloc(16);
-            IntPtr buildFlavorPtr = alloc(buildFlavor.Length * 2 + 2);
-            IntPtr clrVersionPtr = alloc(clrVersion.Length * 2 + 2);
+            IntPtr rcslid = alloc(16);
+            IntPtr pwszBuildFlavor = alloc(buildFlavor.Length * 2 + 2);
+            IntPtr pwszVersion = alloc(clrVersion.Length * 2 + 2);
             writeBytes(riid, iidICLRRuntimeHost.ToByteArray());
-            writeBytes(rclsid, clsidCLRRuntimeHost.ToByteArray());
-            writeString(buildFlavorPtr, buildFlavor);
-            writeString(clrVersionPtr, clrVersion);
+            writeBytes(rcslid, clsidCLRRuntimeHost.ToByteArray());
+            writeString(pwszBuildFlavor, buildFlavor);
+            writeString(pwszVersion, clrVersion);
 
-            IntPtr ptrRet = alloc(4);
-            IntPtr ptrArgs = alloc(args.Length * 2 + 2);
-            IntPtr ptrMethodName = alloc(methodName.Length * 2 + 2);
-            IntPtr ptrTypeName = alloc(typeName.Length * 2 + 2);
-            IntPtr ptrAsmPath = alloc(asmPath.Length * 2 + 2);
-            writeString(ptrArgs, args);
-            writeString(ptrMethodName, methodName);
-            writeString(ptrTypeName, typeName);
-            writeString(ptrAsmPath, asmPath);
+            IntPtr pReturnValue = alloc(4);
+            IntPtr pwzArgument = alloc(args.Length * 2 + 2);
+            IntPtr pwzMethodName = alloc(methodName.Length * 2 + 2);
+            IntPtr pwzTypeName = alloc(typeName.Length * 2 + 2);
+            IntPtr pwzAssemblyPath = alloc(asmPath.Length * 2 + 2);
+            writeString(pwzArgument, args);
+            writeString(pwzMethodName, methodName);
+            writeString(pwzTypeName, typeName);
+            writeString(pwzAssemblyPath, asmPath);
 
             var instructions = new InstructionList();
 
             if (x86) {
                 // call CorBindtoRuntimeEx
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, clrHost.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, ppv.ToInt32()));
                 instructions.Add(Instruction.Create(Code.Pushd_imm32, riid.ToInt32()));
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, rclsid.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, rcslid.ToInt32()));
                 instructions.Add(Instruction.Create(Code.Pushd_imm8,  0));    // startupFlags
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, buildFlavorPtr.ToInt32()));
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, clrVersionPtr.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, pwszBuildFlavor.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, pwszVersion.ToInt32()));
                 instructions.Add(Instruction.Create(Code.Mov_r32_imm32, Register.EAX, fnAddr.ToInt32()));
                 instructions.Add(Instruction.Create(Code.Call_rm32, Register.EAX));
 
-                // call pClrHost->Start();
-                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.None, clrHost.ToInt32())));
+                // call ICLRRuntimeHost::Start
+                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.None, ppv.ToInt32())));
                 instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.ECX, new MemoryOperand(Register.EAX)));
                 instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EDX, new MemoryOperand(Register.ECX, 0x0C)));
                 instructions.Add(Instruction.Create(Code.Push_r32, Register.EAX));
                 instructions.Add(Instruction.Create(Code.Call_rm32, Register.EDX));
 
-                // call pClrHost->ExecuteInDefaultAppDomain()
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, ptrRet.ToInt32()));
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, ptrArgs.ToInt32()));
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, ptrMethodName.ToInt32()));
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, ptrTypeName.ToInt32()));
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, ptrAsmPath.ToInt32()));
-                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.None, clrHost.ToInt32())));
+                // call ICLRRuntimeHost::ExecuteInDefaultAppDomain
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, pReturnValue.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, pwzArgument.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, pwzMethodName.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, pwzTypeName.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, pwzAssemblyPath.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.None, ppv.ToInt32())));
                 instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.ECX, new MemoryOperand(Register.EAX)));
                 instructions.Add(Instruction.Create(Code.Push_r32, Register.EAX));
                 instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.ECX, 0x2C)));
@@ -185,37 +185,37 @@ namespace HoLLy.dnSpyExtension.CodeInjection
                 // TODO: why does Pushq_imm32 push 64 bits??
                 // TODO: still using 32bit pointers in places
                 // TODO: only up to first call is tested
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(clrHost)));    // rbp+30h
-                // instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(clrHost)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(ppv)));    // rbp+30h
+                // instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(ppv)));
                 instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(riid)));       // rbp+28h
                 // instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(riid)));
-                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.R9, rclsid.ToInt64()));
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.R9, rcslid.ToInt64()));
                 instructions.Add(Instruction.Create(Code.Mov_r32_imm32, Register.R8D,  0));    // startupFlags, perhaps 1 for concurrent gc?
-                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RDX, buildFlavorPtr.ToInt64()));
-                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RCX, clrVersionPtr.ToInt64()));
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RDX, pwszBuildFlavor.ToInt64()));
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RCX, pwszVersion.ToInt64()));
                 instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RAX, fnAddr.ToInt64()));
                 for (int i = 0; i < 8/2; i++) instructions.Add(Instruction.Create(Code.Pushq_imm32, 0));    // push shadow space because x64
                 instructions.Add(Instruction.Create(Code.Call_rm64, Register.RAX));    // this crashes
 
                 // call pClrHost->Start();
-                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RAX, new MemoryOperand(Register.None, clrHost.ToInt32())));
+                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RAX, new MemoryOperand(Register.None, ppv.ToInt32())));
                 instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RCX, new MemoryOperand(Register.RAX)));
                 instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RDX, new MemoryOperand(Register.RCX, 0x0C)));
                 instructions.Add(Instruction.Create(Code.Push_r64, Register.RAX));
                 instructions.Add(Instruction.Create(Code.Call_rm64, Register.RDX));
 
                 // call pClrHost->ExecuteInDefaultAppDomain()
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(ptrRet)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(ptrRet)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(ptrArgs)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(ptrArgs)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(ptrMethodName)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(ptrMethodName)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(ptrTypeName)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(ptrTypeName)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(ptrAsmPath)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(ptrAsmPath)));
-                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RAX, new MemoryOperand(Register.None, clrHost.ToInt32())));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(pReturnValue)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(pReturnValue)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(pwzArgument)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(pwzArgument)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(pwzMethodName)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(pwzMethodName)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(pwzTypeName)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(pwzTypeName)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(pwzAssemblyPath)));
+                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(pwzAssemblyPath)));
+                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RAX, new MemoryOperand(Register.None, ppv.ToInt32())));
                 instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RCX, new MemoryOperand(Register.RAX)));
                 instructions.Add(Instruction.Create(Code.Push_r64, Register.RAX));
                 instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RAX, new MemoryOperand(Register.RCX, 0x2C)));
