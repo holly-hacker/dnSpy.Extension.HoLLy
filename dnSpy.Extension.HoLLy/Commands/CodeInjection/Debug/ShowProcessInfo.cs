@@ -8,13 +8,13 @@ using dnSpy.Contracts.Menus;
 namespace HoLLy.dnSpyExtension.Commands.CodeInjection.Debug
 {
     [ExportMenuItem(Header = "DBG: Show Process Info", OwnerGuid = MenuConstants.APP_MENU_DEBUG_GUID, Group = Constants.AppMenuGroupDebuggerDebug)]
-    internal class ShowInfo : MenuItemBase
+    internal class ShowProcessInfo : MenuItemBase
     {
         private DbgManager DbgManager => dbgManagerLazy.Value;
         private readonly Lazy<DbgManager> dbgManagerLazy;
 
         [ImportingConstructor]
-        public ShowInfo(Lazy<DbgManager> dbgManager)
+        public ShowProcessInfo(Lazy<DbgManager> dbgManager)
         {
             dbgManagerLazy = dbgManager;
         }
@@ -28,6 +28,8 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection.Debug
             MsgBox.Instance.Show($"Process ID: {proc.Id} (0x{proc.Id:x})\n" +
                                  $"Architecture: {proc.Architecture} ({proc.Bitness}bit, {proc.PointerSize} byte pointers)\n" +
                                  $"Runtime: {proc.Runtimes[0].Name}\n" +
+                                 $"Runtime ID: {proc.Runtimes[0].Id}\n" +
+                                 $"Runtime Tags: {string.Join(", ", proc.Runtimes[0].Tags)}\n" +
                                  $"File name: {proc.Filename}");
         }
 
