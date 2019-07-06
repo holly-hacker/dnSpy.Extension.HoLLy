@@ -32,13 +32,16 @@
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="1" Style="{StaticResource DialogButton}" Content="Inject" IsDefault="True" IsEnabled="{Binding HasSelection}" Click="okButton_Click" />
-            <Button Grid.Column="2" Style="{StaticResource DialogButton}" Content="Cancel" IsCancel="True" />
+            <TextBlock Grid.Column="0" Text="Parameter:" Padding="3" />
+            <TextBox Grid.Column="1" Text="{Binding Parameter}" Padding="3" />
+            <Button Grid.Column="2" Style="{StaticResource DialogButton}" Margin="5 0 0 0" Content="Inject" IsDefault="True" IsEnabled="{Binding HasSelection}" Click="okButton_Click" />
+            <Button Grid.Column="3" Style="{StaticResource DialogButton}" Margin="5 0 0 0" Content="Cancel" IsCancel="True" />
         </Grid>
     </Grid>
 </controls:WindowBase>

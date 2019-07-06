@@ -20,10 +20,10 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection.Debug
             var pid = MsgBox.Instance.Ask<int>("Process ID");
             var x86 = MsgBox.Instance.Ask<bool>("Is x86?");
 
-            if (!InjectDllCommand.AskForEntryPoint(out MethodDef method))
+            if (!InjectDllCommand.AskForEntryPoint(out MethodDef method, out string parameter))
                 return;
 
-            injector.Inject(pid, method, string.Empty, x86, RuntimeType.FrameworkV4);
+            injector.Inject(pid, method, parameter, x86, RuntimeType.FrameworkV4);
         }
 
         public override bool IsVisible(IMenuItemContext context) => Utils.IsDebugBuild;

@@ -31,15 +31,16 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection
 
         public override void Execute(IMenuItemContext context)
         {
-            if (!AskForEntryPoint(out MethodDef m))
+            if (!AskForEntryPoint(out MethodDef m, out string parameter))
                 return;
 
-            injector.Inject(CurrentProcess.Id, m, "Parameter", CurrentProcess.Bitness == 32, CurrentProcess.Runtimes.First().GetRuntimeType());
+            injector.Inject(CurrentProcess.Id, m, parameter, CurrentProcess.Bitness == 32, CurrentProcess.Runtimes.First().GetRuntimeType());
         }
 
-        public static bool AskForEntryPoint(out MethodDef method)
+        public static bool AskForEntryPoint(out MethodDef method, out string parameter)
         {
             method = default;
+            parameter = default;
 
             var ofd = new OpenFileDialog {
                 Filter = PickFilenameConstants.DotNetAssemblyOrModuleFilter,
@@ -70,6 +71,7 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection
                 return false;
 
             method = vm.SelectedMethod;
+            parameter = vm.Parameter;
             return true;
         }
 

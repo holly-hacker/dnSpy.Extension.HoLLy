@@ -23,7 +23,19 @@ namespace HoLLy.dnSpyExtension.Dialogs
             }
         }
 
+        public string Parameter
+        {
+            get => parameter;
+            set {
+                if (value != parameter) {
+                    parameter = value;
+                    OnPropertyChanged(nameof(Parameter));
+                }
+            }
+        }
+
         private MethodDef selectedMethod;
+        private string parameter;
 
         public DLLEntryPointSelectionVM()
         {
