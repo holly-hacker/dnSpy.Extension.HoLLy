@@ -234,6 +234,8 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 
             IntPtr allocString(string str)
             {
+                if (str is null) return IntPtr.Zero;
+
                 IntPtr pString = alloc(str.Length * 2 + 2);
                 writeString(pString, str);
                 return pString;
