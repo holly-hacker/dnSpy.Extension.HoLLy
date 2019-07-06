@@ -49,10 +49,27 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             Native.CloseHandle(hProc);
         }
 
-        public bool IsProcessSupported(DbgProcess process)
+        public bool IsProcessSupported(DbgProcess process, out string reason)
         {
+            if (process is null) {
+                reason = "no process found";
+                return false;
+            }
+            
+            if (process.OperatingSystem != DbgOperatingSystem.Windows) {
+                reason = "Windows only";
+                return false;
+            }
+
+            if (process.Architecture != DbgArchitecture.X86) {
+                reason = "x86 only";
+                return false;
+            }
+
             // TODO: check for runtime type (CoreCLR, Mono, Unity Mono, etc)
-            return process?.Bitness == 32;
+
+            reason = null;
+            return true;
         }
 
         private static IntPtr GetCorBindToRuntimeExAddress(int pid, IntPtr hProc, bool x86)

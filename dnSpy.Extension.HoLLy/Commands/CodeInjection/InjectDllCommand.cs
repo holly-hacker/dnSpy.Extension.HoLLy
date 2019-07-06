@@ -17,8 +17,7 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection
     {
         private DbgManager DbgManager => dbgManagerLazy.Value;
         private DbgProcess CurrentProcess => DbgManager.CurrentProcess.Current
-                                             ?? DbgManager.Processes.FirstOrDefault()
-                                             ?? throw new Exception("Couldn't find process");
+                                             ?? DbgManager.Processes.FirstOrDefault();
 
         private readonly Lazy<DbgManager> dbgManagerLazy;
         private readonly ManagedInjector injector;
@@ -74,8 +73,9 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection
             return true;
         }
 
-        public override string GetHeader(IMenuItemContext context) => "Inject .NET DLL" + ((CurrentProcess.Bitness != 32) ? " (x86 only)" : string.Empty);
+        public override string GetHeader(IMenuItemContext context)
+            => "Inject .NET DLL" + (!injector.IsProcessSupported(CurrentProcess, out string reason) ? $" ({reason})" : string.Empty);
         public override bool IsVisible(IMenuItemContext context) => DbgManager.IsDebugging;
-        public override bool IsEnabled(IMenuItemContext context) => injector.IsProcessSupported(CurrentProcess);
+        public override bool IsEnabled(IMenuItemContext context) => injector.IsProcessSupported(CurrentProcess, out _);
     }
 }
