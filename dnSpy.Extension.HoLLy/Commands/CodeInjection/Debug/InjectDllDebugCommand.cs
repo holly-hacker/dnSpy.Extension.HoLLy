@@ -23,7 +23,7 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection.Debug
             if (!InjectDllCommand.AskForEntryPoint(out MethodDef method))
                 return;
 
-            injector.Inject(pid, method, string.Empty, x86);
+            injector.Inject(pid, method, string.Empty, x86, RuntimeType.FrameworkV4);
         }
 
         public override bool IsVisible(IMenuItemContext context) => Utils.IsDebugBuild;

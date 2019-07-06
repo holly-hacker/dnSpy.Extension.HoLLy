@@ -22,10 +22,26 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             this.dbgManagerLazy = dbgManagerLazy;
         }
 
-        public void Inject(int pid, MethodDef method, string parameter, bool x86)
-            => Inject(pid, method.Module.Location, method.DeclaringType.FullName, method.Name, parameter, x86);
+        public void Inject(int pid, MethodDef method, string parameter, bool x86, RuntimeType runtimeType)
+            => Inject(pid, method.Module.Location, method.DeclaringType.FullName, method.Name, parameter, x86, runtimeType);
 
-        public void Inject(int pid, string path, string typeName, string methodName, string parameter, bool x86)
+        public void Inject(int pid, string path, string typeName, string methodName, string parameter, bool x86, RuntimeType runtimeType)
+        {
+            switch (runtimeType) {
+                case RuntimeType.FrameworkV2:
+                case RuntimeType.FrameworkV4:
+                    InjectFramework(pid, path, typeName, methodName, parameter, x86, runtimeType == RuntimeType.FrameworkV4);
+                    break;
+                case RuntimeType.NetCore:
+                case RuntimeType.Unity:
+                    throw new NotImplementedException();
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(runtimeType), runtimeType, null);
+            }
+
+        }
+
+        private void InjectFramework(int pid, string path, string typeName, string methodName, string parameter, bool x86, bool isV4)
         {
             IntPtr hProc = Native.OpenProcess(Native.ProcessAccessFlags.AllForDllInject, false, pid);
 
@@ -36,7 +52,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             var bindToRuntimeAddr = GetCorBindToRuntimeExAddress(pid, hProc, x86);
             DbgManager.WriteMessage("CurBindToRuntimeEx: " + bindToRuntimeAddr.ToInt64().ToString("X8"));
 
-            var hStub = AllocateStub(hProc, path, typeName, methodName, parameter, bindToRuntimeAddr, x86);
+            var hStub = AllocateStub(hProc, path, typeName, methodName, parameter, bindToRuntimeAddr, x86, isV4);
             DbgManager.WriteMessage("Created stub at: " + hStub.ToInt64().ToString("X8"));
 
             var hThread = Native.CreateRemoteThread(hProc, IntPtr.Zero, 0u, hStub, IntPtr.Zero, 0u, IntPtr.Zero);
@@ -49,7 +65,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             Native.CloseHandle(hProc);
         }
 
-        public bool IsProcessSupported(DbgProcess process, out string reason)
+        public static bool IsProcessSupported(DbgProcess process, out string reason)
         {
             if (process is null) {
                 reason = "no process found";
@@ -95,10 +111,11 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             return mod.BaseAddress + fnAddr;
         }
 
-        private static IntPtr AllocateStub(IntPtr hProc, string asmPath, string typeName, string methodName, string args, IntPtr fnAddr, bool x86)
+        private static IntPtr AllocateStub(IntPtr hProc, string asmPath, string typeName, string methodName, string args, IntPtr fnAddr, bool x86, bool isV4)
         {
-            const string ClrVersion2 = "v2.0.50727";
-            const string ClrVersion4 = "v4.0.30319";
+            const string clrVersion2 = "v2.0.50727";
+            const string clrVersion4 = "v4.0.30319";
+            string clrVersion = isV4 ? clrVersion4 : clrVersion2;
 
             byte[] CLSID = {
                 0x6E, 0xA0, 0xF1, 0x90, 0x12, 0x77, 0x62, 0x47,
@@ -113,11 +130,11 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             IntPtr riid = alloc(IID.Length * 4);
             IntPtr rclsid = alloc(CLSID.Length * 4);
             IntPtr buildFlavor = alloc(16);
-            IntPtr clrVersion = alloc(ClrVersion4.Length * 2 + 2);
+            IntPtr clrVersionPtr = alloc(clrVersion.Length * 2 + 2);
             writeBytes(riid, IID);
             writeBytes(rclsid, CLSID);
             writeString(buildFlavor, "wks");    // WorkStation
-            writeString(clrVersion, ClrVersion4);
+            writeString(clrVersionPtr, clrVersion);
 
             IntPtr ptrRet = alloc(4);
             IntPtr ptrArgs = alloc(args.Length * 2 + 2);
@@ -138,7 +155,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
                 instructions.Add(Instruction.Create(Code.Pushd_imm32, rclsid.ToInt32()));
                 instructions.Add(Instruction.Create(Code.Pushd_imm8,  0));    // startupFlags
                 instructions.Add(Instruction.Create(Code.Pushd_imm32, buildFlavor.ToInt32()));
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, clrVersion.ToInt32()));
+                instructions.Add(Instruction.Create(Code.Pushd_imm32, clrVersionPtr.ToInt32()));
                 instructions.Add(Instruction.Create(Code.Mov_r32_imm32, Register.EAX, fnAddr.ToInt32()));
                 instructions.Add(Instruction.Create(Code.Call_rm32, Register.EAX));
 
@@ -179,7 +196,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
                 instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.R9, rclsid.ToInt64()));
                 instructions.Add(Instruction.Create(Code.Mov_r32_imm32, Register.R8D,  0));    // startupFlags, perhaps 1 for concurrent gc?
                 instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RDX, buildFlavor.ToInt64()));
-                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RCX, clrVersion.ToInt64()));
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RCX, clrVersionPtr.ToInt64()));
                 instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RAX, fnAddr.ToInt64()));
                 for (int i = 0; i < 8/2; i++) instructions.Add(Instruction.Create(Code.Pushq_imm32, 0));    // push shadow space because x64
                 instructions.Add(Instruction.Create(Code.Call_rm64, Register.RAX));    // this crashes

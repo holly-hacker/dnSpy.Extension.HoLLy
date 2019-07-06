@@ -34,7 +34,7 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection
             if (!AskForEntryPoint(out MethodDef m))
                 return;
 
-            injector.Inject(CurrentProcess.Id, m, "Parameter", CurrentProcess.Bitness == 32);
+            injector.Inject(CurrentProcess.Id, m, "Parameter", CurrentProcess.Bitness == 32, CurrentProcess.Runtimes.First().GetRuntimeType());
         }
 
         public static bool AskForEntryPoint(out MethodDef method)
@@ -74,8 +74,8 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection
         }
 
         public override string GetHeader(IMenuItemContext context)
-            => "Inject .NET DLL" + (!injector.IsProcessSupported(CurrentProcess, out string reason) ? $" ({reason})" : string.Empty);
+            => "Inject .NET DLL" + (!ManagedInjector.IsProcessSupported(CurrentProcess, out string reason) ? $" ({reason})" : string.Empty);
         public override bool IsVisible(IMenuItemContext context) => DbgManager.IsDebugging;
-        public override bool IsEnabled(IMenuItemContext context) => injector.IsProcessSupported(CurrentProcess, out _);
+        public override bool IsEnabled(IMenuItemContext context) => ManagedInjector.IsProcessSupported(CurrentProcess, out _);
     }
 }
