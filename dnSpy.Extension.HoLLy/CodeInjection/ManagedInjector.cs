@@ -77,8 +77,8 @@ namespace HoLLy.dnSpyExtension.CodeInjection
                 return false;
             }
 
-            if (process.Architecture != DbgArchitecture.X86) {
-                reason = "x86 only";
+            if (process.Architecture != DbgArchitecture.X86 && process.Architecture != DbgArchitecture.X64) {
+                reason = "x86 and x64 only";
                 return false;
             }
 
@@ -168,50 +168,50 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 
                 instructions.Add(Instruction.Create(Code.Retnd));
             } else {
-                int lowerHalf(IntPtr ptr) => (int)(ptr.ToInt64() & 0xFFFFFFFF);
-                int upperHalf(IntPtr ptr) => (int)(ptr.ToInt64() >> 32);
+                const int maxStackIndex = 3;
+                const int stackSize = 0x20 + maxStackIndex*8;    // 0x20 bytes shadow space, because x64
+                MemoryOperand stackAccess(int i) => new MemoryOperand(Register.RSP, stackSize - (maxStackIndex - i) * 8);
+
+                instructions.Add(Instruction.Create(Code.Sub_rm64_imm8, Register.RSP, stackSize));
 
                 // call CorBindtoRuntimeEx
-                // https://docs.microsoft.com/en-us/cpp/build/x64-calling-convention?view=vs-2019
-                // TODO: crashes at first Call
-                // TODO: why does Pushq_imm32 push 64 bits??
-                // TODO: still using 32bit pointers in places
-                // TODO: only up to first call is tested
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(ppv)));    // rbp+30h
-                // instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(ppv)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(riid)));       // rbp+28h
-                // instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(riid)));
+                // calling convention: https://docs.microsoft.com/en-us/cpp/build/x64-calling-convention?view=vs-2019
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RAX, ppv.ToInt64()));
+                instructions.Add(Instruction.Create(Code.Mov_rm64_r64, stackAccess(1), Register.RAX));
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RAX, riid.ToInt64()));
+                instructions.Add(Instruction.Create(Code.Mov_rm64_r64, stackAccess(0), Register.RAX));
+
                 instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.R9, rcslid.ToInt64()));
-                instructions.Add(Instruction.Create(Code.Mov_r32_imm32, Register.R8D,  0));    // startupFlags, perhaps 1 for concurrent gc?
+                instructions.Add(Instruction.Create(Code.Mov_r32_imm32, Register.R8D, 0));    // startupFlags
                 instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RDX, pwszBuildFlavor.ToInt64()));
                 instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RCX, pwszVersion.ToInt64()));
                 instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RAX, fnAddr.ToInt64()));
-                for (int i = 0; i < 8/2; i++) instructions.Add(Instruction.Create(Code.Pushq_imm32, 0));    // push shadow space because x64
-                instructions.Add(Instruction.Create(Code.Call_rm64, Register.RAX));    // this crashes
+                instructions.Add(Instruction.Create(Code.Call_rm64, Register.RAX));
 
                 // call pClrHost->Start();
-                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RAX, new MemoryOperand(Register.None, ppv.ToInt32())));
-                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RCX, new MemoryOperand(Register.RAX)));
-                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RDX, new MemoryOperand(Register.RCX, 0x0C)));
-                instructions.Add(Instruction.Create(Code.Push_r64, Register.RAX));
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RCX, ppv.ToInt64()));
+                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RCX, new MemoryOperand(Register.RCX)));
+                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RAX, new MemoryOperand(Register.RCX)));
+                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RDX, new MemoryOperand(Register.RAX, 0x18)));
                 instructions.Add(Instruction.Create(Code.Call_rm64, Register.RDX));
 
                 // call pClrHost->ExecuteInDefaultAppDomain()
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(pReturnValue)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(pReturnValue)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(pwzArgument)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(pwzArgument)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(pwzMethodName)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(pwzMethodName)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(pwzTypeName)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(pwzTypeName)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, lowerHalf(pwzAssemblyPath)));
-                instructions.Add(Instruction.Create(Code.Pushq_imm32, upperHalf(pwzAssemblyPath)));
-                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RAX, new MemoryOperand(Register.None, ppv.ToInt32())));
-                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RCX, new MemoryOperand(Register.RAX)));
-                instructions.Add(Instruction.Create(Code.Push_r64, Register.RAX));
-                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RAX, new MemoryOperand(Register.RCX, 0x2C)));
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RDX, pReturnValue.ToInt64()));
+                instructions.Add(Instruction.Create(Code.Mov_rm64_r64, stackAccess(1), Register.RDX));
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RDX, pwzArgument.ToInt64()));
+                instructions.Add(Instruction.Create(Code.Mov_rm64_r64, stackAccess(0), Register.RDX));
+
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.R9, pwzMethodName.ToInt64()));
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.R8, pwzTypeName.ToInt64()));
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RDX, pwzAssemblyPath.ToInt64()));
+
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RCX, ppv.ToInt64()));
+                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RCX, new MemoryOperand(Register.RCX)));
+                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RAX, new MemoryOperand(Register.RCX)));
+                instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RAX, new MemoryOperand(Register.RAX, 0x58)));
                 instructions.Add(Instruction.Create(Code.Call_rm64, Register.RAX));
+
+                instructions.Add(Instruction.Create(Code.Add_rm64_imm8, Register.RSP, stackSize));
 
                 instructions.Add(Instruction.Create(Code.Retnq));
             }
