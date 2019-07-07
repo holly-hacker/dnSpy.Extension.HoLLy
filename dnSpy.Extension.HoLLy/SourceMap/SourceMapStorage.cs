@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
-using System.Linq;
 using System.Xml;
 using dnlib.DotNet;
 using dnSpy.Contracts.App;
@@ -11,21 +10,26 @@ namespace HoLLy.dnSpyExtension.SourceMap
 {
     internal interface ISourceMapStorage
     {
+        string StorageFolder { get; }
+
         string GetName(IMemberDef member);
         void SetName(IMemberDef member, string name);
-        void Save();
+        void SaveTo(IAssembly assembly, string location);
+        void LoadFrom(IAssembly assembly, string location);
     }
 
     [Export(typeof(ISourceMapStorage))]
     internal class SourceMapStorage : ISourceMapStorage
     {
-        private readonly Dictionary<AssemblyDef, Dictionary<(MapType, string), string>> loadedMaps = new Dictionary<AssemblyDef, Dictionary<(MapType, string), string>>();
+        public string StorageFolder => Path.Combine(AppDirectories.DataDirectory, "SourceMaps");
+
+        private readonly Dictionary<IAssembly, Dictionary<(MapType, string), string>> loadedMaps = new Dictionary<IAssembly, Dictionary<(MapType, string), string>>();
 
         public string GetName(IMemberDef member)
         {
             var asm = member.Module.Assembly;
 
-            if (!loadedMaps.ContainsKey(asm) && !Load(asm))
+            if (!loadedMaps.ContainsKey(asm) && !TryLoad(asm, GetStorageLocation(asm)))
                 return null;
 
             if (loadedMaps[asm] == null)
@@ -52,47 +56,37 @@ namespace HoLLy.dnSpyExtension.SourceMap
             var key = (GetMapType(member), member.FullName);
 
             map[key] = name;
+
+            SaveTo(asm, GetStorageLocation(asm));
         }
 
-        public void Save()
+        public void SaveTo(IAssembly assembly, string location)
         {
             // TODO: handle inability to save
-            foreach (var asmMap in loadedMaps.Where(x => x.Value != null)) {
-                (AssemblyDef asm, Dictionary<(MapType, string), string> map) = (asmMap.Key, asmMap.Value);
-                string path = GetStorageLocation(asm);
+            // would like to not depend on any nuget packages, so not using Json.NET or anything .NET Core specific
+            using var writer = XmlWriter.Create(location, new XmlWriterSettings { Indent = true });
+            writer.WriteStartDocument();
+            writer.WriteStartElement("SourceMap");
 
-                // would like to not depend on any nuget packages, so not using Json.NET or anything .NET Core specific
-                using var writer = XmlWriter.Create(path, new XmlWriterSettings { Indent = true });
-                writer.WriteStartDocument();
-                writer.WriteStartElement("SourceMap");
+            foreach (var pair in loadedMaps[assembly]) {
+                (MapType type, string original, string mapped) = (pair.Key.Item1, pair.Key.Item2, pair.Value);
 
-                foreach (var pair in map) {
-                    (MapType type, string original, string mapped) = (pair.Key.Item1, pair.Key.Item2, pair.Value);
-
-                    writer.WriteStartElement(type.ToString());
-                    writer.WriteAttributeString("original", original);
-                    writer.WriteAttributeString("mapped", mapped);
-                    writer.WriteEndElement();
-                }
-
+                writer.WriteStartElement(type.ToString());
+                writer.WriteAttributeString("original", original);
+                writer.WriteAttributeString("mapped", mapped);
                 writer.WriteEndElement();
-                writer.WriteEndDocument();
             }
+
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
         }
 
-        private bool Load(AssemblyDef asm)
+        public void LoadFrom(IAssembly assembly, string location)
         {
             // TODO: gracefully fail
-            string path = GetStorageLocation(asm);
-
-            if (!File.Exists(path)) {
-                loadedMaps[asm] = null;
-                return false;
-            }
-
             var dic = new Dictionary<(MapType, string), string>();
 
-            using var reader = XmlReader.Create(path);
+            using var reader = XmlReader.Create(location);
             while (reader.Read()) {
                 if (reader.IsStartElement()) {
                     if (Enum.TryParse(reader.Name, true, out MapType type)) {
@@ -104,13 +98,23 @@ namespace HoLLy.dnSpyExtension.SourceMap
                 }
             }
 
-            loadedMaps[asm] = dic;
+            loadedMaps[assembly] = dic;
+        }
+
+        private bool TryLoad(IAssembly assembly, string location)
+        {
+            if (!File.Exists(location)) {
+                loadedMaps[assembly] = null;
+                return false;
+            }
+
+            LoadFrom(assembly, location);
             return true;
         }
 
-        private string GetStorageLocation(AssemblyDef asm)
+        private string GetStorageLocation(IAssembly asm)
         {
-            string directory = Path.Combine(AppDirectories.DataDirectory, "SourceMaps");
+            string directory = StorageFolder;
 
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);

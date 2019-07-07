@@ -25,10 +25,8 @@ namespace HoLLy.dnSpyExtension.Commands.SourceMap
             var m = (IMemberDef)textReference.Reference;
 
             string newName = MsgBox.Instance.Ask<string>(string.Empty, title: $"New name for {m.Name}");
-            if (!string.IsNullOrEmpty(newName)) {
+            if (!string.IsNullOrEmpty(newName))
                 sourceMapStorage.SetName(m, newName);
-                sourceMapStorage.Save();
-            }
 
             var documentTabService = docViewer.DocumentTab.DocumentTabService;
             documentTabService.RefreshModifiedDocument(documentTabService.DocumentTreeView.FindNode(m.Module).Document);
