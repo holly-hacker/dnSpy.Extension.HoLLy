@@ -62,6 +62,10 @@ namespace HoLLy.dnSpyExtension.SourceMap
 
         public void SaveTo(IAssembly assembly, string location)
         {
+            if (!loadedMaps.ContainsKey(assembly))
+                if (!TryLoad(assembly, GetStorageLocation(assembly)))
+                    throw new Exception("No sourcemap found for this assembly");
+
             // TODO: handle inability to save
             // would like to not depend on any nuget packages, so not using Json.NET or anything .NET Core specific
             using var writer = XmlWriter.Create(location, new XmlWriterSettings { Indent = true });

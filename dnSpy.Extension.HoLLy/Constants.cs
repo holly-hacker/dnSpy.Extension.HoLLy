@@ -8,6 +8,8 @@ namespace HoLLy.dnSpyExtension
         public const string ContextMenuGroupDebug = "-999,HoLLy.ContextMenu.Debug";
         public const string AppMenuGroupDebuggerDebug = "-999,HoLLy.AppMenu.Debugger.Debug";
         public const string AppMenuGroupDebuggerInject = "2500,HoLLy.AppMenu.Debugger.Inject";
+        public const string AppMenuGroupSourceMap = "9320D902-D245-40DD-BF23-8887D0C83292";
+        public const string AppMenuGroupSourceMapSaveLoad = "0,HoLLy.AppMenu.SourceMap.SaveLoad";
 
         public static readonly Guid DecompilerGuid = new Guid("590164A4-53F4-4677-B1E3-CC6500C273F6");
     }
