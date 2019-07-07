@@ -11,7 +11,7 @@ namespace HoLLy.dnSpyExtension.Dialogs
             InitializeComponent();
         }
 
-        private void Control_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void ListView_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (!((DLLEntryPointSelectionVM)DataContext).HasSelection)
                 return;

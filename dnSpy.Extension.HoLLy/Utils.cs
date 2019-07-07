@@ -24,16 +24,13 @@ namespace HoLLy.dnSpyExtension
             return new Guid(bytes2);
         }
 
-        public static RuntimeType GetRuntimeType(this DbgRuntime rt)
-        {
-            switch (rt.Name) {
-                case "CLR v2.0.50727": return RuntimeType.FrameworkV2;
-                case "CLR v4.0.30319": return RuntimeType.FrameworkV4;
-                case "CoreCLR": return RuntimeType.NetCore;
-                case "Unity": return RuntimeType.Unity;
-                default: throw new ArgumentOutOfRangeException();
-            }
-        }
+        public static RuntimeType GetRuntimeType(this DbgRuntime rt) => rt.Name switch {
+                "CLR v2.0.50727" => RuntimeType.FrameworkV2,
+                "CLR v4.0.30319" => RuntimeType.FrameworkV4,
+                "CoreCLR" => RuntimeType.NetCore,
+                "Unity" => RuntimeType.Unity,
+                _ => throw new ArgumentOutOfRangeException(),
+            };
 
         /// <remarks>https://stackoverflow.com/a/2186634</remarks>
         private static bool IsAssemblyDebugBuild(Assembly assembly)

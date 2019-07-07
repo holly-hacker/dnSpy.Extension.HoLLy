@@ -46,10 +46,4 @@
       <Reference Include="System.Windows.Forms" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Update="Dialogs\DLLEntryPointSelection.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </None>
-    </ItemGroup>
-
 </Project>

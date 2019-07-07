@@ -4,15 +4,13 @@ using System.Text;
 
 namespace HoLLy.dnSpyExtension.CodeInjection
 {
-    internal class PE
+    internal static class PE
     {
         public static int GetExportAddress(IntPtr hProc, IntPtr hMod, string name, bool x86)
 		{
 			int hdr = readInt(0x3C);
 
 			int exportTableRva = readInt(hdr + (x86 ? 0x78 : 0x88));
-			int exportTableSize = readInt(hdr + (x86 ? 0x7C : 0x8C));
-
 			var exportTable = readStruct<ImageExportDirectory>(exportTableRva);
 
 			int[] functions = readArray<int>(exportTable.AddressOfFunctions, exportTable.NumberOfFunctions);
@@ -72,7 +70,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 			#endregion
 		}
 
-        public struct ImageExportDirectory
+        private struct ImageExportDirectory
         {
 #pragma warning disable 649
 	        public uint Characteristics;

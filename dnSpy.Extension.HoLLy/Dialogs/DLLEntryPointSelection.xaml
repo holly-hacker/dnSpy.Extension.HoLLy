@@ -15,7 +15,7 @@
         </Grid.RowDefinitions>
 
         <ListView Grid.Row="0"
-                  MouseDoubleClick="Control_OnMouseDoubleClick"
+                  MouseDoubleClick="ListView_OnMouseDoubleClick"
                   SelectedItem="{Binding SelectedMethod}"
                   ItemsSource="{Binding AllItems}">
             <ListView.View>

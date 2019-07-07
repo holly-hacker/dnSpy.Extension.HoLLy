@@ -44,9 +44,9 @@ namespace HoLLy.dnSpyExtension.CodeInjection
         private void InjectFramework(int pid, string path, string typeName, string methodName, string parameter, bool x86, bool isV4)
         {
             IntPtr hProc = Native.OpenProcess(Native.ProcessAccessFlags.AllForDllInject, false, pid);
-
             if (hProc == IntPtr.Zero)
                 throw new Exception("Couldn't open process");
+
             DbgManager.WriteMessage("Handle: " + hProc.ToInt32().ToString("X8"));
 
             var bindToRuntimeAddr = GetCorBindToRuntimeExAddress(pid, hProc, x86);

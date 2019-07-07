@@ -12,7 +12,7 @@ using HoLLy.dnSpyExtension.Dialogs;
 
 namespace HoLLy.dnSpyExtension.Commands.CodeInjection
 {
-    [ExportMenuItem(Header = "Inject .NET DLL", OwnerGuid = MenuConstants.APP_MENU_DEBUG_GUID, Group = Constants.AppMenuGroupDebuggerInject)]
+    [ExportMenuItem(OwnerGuid = MenuConstants.APP_MENU_DEBUG_GUID, Group = Constants.AppMenuGroupDebuggerInject)]
     internal class InjectDllCommand : MenuItemBase
     {
         private DbgManager DbgManager => dbgManagerLazy.Value;
@@ -55,7 +55,7 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection
                 asm = AssemblyDef.Load(ofd.FileName);
             } catch (BadImageFormatException e) {
                 MsgBox.Instance.Show("I couldn't load that binary. Are you sure it is a .NET assembly?\n" +
-                                     "Reason: " + e.Message);
+                                     "Exception message: " + e.Message);
                 return false;
             }
 
@@ -63,7 +63,7 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection
 
             if (!vm.AllItems.Any()) {
                 MsgBox.Instance.Show("Couldn't find any suitable entry points in that assembly.\n" +
-                                     "Please make a method with the following signature: static int MethodName(string)");
+                                     "Make sure you have a method with the following signature: static int MethodName(string parameter)");
                 return false;
             }
 
