@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using dnSpy.Contracts.Debugger;
 
 namespace HoLLy.dnSpyExtension
 {
@@ -22,6 +23,14 @@ namespace HoLLy.dnSpyExtension
 
             return new Guid(bytes2);
         }
+
+        public static RuntimeType GetRuntimeType(this DbgRuntime rt) => rt.Name switch {
+                "CLR v2.0.50727" => RuntimeType.FrameworkV2,
+                "CLR v4.0.30319" => RuntimeType.FrameworkV4,
+                "CoreCLR" => RuntimeType.NetCore,
+                "Unity" => RuntimeType.Unity,
+                _ => throw new ArgumentOutOfRangeException(),
+            };
 
         /// <remarks>https://stackoverflow.com/a/2186634</remarks>
         private static bool IsAssemblyDebugBuild(Assembly assembly)

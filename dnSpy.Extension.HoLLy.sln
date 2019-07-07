@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dnSpy.Contracts.Logic", "dn
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dnSpy", "dnSpy", "{AACF54E7-A947-4C62-A6A3-AEADE2777F14}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dnSpy.Contracts.Debugger", "dnSpy\dnSpy\dnSpy.Contracts.Debugger\dnSpy.Contracts.Debugger.csproj", "{41EABA82-85B9-4509-86C1-037CA1ED367A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +28,14 @@ Global
 		{59387AA7-7DEC-41B5-9F82-13172A0C4058}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59387AA7-7DEC-41B5-9F82-13172A0C4058}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59387AA7-7DEC-41B5-9F82-13172A0C4058}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41EABA82-85B9-4509-86C1-037CA1ED367A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41EABA82-85B9-4509-86C1-037CA1ED367A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41EABA82-85B9-4509-86C1-037CA1ED367A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41EABA82-85B9-4509-86C1-037CA1ED367A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{59387AA7-7DEC-41B5-9F82-13172A0C4058} = {AACF54E7-A947-4C62-A6A3-AEADE2777F14}
 		{48093B72-0FCE-47C7-893A-68F15F280031} = {AACF54E7-A947-4C62-A6A3-AEADE2777F14}
+		{41EABA82-85B9-4509-86C1-037CA1ED367A} = {AACF54E7-A947-4C62-A6A3-AEADE2777F14}
 	EndGlobalSection
 EndGlobal

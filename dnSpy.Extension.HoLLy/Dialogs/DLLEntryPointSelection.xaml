@@ -1,0 +1,47 @@
+<controls:WindowBase x:Class="HoLLy.dnSpyExtension.Dialogs.DLLEntryPointSelection"
+                     x:ClassModifier="internal"
+                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:controls="clr-namespace:dnSpy.Contracts.Controls;assembly=dnSpy.Contracts.DnSpy"
+                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+                     Height="500" Width="1000"
+                     Style="{StaticResource DialogWindowStyle}" WindowStartupLocation="CenterOwner"
+                     MinHeight="150" MinWidth="300" d:DataContext="{d:DLLEntryPointSelectionVM }">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ListView Grid.Row="0"
+                  MouseDoubleClick="ListView_OnMouseDoubleClick"
+                  SelectedItem="{Binding SelectedMethod}"
+                  ItemsSource="{Binding AllItems}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=MDToken}" Header="Token" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=IsPublic}" Header="Is Public?" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=DeclaringType.Namespace}" Header="Namespace" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=DeclaringType.Name}" Header="Type" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Name}" Header="Method" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=FullName}" Header="Full Name" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="Parameter:" Padding="3" />
+            <TextBox Grid.Column="1" Text="{Binding Parameter}" Padding="3" />
+            <Button Grid.Column="2" Style="{StaticResource DialogButton}" Margin="5 0 0 0" Content="Inject" IsDefault="True" IsEnabled="{Binding HasSelection}" Click="okButton_Click" />
+            <Button Grid.Column="3" Style="{StaticResource DialogButton}" Margin="5 0 0 0" Content="Cancel" IsCancel="True" />
+        </Grid>
+    </Grid>
+</controls:WindowBase>
