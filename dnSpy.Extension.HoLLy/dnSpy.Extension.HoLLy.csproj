@@ -8,8 +8,8 @@
         <Description>A dnSpy Extension</Description>
         <Authors>HoLLy</Authors>
         <Copyright>Copyright © HoLLy 2019</Copyright>
-        <PackageVersion>0.1.0</PackageVersion>
-        <FileVersion>0.1.0</FileVersion>
+        <PackageVersion>0.2.0</PackageVersion>
+        <FileVersion>0.2.0</FileVersion>
 
         <AssemblyName>dnSpy.Extension.HoLLy.x</AssemblyName>
         <RootNamespace>HoLLy.dnSpyExtension</RootNamespace>
