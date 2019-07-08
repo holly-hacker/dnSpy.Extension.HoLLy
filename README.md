@@ -9,7 +9,9 @@ A dnSpy extension to aid reversing of obfuscated assemblies.
 - Underline managed assemblies in the treeview.
 
 ### License
-Because dnSpy is licensed under the GPL3 license, this plugin has to be as well. I like it as little as you do :(
+Because dnSpy is licensed under the GPLv3 license, this plugin has to be as well. I like it as little as you do :(
 
 ### Attribution
-- [dnSpy](https://github.com/0xd4d/dnSpy), licensed under [GPLv3](https://github.com/0xd4d/dnSpy/blob/master/dnSpy/dnSpy/LicenseInfo/LICENSE.txt)
+- [dnSpy](https://github.com/0xd4d/dnSpy) and its dependencies, licensed under the [GPLv3 license](https://github.com/0xd4d/dnSpy/blob/master/dnSpy/dnSpy/LicenseInfo/LICENSE.txt)
+- [iced](https://github.com/0xd4d/iced), licensed under the [MIT license](https://github.com/0xd4d/iced/blob/master/LICENSE.txt)
+- [dnlib](https://github.com/0xd4d/dnlib), licensed under the [MIT license](https://github.com/0xd4d/dnlib/blob/master/LICENSE.txt)
