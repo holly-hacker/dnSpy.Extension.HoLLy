@@ -10,7 +10,7 @@ namespace HoLLy.dnSpyExtension.SourceMap
 {
     internal interface ISourceMapStorage
     {
-        string StorageFolder { get; }
+        string CacheFolder { get; }
 
         string GetName(IMemberDef member);
         void SetName(IMemberDef member, string name);
@@ -21,7 +21,7 @@ namespace HoLLy.dnSpyExtension.SourceMap
     [Export(typeof(ISourceMapStorage))]
     internal class SourceMapStorage : ISourceMapStorage
     {
-        public string StorageFolder => Path.Combine(AppDirectories.DataDirectory, "SourceMaps");
+        public string CacheFolder => Path.Combine(AppDirectories.DataDirectory, "SourceMaps");
 
         private readonly Dictionary<IAssembly, Dictionary<(MapType, string), string>> loadedMaps = new Dictionary<IAssembly, Dictionary<(MapType, string), string>>();
 
@@ -29,20 +29,17 @@ namespace HoLLy.dnSpyExtension.SourceMap
         {
             var asm = member.Module.Assembly;
 
-            if (!loadedMaps.ContainsKey(asm) && !TryLoad(asm, GetStorageLocation(asm)))
+            // null if we tried to load from cache before, to prevent excessive fs access
+            if (loadedMaps.ContainsKey(asm) && loadedMaps[asm] == null)
                 return null;
 
-            if (loadedMaps[asm] == null)
+            if (!loadedMaps.ContainsKey(asm) && !TryLoadFromCache(asm))
                 return null;
 
             var map = loadedMaps[asm];
             var key = (GetMapType(member), member.FullName);
 
-            if (!map.ContainsKey(key))
-                return null;
-
-            return map[key];
-
+            return map.ContainsKey(key) ? map[key] : null;
         }
 
         public void SetName(IMemberDef member, string name)
@@ -54,16 +51,15 @@ namespace HoLLy.dnSpyExtension.SourceMap
 
             var map = loadedMaps[asm];
             var key = (GetMapType(member), member.FullName);
-
             map[key] = name;
 
-            SaveTo(asm, GetStorageLocation(asm));
+            SaveTo(asm, GetCacheLocation(asm));
         }
 
         public void SaveTo(IAssembly assembly, string location)
         {
             if (!loadedMaps.ContainsKey(assembly))
-                if (!TryLoad(assembly, GetStorageLocation(assembly)))
+                if (!TryLoadFromCache(assembly))
                     throw new Exception("No sourcemap found for this assembly");
 
             // TODO: handle inability to save
@@ -87,17 +83,38 @@ namespace HoLLy.dnSpyExtension.SourceMap
 
         public void LoadFrom(IAssembly assembly, string location)
         {
+            LoadFromInternal(assembly, location);
+
+            SaveTo(assembly, GetCacheLocation(assembly));
+        }
+
+        private bool TryLoadFromCache(IAssembly assembly)
+        {
+            string location = GetCacheLocation(assembly);
+
+            if (!File.Exists(location)) {
+                loadedMaps[assembly] = null;
+                return false;
+            }
+
+            LoadFromInternal(assembly, location);
+            return true;
+        }
+
+        private void LoadFromInternal(IAssembly assembly, string location)
+        {
             // TODO: gracefully fail
             var dic = new Dictionary<(MapType, string), string>();
 
-            using var reader = XmlReader.Create(location);
-            while (reader.Read()) {
-                if (reader.IsStartElement()) {
-                    if (Enum.TryParse(reader.Name, true, out MapType type)) {
-                        string orig = reader["original"];
-                        string mapped = reader["mapped"];
+            using (var reader = XmlReader.Create(location)) {
+                while (reader.Read()) {
+                    if (reader.IsStartElement()) {
+                        if (Enum.TryParse(reader.Name, true, out MapType type)) {
+                            string orig = reader["original"];
+                            string mapped = reader["mapped"];
 
-                        dic[(type, orig)] = mapped;
+                            dic[(type, orig)] = mapped;
+                        }
                     }
                 }
             }
@@ -105,20 +122,9 @@ namespace HoLLy.dnSpyExtension.SourceMap
             loadedMaps[assembly] = dic;
         }
 
-        private bool TryLoad(IAssembly assembly, string location)
+        private string GetCacheLocation(IAssembly asm)
         {
-            if (!File.Exists(location)) {
-                loadedMaps[assembly] = null;
-                return false;
-            }
-
-            LoadFrom(assembly, location);
-            return true;
-        }
-
-        private string GetStorageLocation(IAssembly asm)
-        {
-            string directory = StorageFolder;
+            string directory = CacheFolder;
 
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
