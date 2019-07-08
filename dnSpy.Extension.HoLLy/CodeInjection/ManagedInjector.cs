@@ -4,7 +4,6 @@ using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using dnlib.DotNet;
 using dnSpy.Contracts.Debugger;
 using Iced.Intel;
 
@@ -24,8 +23,8 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             this.settings = settings;
         }
 
-        public void Inject(int pid, MethodDef method, string parameter, bool x86, RuntimeType runtimeType)
-            => Inject(pid, method.Module.Location, method.DeclaringType.FullName, method.Name, parameter, x86, runtimeType);
+        public void Inject(int pid, InjectionArguments args, bool x86, RuntimeType runtimeType)
+            => Inject(pid, args.Path, args.Type, args.Method, args.Argument, x86, runtimeType);
 
         public void Inject(int pid, string path, string typeName, string methodName, string parameter, bool x86, RuntimeType runtimeType)
         {
