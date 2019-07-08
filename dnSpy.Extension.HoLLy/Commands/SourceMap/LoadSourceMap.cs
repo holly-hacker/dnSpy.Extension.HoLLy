@@ -8,14 +8,14 @@ using HoLLy.dnSpyExtension.SourceMap;
 
 namespace HoLLy.dnSpyExtension.Commands.SourceMap
 {
-    [ExportMenuItem(Header = "Save SourceMap", Group = Constants.AppMenuGroupSourceMapSaveLoad, OwnerGuid = Constants.AppMenuGroupSourceMap, Order = 10)]
-    internal class SaveSourceMap : MenuItemBase
+    [ExportMenuItem(Header = "Load SourceMap", Group = Constants.AppMenuGroupSourceMapSaveLoad, OwnerGuid = Constants.AppMenuGroupSourceMap, Order = 20)]
+    internal class LoadSourceMap : MenuItemBase
     {
         private readonly ISourceMapStorage map;
         private readonly IDocumentTabService tabService;
 
         [ImportingConstructor]
-        public SaveSourceMap(ISourceMapStorage map, IDocumentTabService tabService)
+        public LoadSourceMap(ISourceMapStorage map, IDocumentTabService tabService)
         {
             this.map = map;
             this.tabService = tabService;
@@ -23,17 +23,19 @@ namespace HoLLy.dnSpyExtension.Commands.SourceMap
 
         public override void Execute(IMenuItemContext context)
         {
-            var asm = GetDocument().AssemblyDef;
-            var sfd  = new SaveFileDialog {
+            var doc = GetDocument();
+            var asm = doc.AssemblyDef;
+            var ofd = new OpenFileDialog {
                 Title = $"Save sourcemap for {asm.FullName}",
                 FileName = $"{asm.Name}.xml",
                 Filter = "SourceMap XML|*.xml|All Files|*"
             };
 
-            if (sfd.ShowDialog() != DialogResult.OK)
+            if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
-            map.SaveTo(asm, sfd.FileName);
+            map.LoadFrom(asm, ofd.FileName);
+            tabService.RefreshModifiedDocument(doc);
         }
 
         private IDsDocument GetDocument() => tabService.DocumentTreeView.TreeView.SelectedItem?.GetDocumentNode()?.Document;
