@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using dnSpy.Contracts.Debugger;
@@ -31,6 +32,18 @@ namespace HoLLy.dnSpyExtension
                 "Unity" => RuntimeType.Unity,
                 _ => throw new ArgumentOutOfRangeException(),
             };
+
+        public static string CopyToTempPath(string path)
+        {
+            string dir = Path.Combine(Path.GetTempPath(), "dnSpy.Extension.HoLLy");
+
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            string newPath = Path.Combine(dir, Guid.NewGuid() + Path.GetExtension(path));
+            File.Copy(path, newPath);
+            return newPath;
+        }
 
         /// <remarks>https://stackoverflow.com/a/2186634</remarks>
         private static bool IsAssemblyDebugBuild(Assembly assembly)

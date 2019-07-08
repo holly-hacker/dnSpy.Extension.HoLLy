@@ -15,11 +15,13 @@ namespace HoLLy.dnSpyExtension.CodeInjection
     {
         private DbgManager DbgManager => dbgManagerLazy.Value;
         private readonly Lazy<DbgManager> dbgManagerLazy;
+        private readonly Settings.Settings settings;
 
         [ImportingConstructor]
-        public ManagedInjector(Lazy<DbgManager> dbgManagerLazy)
+        public ManagedInjector(Lazy<DbgManager> dbgManagerLazy, Settings.Settings settings)
         {
             this.dbgManagerLazy = dbgManagerLazy;
+            this.settings = settings;
         }
 
         public void Inject(int pid, MethodDef method, string parameter, bool x86, RuntimeType runtimeType)
@@ -27,6 +29,9 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 
         public void Inject(int pid, string path, string typeName, string methodName, string parameter, bool x86, RuntimeType runtimeType)
         {
+            if (settings.CopyInjectedDLLToTemp)
+                path = Utils.CopyToTempPath(path);
+
             switch (runtimeType) {
                 case RuntimeType.FrameworkV2:
                 case RuntimeType.FrameworkV4:
