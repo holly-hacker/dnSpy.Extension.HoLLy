@@ -12,7 +12,7 @@ using HoLLy.dnSpyExtension.Dialogs;
 
 namespace HoLLy.dnSpyExtension.Commands.CodeInjection
 {
-    [ExportMenuItem(OwnerGuid = MenuConstants.APP_MENU_DEBUG_GUID, Group = Constants.AppMenuGroupDebuggerInject)]
+    [ExportMenuItem(OwnerGuid = MenuConstants.APP_MENU_DEBUG_GUID, Group = Constants.AppMenuGroupDebuggerInject, Order = 10)]
     internal class InjectDllCommand : MenuItemBase
     {
         private DbgManager DbgManager => dbgManagerLazy.Value;
@@ -21,18 +21,22 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection
 
         private readonly Lazy<DbgManager> dbgManagerLazy;
         private readonly ManagedInjector injector;
+        private readonly Settings.Settings settings;
 
         [ImportingConstructor]
-        public InjectDllCommand(Lazy<DbgManager> dbgManagerLazy, ManagedInjector injector)
+        public InjectDllCommand(Lazy<DbgManager> dbgManagerLazy, ManagedInjector injector, Settings.Settings settings)
         {
             this.dbgManagerLazy = dbgManagerLazy;
             this.injector = injector;
+            this.settings = settings;
         }
 
         public override void Execute(IMenuItemContext context)
         {
             if (!AskForEntryPoint(out InjectionArguments args))
                 return;
+
+            settings.AddRecentInjection(args);
 
             injector.Inject(CurrentProcess.Id, args, CurrentProcess.Bitness == 32, CurrentProcess.Runtimes.First().GetRuntimeType());
         }
