@@ -8,8 +8,15 @@
         <Description>A dnSpy Extension</Description>
         <Authors>HoLLy</Authors>
         <Copyright>Copyright © HoLLy 2019</Copyright>
-        <PackageVersion>0.2.0</PackageVersion>
         <FileVersion>0.2.0</FileVersion>
+        <AssemblyVersion>0.2.0</AssemblyVersion>
+
+        <PackageVersion>0.2.0</PackageVersion>
+        <PackageProjectUrl>https://github.com/HoLLy-HaCKeR/dnSpy.Extension.HoLLy</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/HoLLy-HaCKeR/dnSpy.Extension.HoLLy/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <RepositoryUrl>https://github.com/HoLLy-HaCKeR/dnSpy.Extension.HoLLy.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
 
         <AssemblyName>dnSpy.Extension.HoLLy.x</AssemblyName>
         <RootNamespace>HoLLy.dnSpyExtension</RootNamespace>
