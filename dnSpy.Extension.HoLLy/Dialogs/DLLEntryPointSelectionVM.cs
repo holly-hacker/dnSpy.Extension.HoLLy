@@ -10,9 +10,9 @@ namespace HoLLy.dnSpyExtension.Dialogs
     {
         public bool HasSelection => SelectedMethod != null;
         public AssemblyDef Assembly { set => ProcessAssembly(value); }
-        public List<MethodDef> AllItems { get; private set; }
+        public List<MethodDef> AllItems { get; private set; } = new List<MethodDef>();
 
-        public MethodDef SelectedMethod
+        public MethodDef? SelectedMethod
         {
             get => selectedMethod;
             set {
@@ -23,7 +23,7 @@ namespace HoLLy.dnSpyExtension.Dialogs
             }
         }
 
-        public string Parameter
+        public string? Parameter
         {
             get => parameter;
             set {
@@ -34,8 +34,8 @@ namespace HoLLy.dnSpyExtension.Dialogs
             }
         }
 
-        private MethodDef selectedMethod;
-        private string parameter;
+        private MethodDef? selectedMethod;
+        private string? parameter;
 
         public DLLEntryPointSelectionVM()
         {

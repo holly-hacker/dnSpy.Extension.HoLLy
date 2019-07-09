@@ -12,7 +12,7 @@ namespace HoLLy.dnSpyExtension.SourceMap
     {
         string CacheFolder { get; }
 
-        string GetName(IMemberDef member);
+        string? GetName(IMemberDef member);
         void SetName(IMemberDef member, string name);
         void SaveTo(IAssembly assembly, string location);
         void LoadFrom(IAssembly assembly, string location);
@@ -23,9 +23,9 @@ namespace HoLLy.dnSpyExtension.SourceMap
     {
         public string CacheFolder => Path.Combine(AppDirectories.DataDirectory, "SourceMaps");
 
-        private readonly Dictionary<IAssembly, Dictionary<(MapType, string), string>> loadedMaps = new Dictionary<IAssembly, Dictionary<(MapType, string), string>>();
+        private readonly Dictionary<IAssembly, Dictionary<(MapType, string), string>?> loadedMaps = new Dictionary<IAssembly, Dictionary<(MapType, string), string>?>();
 
-        public string GetName(IMemberDef member)
+        public string? GetName(IMemberDef member)
         {
             var asm = member.Module.Assembly;
 
@@ -36,7 +36,7 @@ namespace HoLLy.dnSpyExtension.SourceMap
             if (!loadedMaps.ContainsKey(asm) && !TryLoadFromCache(asm))
                 return null;
 
-            var map = loadedMaps[asm];
+            var map = loadedMaps[asm]!;
             var key = (GetMapType(member), member.FullName);
 
             return map.ContainsKey(key) ? map[key] : null;
@@ -49,7 +49,7 @@ namespace HoLLy.dnSpyExtension.SourceMap
             if (!loadedMaps.ContainsKey(asm) || loadedMaps[asm] == null)
                 loadedMaps[asm] = new Dictionary<(MapType, string), string>();
 
-            var map = loadedMaps[asm];
+            var map = loadedMaps[asm]!;
             var key = (GetMapType(member), member.FullName);
             map[key] = name;
 
@@ -62,13 +62,15 @@ namespace HoLLy.dnSpyExtension.SourceMap
                 if (!TryLoadFromCache(assembly))
                     throw new Exception("No sourcemap found for this assembly");
 
+            var map = loadedMaps[assembly] ?? new Dictionary<(MapType, string), string>();
+
             // TODO: handle inability to save
             // would like to not depend on any nuget packages, so not using Json.NET or anything .NET Core specific
             using var writer = XmlWriter.Create(location, new XmlWriterSettings { Indent = true });
             writer.WriteStartDocument();
             writer.WriteStartElement("SourceMap");
 
-            foreach (var pair in loadedMaps[assembly]) {
+            foreach (var pair in map) {
                 (MapType type, string original, string mapped) = (pair.Key.Item1, pair.Key.Item2, pair.Value);
 
                 writer.WriteStartElement(type.ToString());

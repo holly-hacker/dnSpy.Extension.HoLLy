@@ -26,7 +26,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
         public void Inject(int pid, InjectionArguments args, bool x86, RuntimeType runtimeType)
             => Inject(pid, args.Path, args.Type, args.Method, args.Argument, x86, runtimeType);
 
-        public void Inject(int pid, string path, string typeName, string methodName, string parameter, bool x86, RuntimeType runtimeType)
+        public void Inject(int pid, string path, string typeName, string methodName, string? parameter, bool x86, RuntimeType runtimeType)
         {
             if (settings.CopyInjectedDLLToTemp)
                 path = Utils.CopyToTempPath(path);
@@ -45,7 +45,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 
         }
 
-        private void InjectFramework(int pid, string path, string typeName, string methodName, string parameter, bool x86, bool isV4)
+        private void InjectFramework(int pid, string path, string typeName, string methodName, string? parameter, bool x86, bool isV4)
         {
             IntPtr hProc = Native.OpenProcess(Native.ProcessAccessFlags.AllForDllInject, false, pid);
             if (hProc == IntPtr.Zero)
@@ -69,7 +69,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             Native.CloseHandle(hProc);
         }
 
-        public static bool IsProcessSupported(DbgProcess process, out string reason)
+        public static bool IsProcessSupported(DbgProcess process, out string? reason)
         {
             if (process is null) {
                 reason = "no process found";
@@ -115,7 +115,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             return mod.BaseAddress + fnAddr;
         }
 
-        private static IntPtr AllocateStub(IntPtr hProc, string asmPath, string typeName, string methodName, string args, IntPtr fnAddr, bool x86, bool isV4)
+        private static IntPtr AllocateStub(IntPtr hProc, string asmPath, string typeName, string methodName, string? args, IntPtr fnAddr, bool x86, bool isV4)
         {
             const string clrVersion2 = "v2.0.50727";
             const string clrVersion4 = "v4.0.30319";
@@ -236,7 +236,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             void writeBytes(IntPtr address, byte[] b) => Native.WriteProcessMemory(hProc, address, b, (uint)b.Length, out _);
             void writeString(IntPtr address, string str) => writeBytes(address, new UnicodeEncoding().GetBytes(str));
 
-            IntPtr allocString(string str)
+            IntPtr allocString(string? str)
             {
                 if (str is null) return IntPtr.Zero;
 

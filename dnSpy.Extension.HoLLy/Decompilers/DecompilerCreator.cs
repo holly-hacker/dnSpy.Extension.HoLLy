@@ -43,7 +43,7 @@ namespace HoLLy.dnSpyExtension.Decompilers
             }
         }
 
-        private static IDecompilerProvider TryCreateDecompilerProvider(string languageName)
+        private static IDecompilerProvider? TryCreateDecompilerProvider(string languageName)
         {
             var dnSpyDir = Path.GetDirectoryName(typeof(IDecompilerCreator).Assembly.Location);
             if (dnSpyDir is null) return null;

@@ -23,7 +23,7 @@ namespace HoLLy.dnSpyExtension.Settings
     {
         private readonly Settings globalSettings;
         private readonly Settings newSettings;
-        private SettingsControl uiObject;
+        private SettingsControl? uiObject;
 
         public override Guid Guid => Constants.SettingsPageGuid;
         public override double Order => AppSettingsConstants.ORDER_BOOKMARKS + 10000;

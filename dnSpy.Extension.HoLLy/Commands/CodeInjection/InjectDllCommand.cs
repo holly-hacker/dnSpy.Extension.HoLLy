@@ -73,12 +73,12 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection
             if (new DLLEntryPointSelection(vm).ShowDialog() != true)
                 return false;
 
-            args = InjectionArguments.FromMethodDef(vm.SelectedMethod, vm.Parameter);
+            args = InjectionArguments.FromMethodDef(vm.SelectedMethod!, vm.Parameter);
             return true;
         }
 
         public override string GetHeader(IMenuItemContext context)
-            => "Inject .NET DLL" + (!ManagedInjector.IsProcessSupported(CurrentProcess, out string reason) ? $" ({reason})" : string.Empty);
+            => "Inject .NET DLL" + (!ManagedInjector.IsProcessSupported(CurrentProcess, out string? reason) ? $" ({reason})" : string.Empty);
         public override bool IsVisible(IMenuItemContext context) => DbgManager.IsDebugging;
         public override bool IsEnabled(IMenuItemContext context) => ManagedInjector.IsProcessSupported(CurrentProcess, out _);
     }

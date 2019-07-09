@@ -86,7 +86,7 @@ namespace HoLLy.dnSpyExtension.Commands.CodeInjection
                 parent.injector.Inject(proc.Id, injectionArguments, proc.Bitness == 32, proc.Runtimes.First().GetRuntimeType());
             }
 
-            private static string Quote(string s) => s is null ? null : $"\"{s}\"";
+            private static string? Quote(string? s) => s is null ? null : $"\"{s}\"";
         }
     }
 }
