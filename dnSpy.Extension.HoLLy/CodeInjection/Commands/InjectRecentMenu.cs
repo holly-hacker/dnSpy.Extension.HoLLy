@@ -7,6 +7,7 @@ using dnSpy.Contracts.Debugger;
 using dnSpy.Contracts.Menus;
 using dnSpy.Contracts.Text;
 using HoLLy.dnSpyExtension.Common;
+using HoLLy.dnSpyExtension.Common.CodeInjection;
 using HoLLy.dnSpyExtension.Common.Settings;
 
 namespace HoLLy.dnSpyExtension.CodeInjection.Commands
@@ -20,18 +21,19 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
 
         private readonly Settings settings;
         private readonly Lazy<DbgManager> dbgManagerLazy;
+        private readonly IManagedInjector injector;
 
         [ImportingConstructor]
-        public InjectRecentMenu(Settings settings, Lazy<DbgManager> dbgManagerLazy)
+        public InjectRecentMenu(Settings settings, Lazy<DbgManager> dbgManagerLazy, IManagedInjector injector)
         {
             this.settings = settings;
             this.dbgManagerLazy = dbgManagerLazy;
+            this.injector = injector;
         }
 
         public override void Execute(IMenuItemContext context) { }
-
         public override bool IsEnabled(IMenuItemContext context) => DbgManager.IsDebugging;
-        public override bool IsVisible(IMenuItemContext context) => settings.RecentInjections.Any() && ManagedInjector.IsProcessSupported(CurrentProcess, out _);
+        public override bool IsVisible(IMenuItemContext context) => settings.RecentInjections.Any() && injector.IsProcessSupported(CurrentProcess, out _);
     }
 
     [ExportMenuItem(OwnerGuid = Constants.AppMenuGuidDebuggerInjectRecent, Group = Constants.AppMenuGroupDebuggerInjectRecent, Order = 0)]
@@ -42,11 +44,11 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
                                              ?? DbgManager.Processes.FirstOrDefault();
 
         private readonly Lazy<DbgManager> dbgManagerLazy;
-        private readonly ManagedInjector injector;
+        private readonly IManagedInjector injector;
         private readonly Settings settings;
 
         [ImportingConstructor]
-        public InjectRecentMenuList(Lazy<DbgManager> dbgManagerLazy, ManagedInjector injector, Settings settings)
+        public InjectRecentMenuList(Lazy<DbgManager> dbgManagerLazy, IManagedInjector injector, Settings settings)
         {
             this.dbgManagerLazy = dbgManagerLazy;
             this.injector = injector;

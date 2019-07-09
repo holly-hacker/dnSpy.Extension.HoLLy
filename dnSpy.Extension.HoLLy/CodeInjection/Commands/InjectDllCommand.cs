@@ -9,6 +9,7 @@ using dnSpy.Contracts.Menus;
 using dnSpy.Contracts.MVVM;
 using HoLLy.dnSpyExtension.CodeInjection.Dialogs;
 using HoLLy.dnSpyExtension.Common;
+using HoLLy.dnSpyExtension.Common.CodeInjection;
 using HoLLy.dnSpyExtension.Common.Settings;
 
 namespace HoLLy.dnSpyExtension.CodeInjection.Commands
@@ -21,11 +22,11 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
                                              ?? DbgManager.Processes.FirstOrDefault();
 
         private readonly Lazy<DbgManager> dbgManagerLazy;
-        private readonly ManagedInjector injector;
+        private readonly IManagedInjector injector;
         private readonly Settings settings;
 
         [ImportingConstructor]
-        public InjectDllCommand(Lazy<DbgManager> dbgManagerLazy, ManagedInjector injector, Settings settings)
+        public InjectDllCommand(Lazy<DbgManager> dbgManagerLazy, IManagedInjector injector, Settings settings)
         {
             this.dbgManagerLazy = dbgManagerLazy;
             this.injector = injector;
@@ -79,8 +80,8 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
         }
 
         public override string GetHeader(IMenuItemContext context)
-            => "Inject .NET DLL" + (!ManagedInjector.IsProcessSupported(CurrentProcess, out string? reason) ? $" ({reason})" : string.Empty);
+            => "Inject .NET DLL" + (!injector.IsProcessSupported(CurrentProcess, out string? reason) ? $" ({reason})" : string.Empty);
         public override bool IsVisible(IMenuItemContext context) => DbgManager.IsDebugging;
-        public override bool IsEnabled(IMenuItemContext context) => ManagedInjector.IsProcessSupported(CurrentProcess, out _);
+        public override bool IsEnabled(IMenuItemContext context) => injector.IsProcessSupported(CurrentProcess, out _);
     }
 }

@@ -2,16 +2,17 @@ using System.ComponentModel.Composition;
 using dnSpy.Contracts.App;
 using dnSpy.Contracts.Menus;
 using HoLLy.dnSpyExtension.Common;
+using HoLLy.dnSpyExtension.Common.CodeInjection;
 
 namespace HoLLy.dnSpyExtension.CodeInjection.Commands.Debug
 {
     [ExportMenuItem(Header = "DBG: Inject DLL", OwnerGuid = MenuConstants.APP_MENU_DEBUG_GUID, Group = Constants.AppMenuGroupDebuggerDebug)]
     internal class InjectDllDebugCommand : MenuItemBase
     {
-        private readonly ManagedInjector injector;
+        private readonly IManagedInjector injector;
 
         [ImportingConstructor]
-        public InjectDllDebugCommand(ManagedInjector injector) => this.injector = injector;
+        public InjectDllDebugCommand(IManagedInjector injector) => this.injector = injector;
 
         public override void Execute(IMenuItemContext context)
         {

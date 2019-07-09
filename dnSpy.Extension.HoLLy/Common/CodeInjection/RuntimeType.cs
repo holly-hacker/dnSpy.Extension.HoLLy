@@ -1,4 +1,4 @@
-namespace HoLLy.dnSpyExtension.CodeInjection
+namespace HoLLy.dnSpyExtension.Common.CodeInjection
 {
     public enum RuntimeType
     {

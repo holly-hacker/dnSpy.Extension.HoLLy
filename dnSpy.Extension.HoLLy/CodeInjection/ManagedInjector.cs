@@ -6,13 +6,14 @@ using System.Linq;
 using System.Text;
 using dnSpy.Contracts.Debugger;
 using HoLLy.dnSpyExtension.Common;
+using HoLLy.dnSpyExtension.Common.CodeInjection;
 using HoLLy.dnSpyExtension.Common.Settings;
 using Iced.Intel;
 
 namespace HoLLy.dnSpyExtension.CodeInjection
 {
-    [Export(typeof(ManagedInjector))]
-    internal class ManagedInjector
+    [Export(typeof(IManagedInjector))]
+    internal class ManagedInjector : IManagedInjector
     {
         private DbgManager DbgManager => dbgManagerLazy.Value;
         private readonly Lazy<DbgManager> dbgManagerLazy;
@@ -71,7 +72,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             Native.CloseHandle(hProc);
         }
 
-        public static bool IsProcessSupported(DbgProcess process, out string? reason)
+        public bool IsProcessSupported(DbgProcess process, out string? reason)
         {
             if (process is null) {
                 reason = "no process found";

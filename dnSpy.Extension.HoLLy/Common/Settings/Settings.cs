@@ -5,6 +5,7 @@ using System.Linq;
 using dnSpy.Contracts.MVVM;
 using dnSpy.Contracts.Settings;
 using HoLLy.dnSpyExtension.CodeInjection;
+using HoLLy.dnSpyExtension.Common.CodeInjection;
 
 namespace HoLLy.dnSpyExtension.Common.Settings
 {

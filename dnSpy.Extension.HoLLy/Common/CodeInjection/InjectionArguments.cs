@@ -2,7 +2,7 @@ using System;
 using dnlib.DotNet;
 using dnSpy.Contracts.Settings;
 
-namespace HoLLy.dnSpyExtension.CodeInjection
+namespace HoLLy.dnSpyExtension.Common.CodeInjection
 {
     public struct InjectionArguments
     {
