@@ -24,7 +24,11 @@
         <TargetFrameworks>net472</TargetFrameworks> <!-- TODO: update for .NET Core 3.0 -->
         <LangVersion>8</LangVersion>
         <NullableContextOptions>enable</NullableContextOptions>
+        <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
+
+        <!-- Turn nullability warnings into errors -->
+        <WarningsAsErrors>CS8600;CS8602;CS8603;CS8604</WarningsAsErrors>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
