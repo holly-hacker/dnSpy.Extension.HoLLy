@@ -5,6 +5,7 @@ using dnSpy.Contracts.Documents.Tabs;
 using dnSpy.Contracts.Documents.TreeView;
 using dnSpy.Contracts.Menus;
 using HoLLy.dnSpyExtension.Common;
+using HoLLy.dnSpyExtension.Common.SourceMap;
 
 namespace HoLLy.dnSpyExtension.SourceMap.Commands
 {

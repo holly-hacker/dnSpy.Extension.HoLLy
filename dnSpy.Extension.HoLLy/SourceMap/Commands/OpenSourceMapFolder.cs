@@ -2,6 +2,7 @@ using System.ComponentModel.Composition;
 using System.Diagnostics;
 using dnSpy.Contracts.Menus;
 using HoLLy.dnSpyExtension.Common;
+using HoLLy.dnSpyExtension.Common.SourceMap;
 
 namespace HoLLy.dnSpyExtension.SourceMap.Commands
 {

@@ -1,5 +1,7 @@
 using dnlib.DotNet;
 using dnSpy.Contracts.Decompiler;
+using HoLLy.dnSpyExtension.Common;
+using HoLLy.dnSpyExtension.Common.SourceMap;
 
 namespace HoLLy.dnSpyExtension.SourceMap.Decompilers.Decorators
 {
