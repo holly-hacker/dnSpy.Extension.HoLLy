@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using dnSpy.Contracts.Settings.Dialog;
+using HoLLy.dnSpyExtension.Common;
 
-namespace HoLLy.dnSpyExtension.Common.Settings
+namespace HoLLy.dnSpyExtension.PluginSettings
 {
     [Export(typeof(IAppSettingsPageProvider))]
     internal class SettingsPageProvider : IAppSettingsPageProvider

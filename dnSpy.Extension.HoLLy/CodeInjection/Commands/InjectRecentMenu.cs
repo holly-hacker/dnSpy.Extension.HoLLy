@@ -8,7 +8,6 @@ using dnSpy.Contracts.Menus;
 using dnSpy.Contracts.Text;
 using HoLLy.dnSpyExtension.Common;
 using HoLLy.dnSpyExtension.Common.CodeInjection;
-using HoLLy.dnSpyExtension.Common.Settings;
 
 namespace HoLLy.dnSpyExtension.CodeInjection.Commands
 {

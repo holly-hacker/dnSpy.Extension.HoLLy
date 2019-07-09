@@ -7,7 +7,6 @@ using System.Text;
 using dnSpy.Contracts.Debugger;
 using HoLLy.dnSpyExtension.Common;
 using HoLLy.dnSpyExtension.Common.CodeInjection;
-using HoLLy.dnSpyExtension.Common.Settings;
 using Iced.Intel;
 
 namespace HoLLy.dnSpyExtension.CodeInjection

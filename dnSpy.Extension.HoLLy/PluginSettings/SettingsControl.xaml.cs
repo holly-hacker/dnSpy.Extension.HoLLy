@@ -1,6 +1,6 @@
 using System.Windows.Controls;
 
-namespace HoLLy.dnSpyExtension.Common.Settings
+namespace HoLLy.dnSpyExtension.PluginSettings
 {
     public partial class SettingsControl : UserControl
     {

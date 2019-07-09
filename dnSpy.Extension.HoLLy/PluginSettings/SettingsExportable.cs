@@ -1,61 +1,12 @@
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
-using dnSpy.Contracts.MVVM;
 using dnSpy.Contracts.Settings;
-using HoLLy.dnSpyExtension.CodeInjection;
+using HoLLy.dnSpyExtension.Common;
 using HoLLy.dnSpyExtension.Common.CodeInjection;
 
-namespace HoLLy.dnSpyExtension.Common.Settings
+namespace HoLLy.dnSpyExtension.PluginSettings
 {
-    internal class Settings : ViewModelBase
-    {
-        private const int MaxRecentInjections = 5;
-
-        private bool copyInjectedDLLToTemp;
-        private List<InjectionArguments> recentInjections = new List<InjectionArguments>();
-
-        public bool CopyInjectedDLLToTemp
-        {
-            get => copyInjectedDLLToTemp;
-            set {
-                if (value != copyInjectedDLLToTemp) {
-                    copyInjectedDLLToTemp = value;
-                    OnPropertyChanged(nameof(CopyInjectedDLLToTemp));
-                }
-            }
-        }
-
-        public IReadOnlyList<InjectionArguments> RecentInjections
-        {
-            get => recentInjections;
-            protected set => recentInjections = (List<InjectionArguments>)value;
-        }
-
-        public void AddRecentInjection(InjectionArguments injectionArguments)
-        {
-            while (recentInjections.Contains(injectionArguments))
-                recentInjections.Remove(injectionArguments);
-
-            recentInjections.Insert(0, injectionArguments);
-
-            if (recentInjections.Count > MaxRecentInjections)
-                recentInjections.RemoveRange(MaxRecentInjections, recentInjections.Count - MaxRecentInjections);
-
-            OnPropertyChanged(nameof(RecentInjections));
-        }
-
-        public Settings Clone() => CopyTo(new Settings());
-
-        public Settings CopyTo(Settings other)
-        {
-            other.CopyInjectedDLLToTemp = CopyInjectedDLLToTemp;
-            other.RecentInjections = RecentInjections.ToList();
-            return other;
-        }
-    }
-
     [Export(typeof(Settings))]
     internal class SettingsExportable : Settings
     {

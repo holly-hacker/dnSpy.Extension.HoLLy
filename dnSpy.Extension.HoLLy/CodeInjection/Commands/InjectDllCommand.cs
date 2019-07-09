@@ -10,7 +10,6 @@ using dnSpy.Contracts.MVVM;
 using HoLLy.dnSpyExtension.CodeInjection.Dialogs;
 using HoLLy.dnSpyExtension.Common;
 using HoLLy.dnSpyExtension.Common.CodeInjection;
-using HoLLy.dnSpyExtension.Common.Settings;
 
 namespace HoLLy.dnSpyExtension.CodeInjection.Commands
 {
