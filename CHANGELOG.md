@@ -2,6 +2,7 @@ Changelog
 =========
 
 ## vNext
+- Reinject a recently injected DLL
 - Export/import sourcemaps
 - Add setting for copying injected DLLs to temporary directory first
 
