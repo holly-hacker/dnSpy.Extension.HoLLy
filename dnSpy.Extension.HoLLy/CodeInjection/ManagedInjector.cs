@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using dnSpy.Contracts.Debugger;
+using HoLLy.dnSpyExtension.Common;
+using HoLLy.dnSpyExtension.Common.Settings;
 using Iced.Intel;
 
 namespace HoLLy.dnSpyExtension.CodeInjection
@@ -14,10 +16,10 @@ namespace HoLLy.dnSpyExtension.CodeInjection
     {
         private DbgManager DbgManager => dbgManagerLazy.Value;
         private readonly Lazy<DbgManager> dbgManagerLazy;
-        private readonly Settings.Settings settings;
+        private readonly Settings settings;
 
         [ImportingConstructor]
-        public ManagedInjector(Lazy<DbgManager> dbgManagerLazy, Settings.Settings settings)
+        public ManagedInjector(Lazy<DbgManager> dbgManagerLazy, Settings settings)
         {
             this.dbgManagerLazy = dbgManagerLazy;
             this.settings = settings;

@@ -1,0 +1,10 @@
+namespace HoLLy.dnSpyExtension.CodeInjection
+{
+    public enum RuntimeType
+    {
+        FrameworkV2,
+        FrameworkV4,
+        NetCore,
+        Unity,
+    }
+}

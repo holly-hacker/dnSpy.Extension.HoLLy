@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using dnSpy.Contracts.Extension;
+using HoLLy.dnSpyExtension.Common;
 
 namespace HoLLy.dnSpyExtension
 {
