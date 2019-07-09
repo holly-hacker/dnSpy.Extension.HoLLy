@@ -1,5 +1,4 @@
 using dnSpy.Contracts.Debugger;
-using HoLLy.dnSpyExtension.CodeInjection;
 
 namespace HoLLy.dnSpyExtension.Common.CodeInjection
 {

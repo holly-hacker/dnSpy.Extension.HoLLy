@@ -6,7 +6,7 @@ using dnSpy.Contracts.Text;
 using HoLLy.dnSpyExtension.Common;
 using HoLLy.dnSpyExtension.Common.SourceMap;
 
-namespace HoLLy.dnSpyExtension.SourceMap.Decompilers.Decorators
+namespace HoLLy.dnSpyExtension.SourceMap.Decompilers
 {
     internal class DecompilerDecorator : IDecompiler
     {

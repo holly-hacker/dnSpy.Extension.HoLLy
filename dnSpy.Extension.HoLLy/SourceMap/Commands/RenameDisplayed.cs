@@ -9,12 +9,12 @@ using HoLLy.dnSpyExtension.Common.SourceMap;
 namespace HoLLy.dnSpyExtension.SourceMap.Commands
 {
     [ExportMenuItem(Header = "Change displayed name", Group = Constants.ContextMenuGroupEdit)]
-    internal class RenameDisplayedCommand : MenuItemBase
+    internal class RenameDisplayed : MenuItemBase
     {
         private readonly ISourceMapStorage sourceMapStorage;
 
         [ImportingConstructor]
-        public RenameDisplayedCommand(ISourceMapStorage sourceMapStorage)
+        public RenameDisplayed(ISourceMapStorage sourceMapStorage)
         {
             this.sourceMapStorage = sourceMapStorage;
         }

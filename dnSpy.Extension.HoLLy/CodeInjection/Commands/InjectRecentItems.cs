@@ -11,32 +11,8 @@ using HoLLy.dnSpyExtension.Common.CodeInjection;
 
 namespace HoLLy.dnSpyExtension.CodeInjection.Commands
 {
-    [ExportMenuItem(Header = "Re-inject recent", OwnerGuid = MenuConstants.APP_MENU_DEBUG_GUID, Group = Constants.AppMenuGroupDebuggerInject, Order = 20, Guid = Constants.AppMenuGuidDebuggerInjectRecent)]
-    internal class InjectRecentMenu : MenuItemBase
-    {
-        private DbgManager DbgManager => dbgManagerLazy.Value;
-        private DbgProcess CurrentProcess => DbgManager.CurrentProcess.Current
-                                             ?? DbgManager.Processes.FirstOrDefault();
-
-        private readonly Settings settings;
-        private readonly Lazy<DbgManager> dbgManagerLazy;
-        private readonly IManagedInjector injector;
-
-        [ImportingConstructor]
-        public InjectRecentMenu(Settings settings, Lazy<DbgManager> dbgManagerLazy, IManagedInjector injector)
-        {
-            this.settings = settings;
-            this.dbgManagerLazy = dbgManagerLazy;
-            this.injector = injector;
-        }
-
-        public override void Execute(IMenuItemContext context) { }
-        public override bool IsEnabled(IMenuItemContext context) => DbgManager.IsDebugging;
-        public override bool IsVisible(IMenuItemContext context) => settings.RecentInjections.Any() && injector.IsProcessSupported(CurrentProcess, out _);
-    }
-
     [ExportMenuItem(OwnerGuid = Constants.AppMenuGuidDebuggerInjectRecent, Group = Constants.AppMenuGroupDebuggerInjectRecent, Order = 0)]
-    internal class InjectRecentMenuList : MenuItemBase, IMenuItemProvider
+    internal class InjectRecentItems : MenuItemBase, IMenuItemProvider
     {
         private DbgManager DbgManager => dbgManagerLazy.Value;
         private DbgProcess CurrentProcess => DbgManager.CurrentProcess.Current
@@ -47,7 +23,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
         private readonly Settings settings;
 
         [ImportingConstructor]
-        public InjectRecentMenuList(Lazy<DbgManager> dbgManagerLazy, IManagedInjector injector, Settings settings)
+        public InjectRecentItems(Lazy<DbgManager> dbgManagerLazy, IManagedInjector injector, Settings settings)
         {
             this.dbgManagerLazy = dbgManagerLazy;
             this.injector = injector;
@@ -64,10 +40,10 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
 
         private class InjectRecentMenuItem : MenuItemBase
         {
-            private readonly InjectRecentMenuList parent;
+            private readonly InjectRecentItems parent;
             private readonly InjectionArguments injectionArguments;
 
-            public InjectRecentMenuItem(InjectRecentMenuList parent, InjectionArguments injectionArguments)
+            public InjectRecentMenuItem(InjectRecentItems parent, InjectionArguments injectionArguments)
             {
                 this.parent = parent;
                 this.injectionArguments = injectionArguments;
@@ -77,8 +53,8 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
             /// TODO: Use UIUtilities.EscapeMenuItemHeader, see 0xd4d/dnSpy#1201
             /// </remarks>
             public override string GetHeader(IMenuItemContext context) => NameUtilities
-                    .CleanName($"{Path.GetFileName(injectionArguments.Path)} {injectionArguments.Type}.{injectionArguments.Method}({Quote(injectionArguments.Argument) ?? "null"})")
-                    .Replace("_", "__");
+                .CleanName($"{Path.GetFileName(injectionArguments.Path)} {injectionArguments.Type}.{injectionArguments.Method}({Quote(injectionArguments.Argument) ?? "null"})")
+                .Replace("_", "__");
             public override bool IsEnabled(IMenuItemContext context) => File.Exists(injectionArguments.Path);
 
             public override void Execute(IMenuItemContext context)

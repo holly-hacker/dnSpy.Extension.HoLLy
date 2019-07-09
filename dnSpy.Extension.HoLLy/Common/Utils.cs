@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using dnSpy.Contracts.Debugger;
-using HoLLy.dnSpyExtension.CodeInjection;
 using HoLLy.dnSpyExtension.Common.CodeInjection;
 
 namespace HoLLy.dnSpyExtension.Common

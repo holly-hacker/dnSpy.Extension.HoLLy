@@ -8,7 +8,6 @@ using dnSpy.Contracts.App;
 using dnSpy.Contracts.Decompiler;
 using HoLLy.dnSpyExtension.Common;
 using HoLLy.dnSpyExtension.Common.SourceMap;
-using HoLLy.dnSpyExtension.SourceMap.Decompilers.Decorators;
 
 namespace HoLLy.dnSpyExtension.SourceMap.Decompilers
 {

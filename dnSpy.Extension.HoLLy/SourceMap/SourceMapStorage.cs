@@ -5,7 +5,6 @@ using System.IO;
 using System.Xml;
 using dnlib.DotNet;
 using dnSpy.Contracts.App;
-using HoLLy.dnSpyExtension.Common;
 using HoLLy.dnSpyExtension.Common.SourceMap;
 
 namespace HoLLy.dnSpyExtension.SourceMap
