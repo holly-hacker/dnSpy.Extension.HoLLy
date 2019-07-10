@@ -5,6 +5,7 @@ using System.IO;
 using System.Xml;
 using dnlib.DotNet;
 using dnSpy.Contracts.App;
+using HoLLy.dnSpyExtension.Common;
 using HoLLy.dnSpyExtension.Common.SourceMap;
 
 namespace HoLLy.dnSpyExtension.SourceMap
@@ -15,6 +16,13 @@ namespace HoLLy.dnSpyExtension.SourceMap
         public string CacheFolder => Path.Combine(AppDirectories.DataDirectory, "SourceMaps");
 
         private readonly Dictionary<IAssembly, Dictionary<(MapType, string), string>?> loadedMaps = new Dictionary<IAssembly, Dictionary<(MapType, string), string>?>();
+        private readonly Settings settings;
+
+        [ImportingConstructor]
+        public SourceMapStorage(Settings settings)
+        {
+            this.settings = settings;
+        }
 
         public string? GetName(IMemberDef member)
         {
@@ -32,7 +40,13 @@ namespace HoLLy.dnSpyExtension.SourceMap
             var map = loadedMaps[asm]!;
             var key = (GetMapType(member), member.FullName);
 
-            return map.ContainsKey(key) ? map[key] : null;
+            if (map.ContainsKey(key))
+                return map[key];
+
+            if (settings.AutoMapDLLImports && member is MethodDef md && md.HasImplMap)
+                return md.ImplMap.Name;
+
+            return null;
         }
 
         public void SetName(IMemberDef member, string name)

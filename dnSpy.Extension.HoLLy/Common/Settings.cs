@@ -10,6 +10,7 @@ namespace HoLLy.dnSpyExtension.Common
         private const int MaxRecentInjections = 5;
 
         private bool copyInjectedDLLToTemp;
+        private bool autoMapDLLImports = true;
         private List<InjectionArguments> recentInjections = new List<InjectionArguments>();
 
         public bool CopyInjectedDLLToTemp
@@ -19,6 +20,17 @@ namespace HoLLy.dnSpyExtension.Common
                 if (value != copyInjectedDLLToTemp) {
                     copyInjectedDLLToTemp = value;
                     OnPropertyChanged(nameof(CopyInjectedDLLToTemp));
+                }
+            }
+        }
+
+        public bool AutoMapDLLImports
+        {
+            get => autoMapDLLImports;
+            set {
+                if (value != autoMapDLLImports) {
+                    autoMapDLLImports = value;
+                    OnPropertyChanged(nameof(AutoMapDLLImports));
                 }
             }
         }

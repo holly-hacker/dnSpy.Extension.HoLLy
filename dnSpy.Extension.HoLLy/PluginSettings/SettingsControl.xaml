@@ -7,6 +7,15 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance common:Settings}">
     <StackPanel Margin="5">
-        <CheckBox Margin="0 0 0 5" Content="Copy injected DLLs to temporary directory" IsChecked="{Binding CopyInjectedDLLToTemp}" />
+        <GroupBox Header="DLL Injection">
+            <StackPanel>
+                <CheckBox Margin="0 5 0 0" Content="Copy injected DLLs to temporary directory" IsChecked="{Binding CopyInjectedDLLToTemp}" />
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="SourceMapping">
+            <StackPanel>
+                <CheckBox Margin="0 5 0 0" Content="Automatically map DLL imports" IsChecked="{Binding AutoMapDLLImports}" />
+            </StackPanel>
+        </GroupBox>
     </StackPanel>
 </UserControl>

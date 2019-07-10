@@ -6,6 +6,7 @@ Features:
 - Reinject a recently injected DLL
 - Export/import sourcemaps
 - Add setting for copying injected DLLs to temporary directory first
+- Add setting for renaming DLLImports if they don't have a mapped name already
 
 Bugfixes:
 - "this" keyword is no longer sourcemapped
