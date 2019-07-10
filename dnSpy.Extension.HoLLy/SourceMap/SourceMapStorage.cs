@@ -18,8 +18,7 @@ namespace HoLLy.dnSpyExtension.SourceMap
 
         public string? GetName(IMemberDef member)
         {
-            if (member is MethodDef md && md.IsConstructor)
-                return GetName(member.DeclaringType);
+            member = SourceMapUtils.GetDefToMap(member);
 
             var asm = member.Module.Assembly;
 
@@ -38,10 +37,7 @@ namespace HoLLy.dnSpyExtension.SourceMap
 
         public void SetName(IMemberDef member, string name)
         {
-            if (member is MethodDef md && md.IsConstructor) {
-                SetName(member.DeclaringType, name);
-                return;
-            }
+            member = SourceMapUtils.GetDefToMap(member);
 
             var asm = member.Module.Assembly;
 
