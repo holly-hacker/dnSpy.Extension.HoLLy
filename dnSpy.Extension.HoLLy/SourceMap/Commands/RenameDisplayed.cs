@@ -25,7 +25,8 @@ namespace HoLLy.dnSpyExtension.SourceMap.Commands
             var docViewer = context.Find<IDocumentViewer>();
             var m = (IMemberDef)textReference.Reference;
 
-            string newName = MsgBox.Instance.Ask<string>(string.Empty, title: $"New name for {m.Name}");
+            static string getName(IMemberDef md) => (md is MethodDef methodDef && methodDef.IsConstructor) ? getName(methodDef.DeclaringType) : (string)md.Name;
+            string newName = MsgBox.Instance.Ask<string>(string.Empty, title: $"New name for {getName(m)}");
 
             if (string.IsNullOrEmpty(newName))
                 return;

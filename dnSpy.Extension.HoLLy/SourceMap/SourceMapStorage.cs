@@ -38,6 +38,11 @@ namespace HoLLy.dnSpyExtension.SourceMap
 
         public void SetName(IMemberDef member, string name)
         {
+            if (member is MethodDef md && md.IsConstructor) {
+                SetName(member.DeclaringType, name);
+                return;
+            }
+
             var asm = member.Module.Assembly;
 
             if (!loadedMaps.ContainsKey(asm) || loadedMaps[asm] == null)
