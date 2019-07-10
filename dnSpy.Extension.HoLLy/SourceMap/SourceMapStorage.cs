@@ -18,6 +18,9 @@ namespace HoLLy.dnSpyExtension.SourceMap
 
         public string? GetName(IMemberDef member)
         {
+            if (member is MethodDef md && md.IsConstructor)
+                return GetName(member.DeclaringType);
+
             var asm = member.Module.Assembly;
 
             // null if we tried to load from cache before, to prevent excessive fs access
