@@ -21,7 +21,7 @@ namespace HoLLy.dnSpyExtension.SourceMap.Decompilers
         private string Modify(string text, object reference)
         {
             switch (reference) {
-                case IMemberDef memberDef:
+                case IMemberDef memberDef when text != "this":
                     return sourceMap.GetName(memberDef) ?? text;
                 default:
                     return text;
