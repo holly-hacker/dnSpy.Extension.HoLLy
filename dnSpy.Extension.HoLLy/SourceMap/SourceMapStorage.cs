@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using dnlib.DotNet;
 using dnSpy.Contracts.App;
@@ -43,8 +44,22 @@ namespace HoLLy.dnSpyExtension.SourceMap
             if (map.ContainsKey(key))
                 return map[key];
 
-            if (settings.AutoMapDLLImports && member is MethodDef md && md.HasImplMap)
-                return md.ImplMap.Name;
+            // if there was no mapped name found, see if we can get a sensible name in another way
+            if (member is MethodDef md) {
+                if (settings.AutoMapDLLImports && md.HasImplMap)
+                    return md.ImplMap.Name;
+
+                if (settings.AutoMapInterfaceMembers && md.HasOverrides) {
+                    var firstOverride = md.Overrides.First().MethodDeclaration;
+
+                    // if the implementation is in another assembly, don't assume we mapped it
+                    // TODO: try to resolve this to a IMemberDef so we can recursively find name?
+                    if (!(firstOverride is IMemberDef))
+                        return firstOverride.Name;
+                }
+
+                // TODO: interfaces can be implemented without overrides
+            }
 
             return null;
         }

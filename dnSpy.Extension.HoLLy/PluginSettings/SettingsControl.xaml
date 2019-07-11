@@ -15,6 +15,7 @@
         <GroupBox Header="SourceMapping">
             <StackPanel>
                 <CheckBox Margin="0 5 0 0" Content="Automatically map DLL imports" IsChecked="{Binding AutoMapDLLImports}" />
+                <CheckBox Margin="0 5 0 0" Content="Automatically map interface members" IsChecked="{Binding AutoMapInterfaceMembers}" />
             </StackPanel>
         </GroupBox>
     </StackPanel>

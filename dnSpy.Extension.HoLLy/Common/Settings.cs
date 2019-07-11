@@ -11,6 +11,7 @@ namespace HoLLy.dnSpyExtension.Common
 
         private bool copyInjectedDLLToTemp;
         private bool autoMapDLLImports = true;
+        private bool autoMapInterfaceMembers = true;
         private List<InjectionArguments> recentInjections = new List<InjectionArguments>();
 
         public bool CopyInjectedDLLToTemp
@@ -31,6 +32,17 @@ namespace HoLLy.dnSpyExtension.Common
                 if (value != autoMapDLLImports) {
                     autoMapDLLImports = value;
                     OnPropertyChanged(nameof(AutoMapDLLImports));
+                }
+            }
+        }
+
+        public bool AutoMapInterfaceMembers
+        {
+            get => autoMapInterfaceMembers;
+            set {
+                if (value != autoMapInterfaceMembers) {
+                    autoMapInterfaceMembers = value;
+                    OnPropertyChanged(nameof(AutoMapInterfaceMembers));
                 }
             }
         }
