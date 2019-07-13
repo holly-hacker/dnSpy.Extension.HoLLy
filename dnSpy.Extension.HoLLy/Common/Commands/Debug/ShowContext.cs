@@ -1,5 +1,6 @@
 using System.Text;
 using dnSpy.Contracts.App;
+using dnSpy.Contracts.Documents.Tabs.DocViewer;
 using dnSpy.Contracts.Menus;
 
 namespace HoLLy.dnSpyExtension.Common.Commands.Debug
@@ -17,9 +18,14 @@ namespace HoLLy.dnSpyExtension.Common.Commands.Debug
             sb.AppendLine();
 
             sb.AppendLine("GuidObjects:");
-            foreach (GuidObject obj in context.GuidObjects) {
+            foreach (GuidObject obj in context.GuidObjects)
                 sb.AppendLine($" - {obj.Guid} {obj.Object}");
-            }
+            sb.AppendLine();
+
+            // if we have access to an IDocumentViewer, try to find the clicked item
+            TextReference? textRef = context.Find<TextReference>();
+            if (textRef != null)
+                sb.AppendLine($"TextReference.Reference type: {textRef.Reference.GetType()}");
 
             MsgBox.Instance.Show(sb.ToString());
         }
