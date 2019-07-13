@@ -49,7 +49,7 @@ namespace HoLLy.dnSpyExtension.SourceMap
                 if (settings.AutoMapDLLImports && md.HasImplMap)
                     return md.ImplMap.Name;
 
-                if (settings.AutoMapInterfaceMembers && md.HasOverrides) {
+                if (settings.AutoMapOverrides && md.HasOverrides) {
                     var firstOverride = md.Overrides.First().MethodDeclaration;
 
                     // if the implementation is in another assembly, don't assume we mapped it

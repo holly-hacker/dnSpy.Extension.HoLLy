@@ -22,7 +22,7 @@ namespace HoLLy.dnSpyExtension.PluginSettings
             ISettingsSection sect = settingsService.GetOrCreateSection(Constants.SettingsGuid);
             CopyInjectedDLLToTemp = sect.Attribute<bool?>(nameof(CopyInjectedDLLToTemp)) ?? CopyInjectedDLLToTemp;
             AutoMapDLLImports = sect.Attribute<bool?>(nameof(AutoMapDLLImports)) ?? AutoMapDLLImports;
-            AutoMapInterfaceMembers = sect.Attribute<bool?>(nameof(AutoMapInterfaceMembers)) ?? AutoMapInterfaceMembers;
+            AutoMapOverrides = sect.Attribute<bool?>(nameof(AutoMapOverrides)) ?? AutoMapOverrides;
 
             var sectInjections = sect.TryGetSection(SectionRecentInjections);
             if (!(sectInjections is null))
@@ -36,7 +36,7 @@ namespace HoLLy.dnSpyExtension.PluginSettings
             ISettingsSection sect = settingsService.RecreateSection(Constants.SettingsGuid);
             sect.Attribute(nameof(CopyInjectedDLLToTemp), CopyInjectedDLLToTemp);
             sect.Attribute(nameof(AutoMapDLLImports), AutoMapDLLImports);
-            sect.Attribute(nameof(AutoMapInterfaceMembers), AutoMapInterfaceMembers);
+            sect.Attribute(nameof(AutoMapOverrides), AutoMapOverrides);
 
             ISettingsSection sectInjections = sect.GetOrCreateSection(SectionRecentInjections);
             foreach (var injection in RecentInjections) {
