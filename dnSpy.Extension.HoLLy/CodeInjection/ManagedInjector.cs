@@ -1,14 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using dnSpy.Contracts.Debugger;
 using HoLLy.dnSpyExtension.CodeInjection.Injectors;
 using HoLLy.dnSpyExtension.Common;
 using HoLLy.dnSpyExtension.Common.CodeInjection;
-using Iced.Intel;
 
 namespace HoLLy.dnSpyExtension.CodeInjection
 {
