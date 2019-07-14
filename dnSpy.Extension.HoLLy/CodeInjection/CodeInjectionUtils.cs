@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using Iced.Intel;
 
 namespace HoLLy.dnSpyExtension.CodeInjection
 {
@@ -82,6 +83,36 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 			}
 			#endregion
 		}
+
+        public static InstructionList CreateCallStub(Register regFun, object[] arguments, out Register outReg, bool x86)
+        {
+	        var instructions = new InstructionList();
+
+	        // TODO: push/pop parameter registers?
+	        if (x86) {
+		        // push arguments
+		        for (int i = arguments.Length - 1; i >= 0; i--) instructions.Add(arg(arguments[i]));
+		        instructions.Add(Instruction.Create(Code.Call_rm32, regFun));
+		        outReg = Register.EAX;
+	        } else {
+		        throw new NotImplementedException();
+	        }
+
+	        Instruction arg(object o) => x86
+		        ? o switch {
+			        IntPtr p => Instruction.Create(Code.Pushd_imm32, p.ToInt32()),
+			        int i32 => Instruction.Create(Code.Pushd_imm32, i32),
+			        byte u8 => Instruction.Create(Code.Pushd_imm8, u8),
+			        Register reg => Instruction.Create(Code.Push_r32, reg),
+			        _ => throw new NotSupportedException($"Unsupported parameter type {o.GetType()} on x86"),
+		        }
+		        : o switch {
+			        IntPtr p => Instruction.Create(Code.Pushd_imm32, p.ToInt32()),	// TODO
+			        _ => throw new NotSupportedException($"Unsupported parameter type {o.GetType()} on x64"),
+		        };
+
+	        return instructions;
+        }
 
         private struct ImageExportDirectory
         {

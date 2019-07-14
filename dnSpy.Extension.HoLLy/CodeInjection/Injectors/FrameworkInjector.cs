@@ -80,35 +80,28 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
 
             var instructions = new InstructionList();
 
+            void addCall(Register r, params object[] callArgs)
+            {
+                foreach (Instruction instr in CodeInjectionUtils.CreateCallStub(r, callArgs, out _, x86))
+                    instructions.Add(instr);
+            }
+
             if (x86) {
                 // call CorBindtoRuntimeEx
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, ppv.ToInt32()));
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, riid.ToInt32()));
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, rcslid.ToInt32()));
-                instructions.Add(Instruction.Create(Code.Pushd_imm8,  0));    // startupFlags
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, pwszBuildFlavor.ToInt32()));
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, pwszVersion.ToInt32()));
                 instructions.Add(Instruction.Create(Code.Mov_r32_imm32, Register.EAX, fnAddr.ToInt32()));
-                instructions.Add(Instruction.Create(Code.Call_rm32, Register.EAX));
+                addCall(Register.EAX, pwszVersion, pwszBuildFlavor, (byte)0, rcslid, riid, ppv);
 
                 // call ICLRRuntimeHost::Start
-                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.None, ppv.ToInt32())));
-                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.ECX, new MemoryOperand(Register.EAX)));
-                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EDX, new MemoryOperand(Register.ECX, 0x0C)));
-                instructions.Add(Instruction.Create(Code.Push_r32, Register.EAX));
-                instructions.Add(Instruction.Create(Code.Call_rm32, Register.EDX));
+                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EDX, new MemoryOperand(Register.None, ppv.ToInt32())));
+                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.EDX)));
+                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.EAX, 0x0C)));
+                addCall(Register.EAX, Register.EDX);
 
                 // call ICLRRuntimeHost::ExecuteInDefaultAppDomain
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, pReturnValue.ToInt32()));
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, pwzArgument.ToInt32()));
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, pwzMethodName.ToInt32()));
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, pwzTypeName.ToInt32()));
-                instructions.Add(Instruction.Create(Code.Pushd_imm32, pwzAssemblyPath.ToInt32()));
-                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.None, ppv.ToInt32())));
-                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.ECX, new MemoryOperand(Register.EAX)));
-                instructions.Add(Instruction.Create(Code.Push_r32, Register.EAX));
-                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.ECX, 0x2C)));
-                instructions.Add(Instruction.Create(Code.Call_rm32, Register.EAX));
+                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EDX, new MemoryOperand(Register.None, ppv.ToInt32())));
+                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.EDX)));
+                instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.EAX, 0x2C)));
+                addCall(Register.EAX, Register.EDX, pwzAssemblyPath, pwzTypeName, pwzMethodName, pwzArgument, pReturnValue);
 
                 instructions.Add(Instruction.Create(Code.Retnd));
             } else {
