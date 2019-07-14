@@ -71,6 +71,8 @@ namespace HoLLy.dnSpyExtension.Common
         public Settings CopyTo(Settings other)
         {
             other.CopyInjectedDLLToTemp = CopyInjectedDLLToTemp;
+            other.AutoMapOverrides = AutoMapOverrides;
+            other.AutoMapDLLImports = AutoMapDLLImports;
             other.RecentInjections = RecentInjections.ToList();
             return other;
         }
