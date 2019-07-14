@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -6,8 +8,19 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 {
     internal static class CodeInjectionUtils
     {
-        public static int GetExportAddress(IntPtr hProc, IntPtr hMod, string name, bool x86)
+	    public static int GetExportAddress(IntPtr hProc, IntPtr hMod, string name, bool x86)
+	    {
+		    var dic = GetAllExportAddresses(hProc, hMod, x86);
+
+		    if (!dic.ContainsKey(name))
+			    throw new Exception($"Could not find function with name {name}.");
+
+		    return dic[name];
+	    }
+
+        public static Dictionary<string, int> GetAllExportAddresses(IntPtr hProc, IntPtr hMod, bool x86)
 		{
+			var dic = new Dictionary<string, int>();
 			int hdr = readInt(0x3C);
 
 			int exportTableRva = readInt(hdr + (x86 ? 0x78 : 0x88));
@@ -18,10 +31,10 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 			ushort[] ordinals = readArray<ushort>(exportTable.AddressOfNameOrdinals, exportTable.NumberOfFunctions);
 
 			for (int i = 0; i < names.Length; i++)
-				if (names[i] != 0 && readCString(names[i]) == name)
-					return functions[ordinals[i]];
+				if (names[i] != 0)
+					dic[readCString(names[i])] = functions[ordinals[i]];
 
-			throw new Exception($"Could not find function with name {name}.");
+			return dic;
 
 			#region local memory reading functions
 			byte[] readBytes(int offset, int size)
