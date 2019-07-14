@@ -16,5 +16,6 @@ namespace HoLLy.dnSpyExtension.Common
         public static readonly Guid DecompilerGuid = new Guid("590164A4-53F4-4677-B1E3-CC6500C273F6");
         public static readonly Guid SettingsGuid = new Guid("146D6180-E468-493F-BCBD-F778E761C58C");
         public static readonly Guid SettingsPageGuid = new Guid("4F026CFE-442B-4126-9FD7-E6469360A3A3");
+        public static readonly Guid SourceMapSettingsChanged = new Guid("4F026CFE-442B-4126-9FD7-E6469360A3A3");
     }
 }

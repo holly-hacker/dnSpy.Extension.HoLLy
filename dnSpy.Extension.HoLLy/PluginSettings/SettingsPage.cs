@@ -20,7 +20,7 @@ namespace HoLLy.dnSpyExtension.PluginSettings
         }
     }
 
-    internal class SettingsPage : AppSettingsPage
+    internal class SettingsPage : AppSettingsPage, IAppSettingsPage2
     {
         private readonly Settings globalSettings;
         private readonly Settings newSettings;
@@ -37,6 +37,15 @@ namespace HoLLy.dnSpyExtension.PluginSettings
             newSettings = settings.Clone();
         }
 
-        public override void OnApply() => newSettings.CopyTo(globalSettings);
+        public override void OnApply() => throw new NotSupportedException();
+
+        public void OnApply(IAppRefreshSettings appRefreshSettings)
+        {
+            if (globalSettings.AutoMapOverrides != newSettings.AutoMapOverrides
+                || globalSettings.AutoMapDLLImports != newSettings.AutoMapDLLImports)
+                appRefreshSettings.Add(Constants.SourceMapSettingsChanged);
+
+            newSettings.CopyTo(globalSettings);
+        }
     }
 }
