@@ -54,7 +54,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
             if (mod is null)
                 throw new Exception("Couldn't find MSCOREE.DLL, arch mismatch?");
 
-            int fnAddr = PE.GetExportAddress(hProc, mod.BaseAddress, "CorBindToRuntimeEx", x86);
+            int fnAddr = CodeInjectionUtils.GetExportAddress(hProc, mod.BaseAddress, "CorBindToRuntimeEx", x86);
 
             return mod.BaseAddress + fnAddr;
         }

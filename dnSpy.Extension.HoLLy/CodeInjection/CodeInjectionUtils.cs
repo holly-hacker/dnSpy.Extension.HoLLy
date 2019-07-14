@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HoLLy.dnSpyExtension.CodeInjection
 {
-    internal static class PE
+    internal static class CodeInjectionUtils
     {
         public static int GetExportAddress(IntPtr hProc, IntPtr hMod, string name, bool x86)
 		{
