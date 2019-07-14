@@ -35,6 +35,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
                 path = Utils.CopyToTempPath(path);
 
             var injector = GetInjector(runtimeType);
+            injector.Log = DbgManager.WriteMessage;
             injector.Inject(pid, path, typeName, methodName, parameter, x86);
         }
 

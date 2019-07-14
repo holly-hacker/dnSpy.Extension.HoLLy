@@ -20,6 +20,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
     internal abstract class FrameworkInjector : IInjector
     {
         protected abstract string ClrVersion { get; }
+        public Action<string> Log { private get; set; } = s => { };
 
         public void Inject(int pid, string path, string typeName, string methodName, string? parameter, bool x86)
         {
@@ -27,20 +28,20 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
             if (hProc == IntPtr.Zero)
                 throw new Exception("Couldn't open process");
 
-            // DbgManager.WriteMessage("Handle: " + hProc.ToInt32().ToString("X8"));
+            Log("Handle: " + hProc.ToInt32().ToString("X8"));
 
             var bindToRuntimeAddr = GetCorBindToRuntimeExAddress(pid, hProc, x86);
-            // DbgManager.WriteMessage("CurBindToRuntimeEx: " + bindToRuntimeAddr.ToInt64().ToString("X8"));
+            Log("CurBindToRuntimeEx: " + bindToRuntimeAddr.ToInt64().ToString("X8"));
 
             var hStub = AllocateStub(hProc, path, typeName, methodName, parameter, bindToRuntimeAddr, x86, ClrVersion);
-            // DbgManager.WriteMessage("Created stub at: " + hStub.ToInt64().ToString("X8"));
+            Log("Created stub at: " + hStub.ToInt64().ToString("X8"));
 
             var hThread = Native.CreateRemoteThread(hProc, IntPtr.Zero, 0u, hStub, IntPtr.Zero, 0u, IntPtr.Zero);
-            // DbgManager.WriteMessage("Thread handle: " + hThread.ToInt32().ToString("X8"));
+            Log("Thread handle: " + hThread.ToInt32().ToString("X8"));
 
             var success = Native.GetExitCodeThread(hThread, out IntPtr exitCode);
-            // DbgManager.WriteMessage("GetExitCode success: " + success);
-            // DbgManager.WriteMessage("Exit code: " + exitCode.ToInt32().ToString("X8"));
+            Log("GetExitCode success: " + success);
+            Log("Exit code: " + exitCode.ToInt32().ToString("X8"));
 
             Native.CloseHandle(hProc);
         }
