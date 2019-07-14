@@ -5,8 +5,9 @@ Changelog
 Features:
 - Reinject a recently injected DLL
 - Export/import sourcemaps
-- Add setting for copying injected DLLs to temporary directory first
-- Add setting for renaming DLLImports if they don't have a mapped name already
+- Add setting for copying injected DLLs to temporary directory before injecting
+- Add setting for automatically renaming DLLImports if they don't have a mapped name already
+- Add setting for automatically renaming overridden members
 
 Bugfixes:
 - "this" keyword is no longer sourcemapped
