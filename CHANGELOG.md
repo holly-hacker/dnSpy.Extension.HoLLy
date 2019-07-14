@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## vNext
+## v0.3.0
 Features:
 - Reinject a recently injected DLL
 - Export/import sourcemaps
