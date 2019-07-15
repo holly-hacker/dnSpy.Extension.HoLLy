@@ -59,7 +59,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
             return mod.BaseAddress + fnAddr;
         }
 
-        private static IntPtr AllocateStub(IntPtr hProc, string asmPath, string typeName, string methodName, string? args, IntPtr fnAddr, bool x86, string clrVersion)
+        private IntPtr AllocateStub(IntPtr hProc, string asmPath, string typeName, string methodName, string? args, IntPtr fnAddr, bool x86, string clrVersion)
         {
             const string buildFlavor = "wks";    // WorkStation
 
@@ -152,6 +152,8 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
 
                 instructions.Add(Instruction.Create(Code.Retnq));
             }
+
+            Log("Instructions to be injected:\n" + string.Join("\n", instructions));
 
             var cw = new CodeWriterImpl();
             var ib = new InstructionBlock(cw, instructions, 0);
