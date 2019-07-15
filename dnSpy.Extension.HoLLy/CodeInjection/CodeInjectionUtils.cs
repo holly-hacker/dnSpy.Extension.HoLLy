@@ -84,7 +84,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 			#endregion
 		}
 
-        public static InstructionList CreateCallStub(Register regFun, object[] arguments, out Register outReg, bool x86)
+        public static InstructionList CreateCallStub(Register regFun, object[] arguments, bool x86)
         {
 	        var instructions = new InstructionList();
 
@@ -101,7 +101,6 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 			        });
 		        }
 		        instructions.Add(Instruction.Create(Code.Call_rm32, regFun));
-		        outReg = Register.EAX;
 	        } else {
 		        // calling convention: https://docs.microsoft.com/en-us/cpp/build/x64-calling-convention?view=vs-2019
 		        const Register tempReg = Register.RAX;
@@ -142,7 +141,6 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 
 		        // call the function
 		        instructions.Add(Instruction.Create(Code.Call_rm64, regFun));
-		        outReg = Register.RAX;
 	        }
 
 	        return instructions;

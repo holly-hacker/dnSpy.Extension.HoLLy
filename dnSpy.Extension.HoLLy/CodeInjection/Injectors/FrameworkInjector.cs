@@ -82,7 +82,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
 
             void addCall(Register r, params object[] callArgs)
             {
-                foreach (Instruction instr in CodeInjectionUtils.CreateCallStub(r, callArgs, out _, x86))
+                foreach (Instruction instr in CodeInjectionUtils.CreateCallStub(r, callArgs, x86))
                     instructions.Add(instr);
             }
 
