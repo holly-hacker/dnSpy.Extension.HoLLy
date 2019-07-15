@@ -40,8 +40,8 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             switch (runtimeType) {
                 case RuntimeType.FrameworkV2: return new FrameworkV2Injector();
                 case RuntimeType.FrameworkV4: return new FrameworkV4Injector();
+                case RuntimeType.Unity: return new UnityInjector();
                 case RuntimeType.NetCore:
-                case RuntimeType.Unity:
                     throw new NotImplementedException();
                 default:
                     throw new ArgumentOutOfRangeException(nameof(runtimeType), runtimeType, null);
@@ -69,6 +69,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             var rtSupported = runtimeType switch {
                 RuntimeType.FrameworkV2 => true,
                 RuntimeType.FrameworkV4 => true,
+                RuntimeType.Unity => true,
                 _ => false,
             };
 
