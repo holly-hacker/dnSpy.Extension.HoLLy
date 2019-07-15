@@ -106,10 +106,10 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
                 instructions.Add(Instruction.Create(Code.Retnd));
             } else {
                 const int maxStackIndex = 3;
-                const int stackSize = 0x20 + maxStackIndex*8;    // 0x20 bytes shadow space, because x64
-                MemoryOperand stackAccess(int i) => new MemoryOperand(Register.RSP, stackSize - (maxStackIndex - i) * 8);
+                const int stackOffset = 0x20;
+                MemoryOperand stackAccess(int i) => new MemoryOperand(Register.RSP, stackOffset + i * 8);
 
-                instructions.Add(Instruction.Create(Code.Sub_rm64_imm8, Register.RSP, stackSize));
+                instructions.Add(Instruction.Create(Code.Sub_rm64_imm8, Register.RSP, 0x20 + maxStackIndex * 8));
 
                 // call CorBindtoRuntimeEx
                 // calling convention: https://docs.microsoft.com/en-us/cpp/build/x64-calling-convention?view=vs-2019
@@ -148,7 +148,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
                 instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RAX, new MemoryOperand(Register.RAX, 0x58)));
                 instructions.Add(Instruction.Create(Code.Call_rm64, Register.RAX));
 
-                instructions.Add(Instruction.Create(Code.Add_rm64_imm8, Register.RSP, stackSize));
+                instructions.Add(Instruction.Create(Code.Add_rm64_imm8, Register.RSP, 0x20 + maxStackIndex * 8));
 
                 instructions.Add(Instruction.Create(Code.Retnq));
             }
