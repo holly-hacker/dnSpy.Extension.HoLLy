@@ -103,7 +103,46 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 		        instructions.Add(Instruction.Create(Code.Call_rm32, regFun));
 		        outReg = Register.EAX;
 	        } else {
-		        throw new NotImplementedException();
+		        // calling convention: https://docs.microsoft.com/en-us/cpp/build/x64-calling-convention?view=vs-2019
+		        const Register tempReg = Register.RAX;
+
+		        // push the temp register so we can use it
+		        instructions.Add(Instruction.Create(Code.Push_r64, tempReg));
+
+		        // set arguments
+		        for (int i = arguments.Length - 1; i >= 0; i--) {
+			        var arg = arguments[i];
+			        Register argReg = i switch { 0 => Register.RCX, 1 => Register.RDX, 2 => Register.R8, 3 => Register.R9, _ => Register.None };
+			        if (i > 3) {
+				        // push on the stack, keeping in mind that we pushed the temp reg onto the stack too
+				        if (arg is Register r) {
+					        instructions.Add(Instruction.Create(Code.Mov_rm64_r64, new MemoryOperand(Register.RSP, 0x20 + (i - 3) * 8), r));
+				        } else {
+					        instructions.Add(Instruction.Create(Code.Mov_r64_imm64, tempReg, convertToLong(arg)));
+					        instructions.Add(Instruction.Create(Code.Mov_rm64_r64, new MemoryOperand(Register.RSP, 0x20 + (i - 3) * 8), tempReg));
+				        }
+			        } else {
+				        // move to correct register
+				        if (arg is Register r) {
+					        instructions.Add(Instruction.Create(Code.Mov_r64_rm64, argReg, r));
+				        } else {
+							instructions.Add(Instruction.Create(Code.Mov_r64_imm64, argReg, convertToLong(arg)));
+				        }
+			        }
+
+			        long convertToLong(object o) => o switch {
+				        IntPtr p => p.ToInt64(),
+				        UIntPtr p => (long)p.ToUInt64(),
+				        _ => Convert.ToInt64(o),
+			        };
+		        }
+
+		        // pop temp register again
+		        instructions.Add(Instruction.Create(Code.Pop_r64, tempReg));
+
+		        // call the function
+		        instructions.Add(Instruction.Create(Code.Call_rm64, regFun));
+		        outReg = Register.RAX;
 	        }
 
 	        return instructions;
