@@ -2,6 +2,9 @@ Changelog
 =========
 
 ## v0.4.0
+Features:
+- Add Unity x86 DLL injection
+
 Other changes:
 - Namespace and Type are now stored seperately in config files. Old config files will no longer contain valid recent injections.
 
