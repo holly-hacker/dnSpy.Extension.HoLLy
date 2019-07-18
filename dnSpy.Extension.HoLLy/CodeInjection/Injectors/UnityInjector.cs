@@ -29,11 +29,9 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
             // Call remote functions to do actual injection
             var rootDomain = call("mono_get_root_domain");
             MsgBox.Instance.Show($"rootDomain: 0x{rootDomain.ToInt64():X}");
-            // TODO: why is this 0?
 
-            // var pStr = allocString(path);
-            // var imageData = call("mono_pe_file_open", pStr);
-            // MsgBox.Instance.Show($"imageData: 0x{imageData.ToInt64():X}");
+            var imageData = call("mono_image_open", allocString(path), IntPtr.Zero);
+            MsgBox.Instance.Show($"imageData: 0x{imageData.ToInt64():X}");
 
             return;
 
@@ -71,7 +69,8 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
 
             void addCall(Register r, object[] callArgs)
             {
-                foreach (Instruction instr in CodeInjectionUtils.CreateCallStub(r, callArgs, x86))
+                // cdecl calling conventions, so we need to clean the stack
+                foreach (Instruction instr in CodeInjectionUtils.CreateCallStub(r, callArgs, x86, x86))
                     instructions.Add(instr);
             }
 
@@ -95,7 +94,6 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
             return new IntPtr(IntPtr.Size == 8 ? BitConverter.ToInt64(outBuffer, 0) : BitConverter.ToInt32(outBuffer, 0));
 
             IntPtr alloc(int size, int protection = 0x04) => Native.VirtualAllocEx(hProc, IntPtr.Zero, (uint)size, 0x1000, protection);
-            void writeBytes(IntPtr address, byte[] b) => Native.WriteProcessMemory(hProc, address, b, (uint)b.Length, out _);
         }
     }
 }

@@ -83,7 +83,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 			#endregion
 		}
 
-        public static InstructionList CreateCallStub(Register regFun, object[] arguments, bool x86)
+        public static InstructionList CreateCallStub(Register regFun, object[] arguments, bool x86, bool cleanStack = false)
         {
 	        var instructions = new InstructionList();
 
@@ -99,7 +99,11 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 				        _ => throw new NotSupportedException($"Unsupported parameter type {arguments[i].GetType()} on x86"),
 			        });
 		        }
+
 		        instructions.Add(Instruction.Create(Code.Call_rm32, regFun));
+
+		        if (cleanStack && arguments.Length > 0)
+			        instructions.Add(Instruction.Create(Code.Add_rm32_imm8, Register.ESP, arguments.Length * IntPtr.Size));
 	        } else {
 		        // calling convention: https://docs.microsoft.com/en-us/cpp/build/x64-calling-convention?view=vs-2019
 		        const Register tempReg = Register.RAX;
