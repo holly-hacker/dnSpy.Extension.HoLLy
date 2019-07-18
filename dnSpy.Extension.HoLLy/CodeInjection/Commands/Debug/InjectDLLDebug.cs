@@ -22,10 +22,13 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands.Debug
             var x86 = MsgBox.Instance.Ask<bool?>("Is x86?");
             if (x86 is null) return;
 
+            var rt = MsgBox.Instance.Ask<RuntimeType?>("Runtime type?");
+            if (rt is null) return;
+
             if (!InjectDLL.AskForEntryPoint(out InjectionArguments args))
                 return;
 
-            injector.Inject(pid.Value, args, x86.Value, RuntimeType.FrameworkV4);
+            injector.Inject(pid.Value, args, x86.Value, rt.Value);
         }
 
         public override bool IsVisible(IMenuItemContext context) => Utils.IsDebugBuild;
