@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using dnSpy.Contracts.App;
 using Iced.Intel;
@@ -102,8 +101,9 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
 
             var thread = Native.CreateRemoteThread(hProc, IntPtr.Zero, 0u, ptrStub, IntPtr.Zero, 0u, IntPtr.Zero);
 
-            var err = Marshal.GetLastWin32Error();
-            
+            // wait for thread to finish
+            Native.WaitForSingleObject(thread, uint.MaxValue);
+
             var outBuffer = new byte[IntPtr.Size];
             Native.ReadProcessMemory(hProc, pReturnValue, outBuffer, outBuffer.Length, out _);
 
