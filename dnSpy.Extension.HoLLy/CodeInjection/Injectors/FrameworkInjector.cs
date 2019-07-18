@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using HoLLy.dnSpyExtension.Common.CodeInjection;
 using Iced.Intel;
 
 namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
@@ -21,7 +22,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
         protected abstract string ClrVersion { get; }
         public Action<string> Log { private get; set; } = s => { };
 
-        public void Inject(int pid, string path, string typeName, string methodName, string? parameter, bool x86)
+        public void Inject(int pid, in InjectionArguments args, bool x86)
         {
             IntPtr hProc = Native.OpenProcess(Native.ProcessAccessFlags.AllForDllInject, false, pid);
             if (hProc == IntPtr.Zero)
@@ -32,7 +33,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
             var bindToRuntimeAddr = GetCorBindToRuntimeExAddress(pid, hProc, x86);
             Log("CurBindToRuntimeEx: " + bindToRuntimeAddr.ToInt64().ToString("X8"));
 
-            var instructions = CreateStub(hProc, path, typeName, methodName, parameter, bindToRuntimeAddr, x86, ClrVersion);
+            var instructions = CreateStub(hProc, args.Path, args.Type, args.Method, args.Argument, bindToRuntimeAddr, x86, ClrVersion);
             Log("Instructions to be injected:\n" + string.Join("\n", instructions));
 
             var hThread = CodeInjectionUtils.RunRemoteCode(hProc, instructions, x86);

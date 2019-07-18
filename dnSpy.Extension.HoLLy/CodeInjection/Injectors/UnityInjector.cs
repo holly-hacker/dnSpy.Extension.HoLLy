@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using dnSpy.Contracts.App;
+using HoLLy.dnSpyExtension.Common.CodeInjection;
 using Iced.Intel;
 
 namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
@@ -11,7 +12,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
     {
         public Action<string> Log { private get; set; } = s => { };
 
-        public void Inject(int pid, string path, string typeName, string methodName, string? parameter, bool x86)
+        public void Inject(int pid, in InjectionArguments args, bool x86)
         {
             IntPtr hProc = Native.OpenProcess(Native.ProcessAccessFlags.AllForDllInject, false, pid);
             if (hProc == IntPtr.Zero)
@@ -30,7 +31,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
             var rootDomain = call("mono_get_root_domain");
             MsgBox.Instance.Show($"rootDomain: 0x{rootDomain.ToInt64():X}");
 
-            var imageData = call("mono_image_open", allocString(path), IntPtr.Zero);
+            var imageData = call("mono_image_open", allocString(args.Path), IntPtr.Zero);
             MsgBox.Instance.Show($"imageData: 0x{imageData.ToInt64():X}");
 
             return;

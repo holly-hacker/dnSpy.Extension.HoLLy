@@ -1,10 +1,11 @@
 using System;
+using HoLLy.dnSpyExtension.Common.CodeInjection;
 
 namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
 {
     public interface IInjector
     {
         Action<string> Log { set; }
-        void Inject(int pid, string path, string typeName, string methodName, string? parameter, bool x86);
+        void Inject(int pid, in InjectionArguments args, bool x86);
     }
 }

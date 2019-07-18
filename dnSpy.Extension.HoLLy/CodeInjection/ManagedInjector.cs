@@ -22,17 +22,22 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             this.settings = settings;
         }
 
-        public void Inject(int pid, InjectionArguments args, bool x86, RuntimeType runtimeType)
-            => Inject(pid, args.Path, args.Type, args.Method, args.Argument, x86, runtimeType);
-
-        public void Inject(int pid, string path, string typeName, string methodName, string? parameter, bool x86, RuntimeType runtimeType)
+        public void Inject(int pid, in InjectionArguments args, bool x86, RuntimeType runtimeType)
         {
-            if (settings.CopyInjectedDLLToTemp)
-                path = Utils.CopyToTempPath(path);
-
             var injector = GetInjector(runtimeType);
             injector.Log = DbgManager.WriteMessage;
-            injector.Inject(pid, path, typeName, methodName, parameter, x86);
+
+            if (!settings.CopyInjectedDLLToTemp) {
+                injector.Inject(pid, args, x86);
+            } else {
+                injector.Inject(pid, new InjectionArguments {
+                    Path = Utils.CopyToTempPath(args.Path),
+                    Type = args.Type,
+                    Method = args.Method,
+                    Argument = args.Argument,
+                }, x86);
+            }
+
         }
 
         private static IInjector GetInjector(RuntimeType runtimeType)
