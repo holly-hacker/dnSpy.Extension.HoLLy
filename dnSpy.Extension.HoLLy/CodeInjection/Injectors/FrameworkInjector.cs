@@ -83,24 +83,24 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
 
             var instructions = new InstructionList();
 
-            void addCall(Register r, params object[] callArgs) => CodeInjectionUtils.AddCallStub(instructions, r, callArgs, x86);
+            void addCallR(Register r, params object[] callArgs) => CodeInjectionUtils.AddCallStub(instructions, r, callArgs, x86);
+            void addCallP(IntPtr fn, params object[] callArgs) => CodeInjectionUtils.AddCallStub(instructions, fn, callArgs, x86);
 
             if (x86) {
                 // call CorBindToRuntimeEx
-                instructions.Add(Instruction.Create(Code.Mov_r32_imm32, Register.EAX, fnAddr.ToInt32()));
-                addCall(Register.EAX, pwszVersion, pwszBuildFlavor, (byte)0, rcslid, riid, ppv);
+                addCallP(fnAddr, pwszVersion, pwszBuildFlavor, (byte)0, rcslid, riid, ppv);
 
                 // call ICLRRuntimeHost::Start
                 instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EDX, new MemoryOperand(Register.None, ppv.ToInt32())));
                 instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.EDX)));
                 instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.EAX, 0x0C)));
-                addCall(Register.EAX, Register.EDX);
+                addCallR(Register.EAX, Register.EDX);
 
                 // call ICLRRuntimeHost::ExecuteInDefaultAppDomain
                 instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EDX, new MemoryOperand(Register.None, ppv.ToInt32())));
                 instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.EDX)));
                 instructions.Add(Instruction.Create(Code.Mov_r32_rm32, Register.EAX, new MemoryOperand(Register.EAX, 0x2C)));
-                addCall(Register.EAX, Register.EDX, pwzAssemblyPath, pwzTypeName, pwzMethodName, pwzArgument, pReturnValue);
+                addCallR(Register.EAX, Register.EDX, pwzAssemblyPath, pwzTypeName, pwzMethodName, pwzArgument, pReturnValue);
 
                 instructions.Add(Instruction.Create(Code.Retnd));
             } else {
@@ -109,22 +109,21 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
                 instructions.Add(Instruction.Create(Code.Sub_rm64_imm8, Register.RSP, stackOffset + maxStackIndex * 8));
 
                 // call CorBindToRuntimeEx
-                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RAX, fnAddr.ToInt64()));
-                addCall(Register.RAX, pwszVersion, pwszBuildFlavor, 0, rcslid, riid, ppv);
+                addCallP(fnAddr, pwszVersion, pwszBuildFlavor, 0, rcslid, riid, ppv);
 
                 // call pClrHost->Start();
                 instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RCX, ppv.ToInt64()));
                 instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RCX, new MemoryOperand(Register.RCX)));
                 instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RAX, new MemoryOperand(Register.RCX)));
                 instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RDX, new MemoryOperand(Register.RAX, 0x18)));
-                addCall(Register.RDX, Register.RCX);
+                addCallR(Register.RDX, Register.RCX);
 
                 // call pClrHost->ExecuteInDefaultAppDomain()
                 instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RCX, ppv.ToInt64()));
                 instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RCX, new MemoryOperand(Register.RCX)));
                 instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RAX, new MemoryOperand(Register.RCX)));
                 instructions.Add(Instruction.Create(Code.Mov_r64_rm64, Register.RAX, new MemoryOperand(Register.RAX, 0x58)));
-                addCall(Register.RAX, Register.RCX, pwzAssemblyPath, pwzTypeName, pwzMethodName, pwzArgument, pReturnValue);
+                addCallR(Register.RAX, Register.RCX, pwzAssemblyPath, pwzTypeName, pwzMethodName, pwzArgument, pReturnValue);
 
                 instructions.Add(Instruction.Create(Code.Add_rm64_imm8, Register.RSP, stackOffset + maxStackIndex * 8));
 

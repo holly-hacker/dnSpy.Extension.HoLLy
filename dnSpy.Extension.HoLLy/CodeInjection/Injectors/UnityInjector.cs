@@ -90,16 +90,13 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
             var instructions = new InstructionList();
 
             // cdecl calling conventions, so we need to clean the stack
-            void addCall(Register r, object[] callArgs) => CodeInjectionUtils.AddCallStub(instructions, r, callArgs, x86, x86);
+            void addCall(IntPtr fn, object[] callArgs) => CodeInjectionUtils.AddCallStub(instructions, fn, callArgs, x86, x86);
 
             if (x86) {
-                if (rootDomainInfo.HasValue) {
-                    instructions.Add(Instruction.Create(Code.Mov_r32_imm32, Register.EAX, rootDomainInfo.Value.fun.ToInt32()));
-                    addCall(Register.EAX, new object[] { rootDomainInfo.Value.addr });
-                }
+                if (rootDomainInfo.HasValue)
+                    addCall(rootDomainInfo.Value.fun, new object[] { rootDomainInfo.Value.addr });
 
-                instructions.Add(Instruction.Create(Code.Mov_r32_imm32, Register.EAX, fnAddr.ToInt32()));
-                addCall(Register.EAX, arguments);
+                addCall(fnAddr, arguments);
                 instructions.Add(Instruction.Create(Code.Mov_rm32_r32, new MemoryOperand(Register.None, pReturnValue.ToInt32()), Register.EAX));
 
                 instructions.Add(Instruction.Create(Code.Retnd));

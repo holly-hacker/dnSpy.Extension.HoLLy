@@ -83,6 +83,17 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 			#endregion
 		}
 
+        public static void AddCallStub(InstructionList instructions, IntPtr regAddr, object[] arguments, bool x86, bool cleanStack = false)
+        {
+	        if (x86) {
+		        instructions.Add(Instruction.Create(Code.Mov_r32_imm32, Register.EAX, regAddr.ToInt32()));
+		        AddCallStub(instructions, Register.EAX, arguments, true, cleanStack);
+	        } else {
+		        instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RAX, regAddr.ToInt64()));
+		        AddCallStub(instructions, Register.RAX, arguments, false, cleanStack);
+	        }
+        }
+
         public static void AddCallStub(InstructionList instructions, Register regFun, object[] arguments, bool x86, bool cleanStack = false)
         {
 	        // TODO: push/pop parameter registers?
