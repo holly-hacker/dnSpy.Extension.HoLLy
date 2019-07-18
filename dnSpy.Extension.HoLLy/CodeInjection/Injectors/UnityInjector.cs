@@ -89,12 +89,8 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
 
             var instructions = new InstructionList();
 
-            void addCall(Register r, object[] callArgs)
-            {
-                // cdecl calling conventions, so we need to clean the stack
-                foreach (Instruction instr in CodeInjectionUtils.CreateCallStub(r, callArgs, x86, x86))
-                    instructions.Add(instr);
-            }
+            // cdecl calling conventions, so we need to clean the stack
+            void addCall(Register r, object[] callArgs) => CodeInjectionUtils.AddCallStub(instructions, r, callArgs, x86, x86);
 
             if (x86) {
                 if (rootDomainInfo.HasValue) {
@@ -127,12 +123,8 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
         {
             var instructions = new InstructionList();
 
-            void addCall(Register r, object[] callArgs)
-            {
-                // cdecl calling conventions, so we need to clean the stack
-                foreach (Instruction instr in CodeInjectionUtils.CreateCallStub(r, callArgs, x86, x86))
-                    instructions.Add(instr);
-            }
+            // cdecl calling conventions, so we need to clean the stack
+            void addCall(Register r, object[] callArgs) => CodeInjectionUtils.AddCallStub(instructions, r, callArgs, x86, x86);
 
             if (x86) {
                 if (rootDomainInfo.HasValue) {

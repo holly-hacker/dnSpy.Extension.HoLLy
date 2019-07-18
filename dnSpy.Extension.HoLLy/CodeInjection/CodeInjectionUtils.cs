@@ -83,10 +83,8 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 			#endregion
 		}
 
-        public static InstructionList CreateCallStub(Register regFun, object[] arguments, bool x86, bool cleanStack = false)
+        public static void AddCallStub(InstructionList instructions, Register regFun, object[] arguments, bool x86, bool cleanStack = false)
         {
-	        var instructions = new InstructionList();
-
 	        // TODO: push/pop parameter registers?
 	        if (x86) {
 		        // push arguments
@@ -145,8 +143,6 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 		        // call the function
 		        instructions.Add(Instruction.Create(Code.Call_rm64, regFun));
 	        }
-
-	        return instructions;
         }
 
         public static IntPtr RunRemoteCode(IntPtr hProc, InstructionList instructions, bool x86, bool waitForFinish = false)

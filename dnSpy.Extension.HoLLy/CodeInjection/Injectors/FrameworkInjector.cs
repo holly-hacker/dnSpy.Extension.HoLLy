@@ -83,11 +83,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
 
             var instructions = new InstructionList();
 
-            void addCall(Register r, params object[] callArgs)
-            {
-                foreach (Instruction instr in CodeInjectionUtils.CreateCallStub(r, callArgs, x86))
-                    instructions.Add(instr);
-            }
+            void addCall(Register r, params object[] callArgs) => CodeInjectionUtils.AddCallStub(instructions, r, callArgs, x86);
 
             if (x86) {
                 // call CorBindToRuntimeEx
