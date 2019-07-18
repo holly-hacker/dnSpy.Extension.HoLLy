@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -33,15 +32,18 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
             var bindToRuntimeAddr = GetCorBindToRuntimeExAddress(pid, hProc, x86);
             Log("CurBindToRuntimeEx: " + bindToRuntimeAddr.ToInt64().ToString("X8"));
 
-            var hStub = AllocateStub(hProc, path, typeName, methodName, parameter, bindToRuntimeAddr, x86, ClrVersion);
-            Log("Created stub at: " + hStub.ToInt64().ToString("X8"));
+            var instructions = CreateStub(hProc, path, typeName, methodName, parameter, bindToRuntimeAddr, x86, ClrVersion);
+            Log("Instructions to be injected:\n" + string.Join("\n", instructions));
 
-            var hThread = Native.CreateRemoteThread(hProc, IntPtr.Zero, 0u, hStub, IntPtr.Zero, 0u, IntPtr.Zero);
+            var hThread = CodeInjectionUtils.RunRemoteCode(hProc, instructions, x86);
             Log("Thread handle: " + hThread.ToInt32().ToString("X8"));
 
+            // TODO: option to wait until injected function returns?
+            /*
             var success = Native.GetExitCodeThread(hThread, out IntPtr exitCode);
             Log("GetExitCode success: " + success);
             Log("Exit code: " + exitCode.ToInt32().ToString("X8"));
+            */
 
             Native.CloseHandle(hProc);
         }
@@ -59,7 +61,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
             return mod.BaseAddress + fnAddr;
         }
 
-        private IntPtr AllocateStub(IntPtr hProc, string asmPath, string typeName, string methodName, string? args, IntPtr fnAddr, bool x86, string clrVersion)
+        private InstructionList CreateStub(IntPtr hProc, string asmPath, string typeName, string methodName, string? args, IntPtr fnAddr, bool x86, string clrVersion)
         {
             const string buildFlavor = "wks";    // WorkStation
 
@@ -132,19 +134,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
                 instructions.Add(Instruction.Create(Code.Retnq));
             }
 
-            Log("Instructions to be injected:\n" + string.Join("\n", instructions));
-
-            var cw = new CodeWriterImpl();
-            var ib = new InstructionBlock(cw, instructions, 0);
-            bool success = BlockEncoder.TryEncode(x86 ? 32 : 64, ib, out string errMsg);
-            if (!success)
-                throw new Exception("Error during Iced encode: " + errMsg);
-            byte[] bytes = cw.ToArray();
-
-            var ptrStub = alloc(bytes.Length, 0x40);    // RWX
-            writeBytes(ptrStub, bytes);
-
-            return ptrStub;
+            return instructions;
 
             IntPtr alloc(int size, int protection = 0x04) => Native.VirtualAllocEx(hProc, IntPtr.Zero, (uint)size, 0x1000, protection);
             void writeBytes(IntPtr address, byte[] b) => Native.WriteProcessMemory(hProc, address, b, (uint)b.Length, out _);
@@ -165,12 +155,6 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
                 writeBytes(pBuffer, buffer);
                 return pBuffer;
             }
-        }
-
-        sealed class CodeWriterImpl : CodeWriter {
-            readonly List<byte> allBytes = new List<byte>();
-            public override void WriteByte(byte value) => allBytes.Add(value);
-            public byte[] ToArray() => allBytes.ToArray();
         }
     }
 }

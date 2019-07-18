@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Iced.Intel;
@@ -144,6 +143,32 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 	        }
 
 	        return instructions;
+        }
+
+        public static IntPtr RunRemoteCode(IntPtr hProc, InstructionList instructions, bool x86, bool waitForFinish = false)
+        {
+	        var cw = new CodeWriterImpl();
+	        var ib = new InstructionBlock(cw, instructions, 0);
+	        if (!BlockEncoder.TryEncode(x86 ? 32 : 64, ib, out string errMsg))
+		        throw new Exception("Error during Iced encode: " + errMsg);
+	        byte[] bytes = cw.ToArray();
+
+	        var ptrStub = Native.VirtualAllocEx(hProc, IntPtr.Zero, (uint)bytes.Length, 0x1000, 0x40);
+	        Native.WriteProcessMemory(hProc, ptrStub, bytes, (uint)bytes.Length, out _);
+
+	        var thread = Native.CreateRemoteThread(hProc, IntPtr.Zero, 0u, ptrStub, IntPtr.Zero, 0u, IntPtr.Zero);
+
+	        // wait for thread to finish
+	        if (waitForFinish)
+				Native.WaitForSingleObject(thread, uint.MaxValue);
+
+	        return thread;
+        }
+
+        private sealed class CodeWriterImpl : CodeWriter {
+	        readonly List<byte> allBytes = new List<byte>();
+	        public override void WriteByte(byte value) => allBytes.Add(value);
+	        public byte[] ToArray() => allBytes.ToArray();
         }
 
         private struct ImageExportDirectory

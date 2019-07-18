@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -88,21 +87,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
             }
 
             Log("Instructions to be injected:\n" + string.Join("\n", instructions));
-
-            var cw = new CodeWriterImpl();
-            var ib = new InstructionBlock(cw, instructions, 0);
-            bool success = BlockEncoder.TryEncode(x86 ? 32 : 64, ib, out string errMsg);
-            if (!success)
-                throw new Exception("Error during Iced encode: " + errMsg);
-            byte[] bytes = cw.ToArray();
-
-            var ptrStub = alloc(bytes.Length, 0x40);    // RWX
-            writeBytes(ptrStub, bytes);
-
-            var thread = Native.CreateRemoteThread(hProc, IntPtr.Zero, 0u, ptrStub, IntPtr.Zero, 0u, IntPtr.Zero);
-
-            // wait for thread to finish
-            Native.WaitForSingleObject(thread, uint.MaxValue);
+            CodeInjectionUtils.RunRemoteCode(hProc, instructions, x86, true);
 
             var outBuffer = new byte[IntPtr.Size];
             Native.ReadProcessMemory(hProc, pReturnValue, outBuffer, outBuffer.Length, out _);
@@ -111,12 +96,6 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
 
             IntPtr alloc(int size, int protection = 0x04) => Native.VirtualAllocEx(hProc, IntPtr.Zero, (uint)size, 0x1000, protection);
             void writeBytes(IntPtr address, byte[] b) => Native.WriteProcessMemory(hProc, address, b, (uint)b.Length, out _);
-        }
-
-        sealed class CodeWriterImpl : CodeWriter {
-            readonly List<byte> allBytes = new List<byte>();
-            public override void WriteByte(byte value) => allBytes.Add(value);
-            public byte[] ToArray() => allBytes.ToArray();
         }
     }
 }
