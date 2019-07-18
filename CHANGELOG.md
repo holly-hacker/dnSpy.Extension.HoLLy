@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## v0.4.0
+Other changes:
+- Namespace and Type are now stored seperately in config files. Old config files will no longer contain valid recent injections.
+
 ## v0.3.0
 Features:
 - Reinject a recently injected DLL

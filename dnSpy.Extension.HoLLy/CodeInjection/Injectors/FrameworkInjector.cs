@@ -33,7 +33,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
             var bindToRuntimeAddr = GetCorBindToRuntimeExAddress(pid, hProc, x86);
             Log("CurBindToRuntimeEx: " + bindToRuntimeAddr.ToInt64().ToString("X8"));
 
-            var instructions = CreateStub(hProc, args.Path, args.Type, args.Method, args.Argument, bindToRuntimeAddr, x86, ClrVersion);
+            var instructions = CreateStub(hProc, args.Path, args.TypeFull, args.Method, args.Argument, bindToRuntimeAddr, x86, ClrVersion);
             Log("Instructions to be injected:\n" + string.Join("\n", instructions));
 
             var hThread = CodeInjectionUtils.RunRemoteCode(hProc, instructions, x86);
@@ -62,7 +62,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
             return mod.BaseAddress + fnAddr;
         }
 
-        private InstructionList CreateStub(IntPtr hProc, string asmPath, string typeName, string methodName, string? args, IntPtr fnAddr, bool x86, string clrVersion)
+        private InstructionList CreateStub(IntPtr hProc, string asmPath, string typeFullName, string methodName, string? args, IntPtr fnAddr, bool x86, string clrVersion)
         {
             const string buildFlavor = "wks";    // WorkStation
 
@@ -78,7 +78,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
             IntPtr pReturnValue = alloc(4);
             IntPtr pwzArgument = allocString(args);
             IntPtr pwzMethodName = allocString(methodName);
-            IntPtr pwzTypeName = allocString(typeName);
+            IntPtr pwzTypeName = allocString(typeFullName);
             IntPtr pwzAssemblyPath = allocString(asmPath);
 
             var instructions = new InstructionList();

@@ -32,6 +32,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             } else {
                 injector.Inject(pid, new InjectionArguments {
                     Path = Utils.CopyToTempPath(args.Path),
+                    Namespace = args.Namespace,
                     Type = args.Type,
                     Method = args.Method,
                     Argument = args.Argument,
