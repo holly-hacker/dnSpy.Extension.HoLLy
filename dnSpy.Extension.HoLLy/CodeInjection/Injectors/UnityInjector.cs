@@ -93,7 +93,18 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
                 instructions.Add(Instruction.Create(Code.Mov_rm32_r32, new MemoryOperand(Register.None, pReturnValue.ToInt32()), Register.EAX));
                 instructions.Add(Instruction.Create(Code.Retnd));
             } else {
-                throw new NotImplementedException();
+                int stackSize = 0x20 + Math.Max(0, arguments.Length - 4) * 8;
+                instructions.Add(Instruction.Create(Code.Sub_rm64_imm8, Register.RSP, stackSize));
+
+                if (rootDomainInfo.HasValue)
+                    addCall(rootDomainInfo.Value.fun, new object[] { rootDomainInfo.Value.addr });
+
+                addCall(fnAddr, arguments);
+                instructions.Add(Instruction.Create(Code.Mov_r64_imm64, Register.RBX, pReturnValue.ToInt64()));
+                instructions.Add(Instruction.Create(Code.Mov_rm64_r64, new MemoryOperand(Register.RBX), Register.RAX));
+
+                instructions.Add(Instruction.Create(Code.Add_rm64_imm8, Register.RSP, stackSize));
+                instructions.Add(Instruction.Create(Code.Retnq));
             }
 
             CodeInjectionUtils.RunRemoteCode(hProc, instructions, x86, wait);
