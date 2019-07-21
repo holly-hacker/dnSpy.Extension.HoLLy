@@ -42,7 +42,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
             var method = call("mono_class_get_method_from_name", @class, allocCString(args.Method), amountOfParameters);
 
             // allocate arguments
-            var pArg1 = call("mono_string_new", rootDomain, allocCString(args.Argument));
+            var pArg1 = call("mono_string_new_wrapper", allocCString(args.Argument));
             var pArgs = allocBytes(x86 ? BitConverter.GetBytes(pArg1.ToInt32()) : BitConverter.GetBytes(pArg1.ToInt64()));
             callNoWait("mono_runtime_invoke", method, IntPtr.Zero, pArgs, IntPtr.Zero);
 
@@ -65,7 +65,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
                 Log($"Executed {m}");
             }
 
-            IntPtr allocCString(string? str) => str is null ? IntPtr.Zero : allocBytes(new ASCIIEncoding().GetBytes(str + "\0"));
+            IntPtr allocCString(string? str) => str is null ? allocBytes(new byte[] { 0 }) : allocBytes(new ASCIIEncoding().GetBytes(str + "\0"));
 
             IntPtr allocBytes(byte[] buffer)
             {
