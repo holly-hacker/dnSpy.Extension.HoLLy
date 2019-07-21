@@ -61,6 +61,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
             {
                 parent.settings.AddRecentInjection(injectionArguments);
                 DbgProcess proc = parent.CurrentProcess;
+                parent.injector.Log = parent.DbgManager.WriteMessage;
                 parent.injector.Inject(proc.Id, injectionArguments, proc.Bitness == 32, proc.Runtimes.First().GetRuntimeType());
             }
 

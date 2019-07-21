@@ -1,3 +1,4 @@
+using System;
 using dnSpy.Contracts.Debugger;
 
 namespace HoLLy.dnSpyExtension.Common.CodeInjection
@@ -6,5 +7,6 @@ namespace HoLLy.dnSpyExtension.Common.CodeInjection
     {
         void Inject(int pid, in InjectionArguments args, bool x86, RuntimeType runtimeType);
         bool IsProcessSupported(DbgProcess process, out string? reason);
+        Action<string> Log { set; }
     }
 }

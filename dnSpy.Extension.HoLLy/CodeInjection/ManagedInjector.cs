@@ -11,21 +11,20 @@ namespace HoLLy.dnSpyExtension.CodeInjection
     [Export(typeof(IManagedInjector))]
     internal class ManagedInjector : IManagedInjector
     {
-        private DbgManager DbgManager => dbgManagerLazy.Value;
-        private readonly Lazy<DbgManager> dbgManagerLazy;
+        public Action<string> Log { private get; set; } = s => { };
+
         private readonly Settings settings;
 
         [ImportingConstructor]
-        public ManagedInjector(Lazy<DbgManager> dbgManagerLazy, Settings settings)
+        public ManagedInjector(Settings settings)
         {
-            this.dbgManagerLazy = dbgManagerLazy;
             this.settings = settings;
         }
 
         public void Inject(int pid, in InjectionArguments args, bool x86, RuntimeType runtimeType)
         {
             var injector = GetInjector(runtimeType);
-            injector.Log = DbgManager.WriteMessage;
+            injector.Log = Log;
 
             if (!settings.CopyInjectedDLLToTemp) {
                 injector.Inject(pid, args, x86);

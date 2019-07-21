@@ -28,6 +28,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands.Debug
             if (!InjectDLL.AskForEntryPoint(out InjectionArguments args))
                 return;
 
+            injector.Log = s => MsgBox.Instance.Show(s);
             injector.Inject(pid.Value, args, x86.Value, rt.Value);
         }
 
