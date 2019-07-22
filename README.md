@@ -5,7 +5,7 @@ A dnSpy extension to aid reversing of obfuscated assemblies.
 
 ### Features
 - **Change the displayed symbol name of types, methods, properties or fields, without modifying the binary.** These modified names are saved in an xml file, meaning you can write a tool to generate them automatically.
-- **Inject managed (.NET) DLLs into the debugged process.** The injected DLL must have a method with signature `static int Method(string argument)`, can not have a conflicting architecture (no x86-only in an x64 process, AnyCPU is fine) and can not have an incompatible framework version (no .NET 4.7.2 in a .NET 4.0 process, or .NET 2.0 in a .NET 4.0 process due to CLR version differences). .NET Core and Unity are not yet supported.
+- **Inject managed (.NET) DLLs into the debugged process.** The injected DLL must have a method with signature `static int Method(string argument)`. .NET Core and Unity x64 are not yet supported.
 - Underline managed assemblies in the treeview.
 
 ### License

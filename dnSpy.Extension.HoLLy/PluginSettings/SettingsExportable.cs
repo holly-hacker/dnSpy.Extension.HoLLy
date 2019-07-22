@@ -42,6 +42,7 @@ namespace HoLLy.dnSpyExtension.PluginSettings
             foreach (var injection in RecentInjections) {
                 ISettingsSection sectInjection = sectInjections.CreateSection(SectionRecentInjectionsInjection);
                 sectInjection.Attribute(nameof(injection.Path), injection.Path);
+                sectInjection.Attribute(nameof(injection.Namespace), injection.Namespace);
                 sectInjection.Attribute(nameof(injection.Type), injection.Type);
                 sectInjection.Attribute(nameof(injection.Method), injection.Method);
                 if (injection.Argument != null) sectInjection.Attribute(nameof(injection.Argument), injection.Argument);

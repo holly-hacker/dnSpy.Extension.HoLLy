@@ -26,6 +26,9 @@ namespace HoLLy.dnSpyExtension.CodeInjection
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool GetExitCodeThread(IntPtr hThread, out IntPtr lpExitCode);
 
+        [DllImport("kernel32.dll", SetLastError=true)]
+        public static extern UInt32 WaitForSingleObject(IntPtr hHandle, UInt32 dwMilliseconds);
+
         [Flags]
         public enum ProcessAccessFlags : uint
         {

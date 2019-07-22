@@ -53,7 +53,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
             /// TODO: Use UIUtilities.EscapeMenuItemHeader, see 0xd4d/dnSpy#1201
             /// </remarks>
             public override string GetHeader(IMenuItemContext context) => NameUtilities
-                .CleanName($"{Path.GetFileName(injectionArguments.Path)} {injectionArguments.Type}.{injectionArguments.Method}({Quote(injectionArguments.Argument) ?? "null"})")
+                .CleanName($"{Path.GetFileName(injectionArguments.Path)} {injectionArguments.TypeFull}.{injectionArguments.Method}({Quote(injectionArguments.Argument) ?? "null"})")
                 .Replace("_", "__");
             public override bool IsEnabled(IMenuItemContext context) => File.Exists(injectionArguments.Path);
 
@@ -61,6 +61,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
             {
                 parent.settings.AddRecentInjection(injectionArguments);
                 DbgProcess proc = parent.CurrentProcess;
+                parent.injector.Log = parent.DbgManager.WriteMessage;
                 parent.injector.Inject(proc.Id, injectionArguments, proc.Bitness == 32, proc.Runtimes.First().GetRuntimeType());
             }
 
