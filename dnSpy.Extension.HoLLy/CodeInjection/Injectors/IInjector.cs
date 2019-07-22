@@ -3,7 +3,7 @@ using HoLLy.dnSpyExtension.Common.CodeInjection;
 
 namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
 {
-    public interface IInjector
+    internal interface IInjector
     {
         Action<string> Log { set; }
         void Inject(int pid, in InjectionArguments args, bool x86);

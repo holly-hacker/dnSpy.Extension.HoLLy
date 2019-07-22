@@ -4,7 +4,7 @@ using dnSpy.Contracts.Settings;
 
 namespace HoLLy.dnSpyExtension.Common.CodeInjection
 {
-    public struct InjectionArguments
+    internal struct InjectionArguments
     {
         public string Path;
         public string? Namespace;

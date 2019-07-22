@@ -7,7 +7,7 @@ using Iced.Intel;
 
 namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
 {
-    public class UnityInjector : IInjector
+    internal class UnityInjector : IInjector
     {
         public Action<string> Log { private get; set; } = s => { };
 
