@@ -23,8 +23,8 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands.Debug
             var pid = MsgBox.Instance.Ask<int?>("Process ID", verifier: (valStr) => {
                 var val = (int?)TypeDescriptor.GetConverter(typeof(int?)).ConvertFromInvariantString(valStr);
                 if (val is null) return "Not an int?";
-                bool exists = Process.GetProcesses().Any(p => p.Id == val.Value);
-                return exists ? null : $"Couldn't find process with id {val.Value} (0x{val.Value:X})";
+                if (Process.GetProcesses().All(p => p.Id != val.Value)) return $"Couldn't find process with id {val.Value} (0x{val.Value:X})";
+                return null;
             });
             if (pid is null) return;
 

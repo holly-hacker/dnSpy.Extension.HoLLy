@@ -96,7 +96,6 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 
         public static void AddCallStub(InstructionList instructions, Register regFun, object[] arguments, bool x86, bool cleanStack = false)
         {
-	        // TODO: push/pop parameter registers?
 	        if (x86) {
 		        // push arguments
 		        for (int i = arguments.Length - 1; i >= 0; i--) {
@@ -177,7 +176,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
         }
 
         private sealed class CodeWriterImpl : CodeWriter {
-	        readonly List<byte> allBytes = new List<byte>();
+	        private readonly List<byte> allBytes = new List<byte>();
 	        public override void WriteByte(byte value) => allBytes.Add(value);
 	        public byte[] ToArray() => allBytes.ToArray();
         }
