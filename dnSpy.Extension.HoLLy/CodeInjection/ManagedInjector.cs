@@ -74,12 +74,12 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             var rtSupported = runtimeType switch {
                 RuntimeType.FrameworkV2 => true,
                 RuntimeType.FrameworkV4 => true,
-                RuntimeType.Unity => true,
+                RuntimeType.Unity when process.Architecture == DbgArchitecture.X86 => true,
                 _ => false,
             };
 
             if (!rtSupported) {
-                reason = $"Unsupported runtime '{process.Runtimes.First().Name}'";
+                reason = $"Unsupported runtime '{process.Runtimes.First().Name}' on architecture {process.Architecture}";
                 return false;
             }
 
