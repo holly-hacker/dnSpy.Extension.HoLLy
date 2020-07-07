@@ -23,7 +23,9 @@ namespace HoLLy.dnSpyExtension.SourceMap.Commands
         {
             var textReference = context.Find<TextReference>();
             var docViewer = context.Find<IDocumentViewer>();
-            var m = (IMemberDef)textReference.Reference;
+
+            if (!(textReference.Reference is IMemberDef m))
+                return;
 
             string newName = MsgBox.Instance.Ask<string>(string.Empty, title: $"New name for {SourceMapUtils.GetDefToMap(m)}");
 
@@ -32,8 +34,8 @@ namespace HoLLy.dnSpyExtension.SourceMap.Commands
 
             sourceMapStorage.SetName(m, newName);
 
-            var documentTabService = docViewer.DocumentTab.DocumentTabService;
-            documentTabService.RefreshModifiedDocument(documentTabService.DocumentTreeView.FindNode(m.Module).Document);
+            var documentTabService = docViewer.DocumentTab?.DocumentTabService;
+            documentTabService?.RefreshModifiedDocument(documentTabService.DocumentTreeView.FindNode(m.Module)!.Document);
         }
 
         public override bool IsVisible(IMenuItemContext context)

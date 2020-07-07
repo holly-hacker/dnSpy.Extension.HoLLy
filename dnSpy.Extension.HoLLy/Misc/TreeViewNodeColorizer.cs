@@ -21,7 +21,7 @@ namespace HoLLy.dnSpyExtension.Misc
         [Name(UnderlineClassificationType)]
         [BaseDefinition(PredefinedClassificationTypeNames.FormalLanguage)]
         // ReSharper disable once UnassignedField.Local, InconsistentNaming
-        private static ClassificationTypeDefinition UnderlineClassificationTypeDefinition;
+        private static ClassificationTypeDefinition? UnderlineClassificationTypeDefinition;
 #pragma warning restore CS0169
 
         // Export the classes that define the colors and order

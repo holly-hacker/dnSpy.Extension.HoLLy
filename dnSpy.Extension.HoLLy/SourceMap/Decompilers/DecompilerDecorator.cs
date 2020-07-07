@@ -32,14 +32,14 @@ namespace HoLLy.dnSpyExtension.SourceMap.Decompilers
         public Guid GenericGuid => implementation.GenericGuid;
         public Guid UniqueGuid => implementation.UniqueGuid.XorGuid(Constants.DecompilerGuid);
         public string FileExtension => implementation.FileExtension;
-        public string ProjectFileExtension => implementation.ProjectFileExtension;
+        public string? ProjectFileExtension => implementation.ProjectFileExtension;
 
         public void WriteName(ITextColorWriter output, TypeDef type) => implementation.WriteName(output, type);
         public void WriteName(ITextColorWriter output, PropertyDef property, bool? isIndexer) => implementation.WriteName(output, property, isIndexer);
-        public void WriteType(ITextColorWriter output, ITypeDefOrRef type, bool includeNamespace, ParamDef? pd = null) => implementation.WriteType(output, type, includeNamespace, pd);
-        public void WriteToolTip(ITextColorWriter output, IMemberRef member, IHasCustomAttribute typeAttributes) => implementation.WriteToolTip(output, member, typeAttributes);
+        public void WriteType(ITextColorWriter output, ITypeDefOrRef? type, bool includeNamespace, ParamDef? pd = null) => implementation.WriteType(output, type, includeNamespace, pd);
+        public void WriteToolTip(ITextColorWriter output, IMemberRef member, IHasCustomAttribute? typeAttributes) => implementation.WriteToolTip(output, member, typeAttributes);
         public void WriteToolTip(ITextColorWriter output, ISourceVariable variable) => implementation.WriteToolTip(output, variable);
-        public void WriteNamespaceToolTip(ITextColorWriter output, string @namespace) => implementation.WriteNamespaceToolTip(output, @namespace);
+        public void WriteNamespaceToolTip(ITextColorWriter output, string? @namespace) => implementation.WriteNamespaceToolTip(output, @namespace);
         public void Write(ITextColorWriter output, IMemberRef member, FormatterOptions flags) => implementation.Write(output, member, flags);
         public void WriteCommentBegin(IDecompilerOutput output, bool addSpace) => implementation.WriteCommentBegin(output, addSpace);
         public void WriteCommentEnd(IDecompilerOutput output, bool addSpace) => implementation.WriteCommentEnd(output, addSpace);

@@ -69,7 +69,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
 
             IntPtr allocBytes(byte[] buffer)
             {
-                IntPtr pBuffer = Native.VirtualAllocEx(hProc, IntPtr.Zero, (uint)buffer.Length, 0x1000, 0x04);
+                IntPtr pBuffer = Native.VirtualAllocEx(hProc, IntPtr.Zero, (uint)buffer!.Length, 0x1000, 0x04);
                 if (buffer.Any(b => b != 0))
                     Native.WriteProcessMemory(hProc, pBuffer, buffer, (uint)buffer.Length, out _);
                 return pBuffer;

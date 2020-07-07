@@ -25,9 +25,9 @@ namespace HoLLy.dnSpyExtension.SourceMap.Commands
         public override void Execute(IMenuItemContext context)
         {
             var doc = GetDocument();
-            if (doc is null) return;
+            var asm = doc?.AssemblyDef;
+            if (asm is null) return;
 
-            var asm = doc.AssemblyDef;
             var ofd = new OpenFileDialog {
                 Title = $"Save sourcemap for {asm.FullName}",
                 FileName = $"{asm.Name}.xml",
@@ -38,11 +38,11 @@ namespace HoLLy.dnSpyExtension.SourceMap.Commands
                 return;
 
             map.LoadFrom(asm, ofd.FileName);
-            tabService.RefreshModifiedDocument(doc);
+            tabService.RefreshModifiedDocument(doc!);
         }
 
         private IDsDocument? GetDocument() => tabService.DocumentTreeView.TreeView.SelectedItem?.GetDocumentNode()?.Document;
 
-        public override bool IsEnabled(IMenuItemContext context) => GetDocument() != null;
+        public override bool IsEnabled(IMenuItemContext context) => GetDocument()?.AssemblyDef != null;
     }
 }

@@ -25,14 +25,14 @@ namespace HoLLy.dnSpyExtension.Common.Commands.Debug
             // if we have access to an IDocumentViewer, try to find the clicked item
             TextReference? textRef = context.Find<TextReference>();
             if (textRef != null)
-                sb.AppendLine($"TextReference.Reference type: {textRef.Reference.GetType()}");
+                sb.AppendLine($"TextReference.Reference type: {textRef.Reference?.GetType()}");
 
             MsgBox.Instance.Show(sb.ToString());
         }
 
         public override string GetHeader(IMenuItemContext context)
         {
-            return $"DBG: View context of {context.CreatorObject.Object.GetType().Name}";
+            return $"DBG: View context of {context.CreatorObject.Object?.GetType().Name}";
         }
     }
 }

@@ -159,7 +159,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
         {
 	        var cw = new CodeWriterImpl();
 	        var ib = new InstructionBlock(cw, instructions, 0);
-	        if (!BlockEncoder.TryEncode(x86 ? 32 : 64, ib, out string errMsg))
+	        if (!BlockEncoder.TryEncode(x86 ? 32 : 64, ib, out string? errMsg, out _))
 		        throw new Exception("Error during Iced encode: " + errMsg);
 	        byte[] bytes = cw.ToArray();
 
