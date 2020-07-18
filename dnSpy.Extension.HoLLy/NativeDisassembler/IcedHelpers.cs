@@ -36,6 +36,18 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler
 
             return instructionList;
         }
+
+        public static byte[] EncodeBytes(InstructionList methodBody, int bitness)
+        {
+            using var ms = new MemoryStream();
+            var encoder = Encoder.Create(bitness, new StreamCodeWriter(ms));
+
+            foreach (ref var instruction in methodBody)
+                encoder.Encode(instruction, instruction.IP);
+
+            var encodedBytes = ms.ToArray();
+            return encodedBytes;
+        }
         
         public static bool TryGetJumpTarget(this Instruction instr, out ulong target)
         {
