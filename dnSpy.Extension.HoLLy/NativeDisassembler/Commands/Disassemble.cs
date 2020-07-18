@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using dnlib.DotNet;
 using dnSpy.Contracts.App;
-using dnSpy.Contracts.Decompiler;
 using dnSpy.Contracts.Documents.Tabs.DocViewer;
 using dnSpy.Contracts.Menus;
 using HoLLy.dnSpyExtension.Common;
@@ -22,10 +21,8 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler.Commands
         public override void Execute(IMenuItemContext context)
         {
             var method = (MethodDef)context.Find<TextReference>().Reference!;
-            var mod = method.Module;
-            var fileOffset = mod.ToFileOffset((uint)method.NativeBody.RVA);
-
-            mboxService.Show($"file offset: {fileOffset}@{mod.Location}");
+            var methodBody = IcedHelpers.ReadNativeMethodBody(method);
+            mboxService.Show("Instructions: " + methodBody.Count);
         }
 
         public override bool IsVisible(IMenuItemContext context) => context.Find<TextReference>()?.Reference is MethodDef md && md.IsNative;
