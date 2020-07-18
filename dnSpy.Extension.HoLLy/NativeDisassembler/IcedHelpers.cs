@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using dnlib.DotNet;
+using dnSpy.Contracts.App;
 using dnSpy.Contracts.Decompiler;
 using Iced.Intel;
 
@@ -13,18 +14,26 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler
         
         public static InstructionList ReadNativeMethodBody(MethodDef method)
         {
-            // TODO: use Echo for this
             var mod = method.Module;
+            var loc = mod.Location;
+            var is32Bit = mod.Is32BitRequired;
             var rva = (uint)method.NativeBody.RVA;
             var fileOffset = mod.ToFileOffset(rva)!.Value;
             
-            using var fs = File.OpenRead(mod.Location);
+            return ReadNativeFunction(loc, fileOffset, is32Bit, rva);
+        }
+
+        public static InstructionList ReadNativeFunction(string loc, uint fileOffset, bool is32Bit, uint rva)
+        {
+            // TODO: use Echo for this
+            using var fs = File.OpenRead(loc);
             fs.Position = fileOffset;
             var reader = new StreamCodeReader(fs);
-            var decoder = Decoder.Create(mod.Is32BitRequired ? 32 : 64, reader);
+            var decoder = Decoder.Create(is32Bit ? 32 : 64, reader);
             decoder.IP = rva;
 
             // decode loop
+            // TODO: this will blow past an unconditional jump (eg. native entrypoint) causing it to read garbage data.
             Instruction instruction;
             var instructionList = new InstructionList();
             ulong minAddress = ulong.MinValue;
@@ -33,9 +42,10 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler
                 decoder.Decode(out instruction);
                 if (instruction.TryGetJumpTarget(out var target))
                     minAddress = Math.Max(minAddress, target);
-                
+
+                MsgBox.Instance.Show(instruction.ToString());
                 instructionList.Add(instruction);
-            } while (!(instruction.FlowControl == FlowControl.Return && decoder.IP >= minAddress));
+            } while (!((instruction.FlowControl == FlowControl.Return) && decoder.IP >= minAddress));
 
             return instructionList;
         }

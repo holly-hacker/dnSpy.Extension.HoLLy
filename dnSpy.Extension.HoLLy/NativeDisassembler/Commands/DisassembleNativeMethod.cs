@@ -10,13 +10,13 @@ using HoLLy.dnSpyExtension.Common;
 namespace HoLLy.dnSpyExtension.NativeDisassembler.Commands
 {
     [ExportMenuItem(Header = "Disassemble", Group = Constants.ContextMenuGroupEdit, Order = 10000)]
-    public class Disassemble : MenuItemBase
+    public class DisassembleNativeMethod : MenuItemBase
     {
         private readonly DisassemblyContentProviderFactory fac;
         private readonly Lazy<DisassemblyViewerService> disassemblyViewerService;
 
         [ImportingConstructor]
-        public Disassemble(DisassemblyContentProviderFactory fac, Lazy<DisassemblyViewerService> disassemblyViewerService)
+        public DisassembleNativeMethod(DisassemblyContentProviderFactory fac, Lazy<DisassemblyViewerService> disassemblyViewerService)
         {
             this.fac = fac;
             this.disassemblyViewerService = disassemblyViewerService;
