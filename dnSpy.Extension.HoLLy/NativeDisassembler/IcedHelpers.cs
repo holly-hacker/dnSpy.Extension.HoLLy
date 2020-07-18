@@ -8,6 +8,9 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler
 {
     public static class IcedHelpers
     {
+        public static byte[] ReadNativeMethodBodyBytes(MethodDef method)
+            => EncodeBytes(ReadNativeMethodBody(method), method.Module.Is32BitRequired ? 32 : 64);
+        
         public static InstructionList ReadNativeMethodBody(MethodDef method)
         {
             // TODO: use Echo for this
@@ -45,8 +48,7 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler
             foreach (ref var instruction in methodBody)
                 encoder.Encode(instruction, instruction.IP);
 
-            var encodedBytes = ms.ToArray();
-            return encodedBytes;
+            return ms.ToArray();
         }
         
         public static bool TryGetJumpTarget(this Instruction instr, out ulong target)
