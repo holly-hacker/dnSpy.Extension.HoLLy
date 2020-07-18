@@ -52,6 +52,8 @@
         <ProjectReference Include="..\dnSpy\dnSpy\dnSpy.Contracts.Debugger\dnSpy.Contracts.Debugger.csproj" Private="false" />
         <ProjectReference Include="..\dnSpy\dnSpy\dnSpy.Contracts.DnSpy\dnSpy.Contracts.DnSpy.csproj" Private="false" />
         <ProjectReference Include="..\dnSpy\dnSpy\dnSpy.Contracts.Logic\dnSpy.Contracts.Logic.csproj" Private="false" />
+        <ProjectReference Include="..\Echo\src\Core\Echo.ControlFlow\Echo.ControlFlow.csproj" />
+        <ProjectReference Include="..\Echo\src\Platforms\Echo.Platforms.Iced\Echo.Platforms.Iced.csproj" />
     </ItemGroup>
 
     <ItemGroup>

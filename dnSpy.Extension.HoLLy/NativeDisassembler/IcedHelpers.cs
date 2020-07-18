@@ -1,8 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using dnlib.DotNet;
 using dnSpy.Contracts.App;
 using dnSpy.Contracts.Decompiler;
+using Echo.ControlFlow.Construction;
+using Echo.ControlFlow.Construction.Static;
+using Echo.Platforms.Iced;
 using Iced.Intel;
 
 namespace HoLLy.dnSpyExtension.NativeDisassembler
@@ -32,22 +36,14 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler
             var decoder = Decoder.Create(is32Bit ? 32 : 64, reader);
             decoder.IP = rva;
 
-            // decode loop
-            // TODO: this will blow past an unconditional jump (eg. native entrypoint) causing it to read garbage data.
-            Instruction instruction;
-            var instructionList = new InstructionList();
-            ulong minAddress = ulong.MinValue;
-            do
-            {
-                decoder.Decode(out instruction);
-                if (instruction.TryGetJumpTarget(out var target))
-                    minAddress = Math.Max(minAddress, target);
+            var architecture = new X86Architecture();
+            var instructionProvider = new X86DecoderInstructionProvider(architecture, decoder);
+            var cfgBuilder = new StaticFlowGraphBuilder<Instruction>(
+                instructionProvider,
+                new X86StaticSuccessorResolver());
 
-                MsgBox.Instance.Show(instruction.ToString());
-                instructionList.Add(instruction);
-            } while (!((instruction.FlowControl == FlowControl.Return) && decoder.IP >= minAddress));
-
-            return instructionList;
+            var graph = cfgBuilder.ConstructFlowGraph(rva);
+            return new InstructionList(graph.Nodes.SelectMany(n => n.Contents.Instructions).OrderBy(i => i.IP));
         }
 
         public static byte[] EncodeBytes(InstructionList methodBody, int bitness)
