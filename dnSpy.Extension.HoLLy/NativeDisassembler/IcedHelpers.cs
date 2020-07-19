@@ -29,20 +29,18 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler
 
         public static InstructionList ReadNativeFunction(string loc, uint fileOffset, bool is32Bit, uint rva)
         {
-            // TODO: use Echo for this
             using var fs = File.OpenRead(loc);
             fs.Position = fileOffset;
-            var reader = new StreamCodeReader(fs);
-            var decoder = Decoder.Create(is32Bit ? 32 : 64, reader);
-            decoder.IP = rva;
 
             var architecture = new X86Architecture();
-            var instructionProvider = new X86DecoderInstructionProvider(architecture, decoder);
+            var instructionProvider = new X86DecoderInstructionProvider(architecture, fs, is32Bit ? 32 : 64);
             var cfgBuilder = new StaticFlowGraphBuilder<Instruction>(
                 instructionProvider,
                 new X86StaticSuccessorResolver());
 
-            var graph = cfgBuilder.ConstructFlowGraph(rva);
+            // pass in a file offset, since we're working on a file on disk. would pass rva (and base addr in provider
+            // ctor) for in-memory.
+            var graph = cfgBuilder.ConstructFlowGraph(fileOffset);
             return new InstructionList(graph.Nodes.SelectMany(n => n.Contents.Instructions).OrderBy(i => i.IP));
         }
 
