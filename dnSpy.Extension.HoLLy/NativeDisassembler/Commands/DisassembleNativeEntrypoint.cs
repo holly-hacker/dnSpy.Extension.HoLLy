@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using dnlib.PE;
-using dnSpy.Contracts.App;
 using dnSpy.Contracts.Disassembly;
 using dnSpy.Contracts.Disassembly.Viewer;
 using dnSpy.Contracts.Documents.TreeView;
