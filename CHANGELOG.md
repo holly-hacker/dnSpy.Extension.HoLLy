@@ -1,28 +1,55 @@
-Changelog
-=========
+# Changelog
+All notable changes to this project will be documented in this file.
 
-## v0.4.0
-Features:
-- Add Unity x86 DLL injection
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-Other changes:
-- Namespace and Type are now stored seperately in config files. Old config files will no longer contain valid recent injections.
+## [Unreleased]
 
-## v0.3.0
-Features:
-- Reinject a recently injected DLL
-- Export/import sourcemaps
-- Add setting for copying injected DLLs to temporary directory before injecting
-- Add setting for automatically renaming DLLImports if they don't have a mapped name already
-- Add setting for automatically renaming overridden members
+### Added
+- **Add Unity x86 DLL injection (#23)**
+- **Disassemble native functions and the native entrypoint**
+- Debug command for showing tree node type
 
-Bugfixes:
-- "this" keyword is no longer sourcemapped
-- Mapping constructors will map their declaring type
+### Changed
+- Targets Unity v6.0.16
+- **Include [Echo](https://github.com/washi1337/echo) for better disassembling of native functions without known length**
+  - The plugin may need its own folder for now inside the dnSpy installation (eg. `bin/Extensions/HoLLy/dnSpy.Extension.HoLLy.dll`), and will need all the included DLLs to be present.
+- Namespace and Type are now stored seperately in DLL injection config files, meaning old ones will be invalidated
+- Improved debug command for injecting into arbitrary process
+  - It now asks for runtime type
+  - It now verifies the input PID while you're typing
+  - Automatically assumes process architecture matches (it wouldn't work otherwise)
 
-## v0.2.0
-- DLL injection in debugged .NET Framework processes
+## [0.3.0] - 2019-07-14
+### Added
+- Import/export sourcemaps
+  - Location with cached sourcemaps can be opened with a menu item (#5)
+- Allow automatically sourcemapping DLLImports, if they don't already have a name (#11)
+- Allow copying injected DLL to temporary directory to avoid locking the file (#2)
+- Store list of recent injections for easy repeated use (#4)
 
-## v0.1.0
-- Rename symbols in decompiler without modifying binary (sourcemapping)
-- Underline .NET assemblies in tree view
+### Fixed
+- Constructors now get correctly sourcemapped (#13)
+- Sourcemapping a constructor now correctly renames the declaring type (#12)
+- `this` keyword no longer gets incorrectly sourcemapped (#14)
+- Code tabs now refresh when sourcemap settings are changed (#16)
+
+## [0.2.0] - 2019-07-07
+### Added
+- **Managed DLL injection for debugged process**
+  - Requires a method with signature `static int(string)`
+  - Entrypoint and string parameter can be selected.
+  - Works for .NET Framework x86
+- Debug command to inject managed DLL into arbitrary process
+- Debug command to show info on debugged process
+
+## [0.1.0] - 2019-07-02
+### Added
+- **Add sourcemapping decompiler modes for C#, Visual Basic and IL**
+  - Symbol names can be shown with different names, without modifying the binary
+  - Sourcemaps can be exported and imported
+- Underline managed assemblies in the treeview
+- Debug command to show info on `IMenuItemContext`s
+
+### Changed
+- Targets dnSpy v6.0.5, NET472 only
