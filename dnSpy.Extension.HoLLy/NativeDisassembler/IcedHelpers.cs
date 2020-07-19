@@ -1,8 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using dnlib.DotNet;
-using dnSpy.Contracts.App;
 using dnSpy.Contracts.Decompiler;
 using Echo.ControlFlow.Construction;
 using Echo.ControlFlow.Construction.Static;
