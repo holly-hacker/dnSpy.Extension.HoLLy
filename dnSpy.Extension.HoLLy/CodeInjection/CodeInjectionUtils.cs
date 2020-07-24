@@ -64,7 +64,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
 
 				IntPtr hStructure = Marshal.AllocHGlobal(bytes.Length);
 				Marshal.Copy(bytes, 0, hStructure, bytes.Length);
-				var structure = Marshal.PtrToStructure<T>(hStructure);
+				var structure = Marshal.PtrToStructure<T>(hStructure)!;
 				Marshal.FreeHGlobal(hStructure);
 
 				return structure;

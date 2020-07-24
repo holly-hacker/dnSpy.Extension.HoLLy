@@ -1,11 +1,11 @@
 using System.ComponentModel.Composition;
-using System.Windows.Forms;
 using dnSpy.Contracts.Documents;
 using dnSpy.Contracts.Documents.Tabs;
 using dnSpy.Contracts.Documents.TreeView;
 using dnSpy.Contracts.Menus;
 using HoLLy.dnSpyExtension.Common;
 using HoLLy.dnSpyExtension.Common.SourceMap;
+using Microsoft.Win32;
 
 namespace HoLLy.dnSpyExtension.SourceMap.Commands
 {
@@ -33,7 +33,7 @@ namespace HoLLy.dnSpyExtension.SourceMap.Commands
                 Filter = "SourceMap XML|*.xml|All Files|*"
             };
 
-            if (sfd.ShowDialog() != DialogResult.OK)
+            if (sfd.ShowDialog() != true)
                 return;
 
             map.SaveTo(asm, sfd.FileName);

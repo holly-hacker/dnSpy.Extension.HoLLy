@@ -21,7 +21,6 @@
         <AssemblyName>dnSpy.Extension.HoLLy.x</AssemblyName>
         <RootNamespace>HoLLy.dnSpyExtension</RootNamespace>
 
-        <TargetFrameworks>net472</TargetFrameworks> <!-- TODO: update for .NET Core 3.0 -->
         <LangVersion>8</LangVersion>
         <NullableContextOptions>enable</NullableContextOptions>
         <Nullable>enable</Nullable>
@@ -54,10 +53,6 @@
         <ProjectReference Include="..\dnSpy\dnSpy\dnSpy.Contracts.Logic\dnSpy.Contracts.Logic.csproj" Private="false" />
         <ProjectReference Include="..\Echo\src\Core\Echo.ControlFlow\Echo.ControlFlow.csproj" />
         <ProjectReference Include="..\Echo\src\Platforms\Echo.Platforms.Iced\Echo.Platforms.Iced.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="System.Windows.Forms" />
     </ItemGroup>
 
 </Project>

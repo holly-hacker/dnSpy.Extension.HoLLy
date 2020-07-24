@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Windows.Forms;
 using dnlib.DotNet;
 using dnSpy.Contracts.App;
 using dnSpy.Contracts.Debugger;
@@ -10,6 +9,7 @@ using dnSpy.Contracts.MVVM;
 using HoLLy.dnSpyExtension.CodeInjection.Dialogs;
 using HoLLy.dnSpyExtension.Common;
 using HoLLy.dnSpyExtension.Common.CodeInjection;
+using Microsoft.Win32;
 
 namespace HoLLy.dnSpyExtension.CodeInjection.Commands
 {
@@ -52,7 +52,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
                 Title = "Select .NET assembly to inject",
             };
 
-            if (ofd.ShowDialog() != DialogResult.OK)
+            if (ofd.ShowDialog() != true)
                 return false;
 
             AssemblyDef asm;

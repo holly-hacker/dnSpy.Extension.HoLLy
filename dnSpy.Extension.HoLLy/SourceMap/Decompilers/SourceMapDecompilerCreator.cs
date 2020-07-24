@@ -61,7 +61,7 @@ namespace HoLLy.dnSpyExtension.SourceMap.Decompilers
             var type = asm.GetTypes().SingleOrDefault(x => x.FullName == String.Format(TypeNameFormat, languageName));
             if (type is null) return null;
 
-            return (IDecompilerProvider)Activator.CreateInstance(type);
+            return (IDecompilerProvider?)Activator.CreateInstance(type);
         }
     }
 }

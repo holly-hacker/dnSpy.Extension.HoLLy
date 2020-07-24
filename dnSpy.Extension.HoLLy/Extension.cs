@@ -13,6 +13,6 @@ namespace HoLLy.dnSpyExtension
             ShortDescription = "HoLLy's extension" + (Utils.IsDebugBuild ? " [DEBUG]" : string.Empty)
         };
 
-        public void OnEvent(ExtensionEvent e, object obj) { }
+        public void OnEvent(ExtensionEvent e, object? obj) { }
     }
 }

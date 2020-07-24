@@ -15,10 +15,10 @@ namespace HoLLy.dnSpyExtension.SourceMap.Decompilers
             this.sourceMap = sourceMap;
         }
 
-        public void Write(string text, object reference, DecompilerReferenceFlags flags, object color) => implementation.Write(Modify(text, reference), reference, flags, color);
-        public void Write(string text, int index, int length, object reference, DecompilerReferenceFlags flags, object color) => implementation.Write(Modify(text, reference), index, length, reference, flags, color);
+        public void Write(string text, object? reference, DecompilerReferenceFlags flags, object color) => implementation.Write(Modify(text, reference), reference, flags, color);
+        public void Write(string text, int index, int length, object? reference, DecompilerReferenceFlags flags, object color) => implementation.Write(Modify(text, reference), index, length, reference, flags, color);
 
-        private string Modify(string text, object reference)
+        private string Modify(string text, object? reference)
         {
             switch (reference) {
                 case IMemberDef memberDef when text != "this" && text != "new":
