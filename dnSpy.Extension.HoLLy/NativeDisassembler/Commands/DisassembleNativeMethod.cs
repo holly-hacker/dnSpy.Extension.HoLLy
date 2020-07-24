@@ -26,13 +26,14 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler.Commands
         {
             var method = (MethodDef)context.Find<TextReference>().Reference!;
             var encodedBytes = IcedHelpers.ReadNativeMethodBodyBytes(method);
+            var is32Bit = !method.Module.IsAMD64;
 
             var block = new NativeCodeBlock(NativeCodeBlockKind.Code, (uint)method.NativeBody.RVA, new ArraySegment<byte>(encodedBytes), null);
             var vars = new NativeVariableInfo[method.Parameters.Count];
             for (var i = 0; i < method.Parameters.Count; i++)
                 vars[i] = new NativeVariableInfo(false, i, method.Parameters[i].Name);
 
-            var native = new NativeCode(method.Module.Is32BitRequired ? NativeCodeKind.X86_32 : NativeCodeKind.X86_64,
+            var native = new NativeCode(is32Bit ? NativeCodeKind.X86_32 : NativeCodeKind.X86_64,
                 NativeCodeOptimization.Unknown, new[] {block}, null, vars,
                 method.FullName, method.Name, method.Module.Name);
 

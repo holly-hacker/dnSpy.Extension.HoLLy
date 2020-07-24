@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [0.4.1] - 2020-07-24
+### Fixed
+- Native disassembly used incorrect values for architecture, causing disassembly to fail in some cases
+
 ## [0.4.0] - 2020-07-24
 ### Added
 - **Add Unity x86 DLL injection (#23)**

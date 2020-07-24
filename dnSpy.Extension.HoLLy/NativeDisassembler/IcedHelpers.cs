@@ -12,20 +12,20 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler
     public static class IcedHelpers
     {
         public static byte[] ReadNativeMethodBodyBytes(MethodDef method)
-            => EncodeBytes(ReadNativeMethodBody(method), method.Module.Is32BitRequired ? 32 : 64);
+            => EncodeBytes(ReadNativeMethodBody(method), method.Module.IsAMD64 ? 64 : 32);
         
         public static InstructionList ReadNativeMethodBody(MethodDef method)
         {
             var mod = method.Module;
             var loc = mod.Location;
-            var is32Bit = mod.Is32BitRequired;
+            bool is32Bit = !method.Module.IsAMD64;
             var rva = (uint)method.NativeBody.RVA;
             var fileOffset = mod.ToFileOffset(rva)!.Value;
             
-            return ReadNativeFunction(loc, fileOffset, is32Bit, rva);
+            return ReadNativeFunction(loc, fileOffset, is32Bit);
         }
 
-        public static InstructionList ReadNativeFunction(string loc, uint fileOffset, bool is32Bit, uint rva)
+        public static InstructionList ReadNativeFunction(string loc, uint fileOffset, bool is32Bit)
         {
             using var fs = File.OpenRead(loc);
             fs.Position = fileOffset;
