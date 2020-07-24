@@ -22,7 +22,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - "Change Displayed Name" command only appears when a sourcemapping compiler is selected
 
 ### Fixed
-- Fix decompiler crash when user tries to sourcemap names containing invalid characters, ie. < 0x20 (#30)
+- Decompiler crash when user tries to sourcemap names containing invalid characters, ie. < 0x20 (#30)
+- Sourcemapper tried to map "new" keywords
 
 ## [0.3.0] - 2019-07-14
 ### Added
