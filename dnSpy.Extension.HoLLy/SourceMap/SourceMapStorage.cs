@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using dnlib.DotNet;
 using dnSpy.Contracts.App;
@@ -108,7 +109,19 @@ namespace HoLLy.dnSpyExtension.SourceMap
                 (MapType type, string original, string mapped) = (pair.Key.Item1, pair.Key.Item2, pair.Value);
 
                 writer.WriteStartElement(type.ToString());
-                writer.WriteAttributeString("original", original);
+
+                // store as base64 if there is a character under 0x20
+                // TODO: not perfect, see https://referencesource.microsoft.com/#system.xml/System/Xml/Core/XmlUtf8RawTextWriter.cs,675 for real handling
+                if (original.Any(ch => ch < ' '))
+                {
+                    writer.WriteAttributeString("encoding", "base64");
+                    writer.WriteAttributeString("original", Convert.ToBase64String(Encoding.UTF8.GetBytes(original)));
+                }
+                else
+                {
+                    writer.WriteAttributeString("original", original);
+                }
+
                 writer.WriteAttributeString("mapped", mapped);
                 writer.WriteEndElement();
             }
@@ -152,8 +165,11 @@ namespace HoLLy.dnSpyExtension.SourceMap
             using (var reader = XmlReader.Create(location)) {
                 while (reader.Read()) {
                     if (reader.IsStartElement()) {
-                        if (Enum.TryParse(reader.Name, true, out MapType type)) {
-                            string orig = reader["original"];
+                        if (Enum.TryParse(reader.Name, true, out MapType type))
+                        {
+                            string orig = reader.GetAttribute("encoding") == "base64"
+                                ? Encoding.UTF8.GetString(Convert.FromBase64String(reader["original"]))
+                                : reader["original"];
                             string mapped = reader["mapped"];
 
                             dic[(type, orig)] = mapped;
