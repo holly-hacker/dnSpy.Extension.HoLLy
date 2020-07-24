@@ -119,13 +119,16 @@ namespace HoLLy.dnSpyExtension.SourceMap
 
         /// <summary>
         /// Loads the cache for <paramref name="assembly"/> from <paramref name="location"/>, then immediately saves it
-        /// to the default cache location.
+        /// to the default cache location if it wasn't loaded from there.
         /// </summary>
         public void LoadFrom(IAssembly assembly, string location)
         {
             LoadFromInternal(assembly, location);
 
-            SaveTo(assembly, GetCacheLocation(assembly));
+            // save to default location if it was not loaded from there already
+            var defaultLocation = GetCacheLocation(assembly);
+            if (!string.Equals(Path.GetFullPath(location), Path.GetFullPath(defaultLocation), StringComparison.InvariantCultureIgnoreCase))
+                SaveTo(assembly, defaultLocation);
         }
 
         private bool TryLoadFromCache(IAssembly assembly)
