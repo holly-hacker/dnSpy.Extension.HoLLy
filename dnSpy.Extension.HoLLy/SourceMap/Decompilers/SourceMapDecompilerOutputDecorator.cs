@@ -4,12 +4,12 @@ using HoLLy.dnSpyExtension.Common.SourceMap;
 
 namespace HoLLy.dnSpyExtension.SourceMap.Decompilers
 {
-    internal class DecompilerOutputDecorator : IDecompilerOutput
+    internal class SourceMapDecompilerOutputDecorator : IDecompilerOutput
     {
         private readonly IDecompilerOutput implementation;
         private readonly ISourceMapStorage sourceMap;
 
-        public DecompilerOutputDecorator(IDecompilerOutput implementation, ISourceMapStorage sourceMap)
+        public SourceMapDecompilerOutputDecorator(IDecompilerOutput implementation, ISourceMapStorage sourceMap)
         {
             this.implementation = implementation;
             this.sourceMap = sourceMap;

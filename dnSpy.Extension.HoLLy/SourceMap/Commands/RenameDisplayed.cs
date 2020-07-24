@@ -1,10 +1,12 @@
 using System.ComponentModel.Composition;
 using dnlib.DotNet;
 using dnSpy.Contracts.App;
+using dnSpy.Contracts.Decompiler;
 using dnSpy.Contracts.Documents.Tabs.DocViewer;
 using dnSpy.Contracts.Menus;
 using HoLLy.dnSpyExtension.Common;
 using HoLLy.dnSpyExtension.Common.SourceMap;
+using HoLLy.dnSpyExtension.SourceMap.Decompilers;
 
 namespace HoLLy.dnSpyExtension.SourceMap.Commands
 {
@@ -12,11 +14,13 @@ namespace HoLLy.dnSpyExtension.SourceMap.Commands
     internal class RenameDisplayed : MenuItemBase
     {
         private readonly ISourceMapStorage sourceMapStorage;
+        private readonly IDecompilerService decompilerService;
 
         [ImportingConstructor]
-        public RenameDisplayed(ISourceMapStorage sourceMapStorage)
+        public RenameDisplayed(ISourceMapStorage sourceMapStorage, IDecompilerService decompilerService)
         {
             this.sourceMapStorage = sourceMapStorage;
+            this.decompilerService = decompilerService;
         }
 
         public override void Execute(IMenuItemContext context)
@@ -40,6 +44,9 @@ namespace HoLLy.dnSpyExtension.SourceMap.Commands
 
         public override bool IsVisible(IMenuItemContext context)
         {
+            if (!(decompilerService.Decompiler is SourceMapDecompilerDecorator))
+                return false;
+
             var tf = context.Find<TextReference>();
             return tf?.Reference is IMemberDef;
         }

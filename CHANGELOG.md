@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - It now asks for runtime type
   - It now verifies the input PID while you're typing
   - Automatically assumes process architecture matches (it wouldn't work otherwise)
+- "Change Displayed Name" command only appears when a sourcemapping compiler is selected
 
 ### Fixed
 - Fix decompiler crash when user tries to sourcemap names containing invalid characters, ie. < 0x20 (#30)

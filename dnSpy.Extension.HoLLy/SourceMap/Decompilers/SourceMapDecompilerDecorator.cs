@@ -8,20 +8,20 @@ using HoLLy.dnSpyExtension.Common.SourceMap;
 
 namespace HoLLy.dnSpyExtension.SourceMap.Decompilers
 {
-    internal class DecompilerDecorator : IDecompiler
+    internal class SourceMapDecompilerDecorator : IDecompiler
     {
         private const string UniqueNameFormat = "{0} (w/ SourceMap)";
 
         private readonly IDecompiler implementation;
         private readonly ISourceMapStorage sourceMap;
 
-        public DecompilerDecorator(IDecompiler implementation, ISourceMapStorage sourceMap)
+        public SourceMapDecompilerDecorator(IDecompiler implementation, ISourceMapStorage sourceMap)
         {
             this.implementation = implementation;
             this.sourceMap = sourceMap;
         }
 
-        private IDecompilerOutput GetOutput(IDecompilerOutput output) => new DecompilerOutputDecorator(output, sourceMap);
+        private IDecompilerOutput GetOutput(IDecompilerOutput output) => new SourceMapDecompilerOutputDecorator(output, sourceMap);
 
         public DecompilerSettingsBase Settings => implementation.Settings;
         public MetadataTextColorProvider MetadataTextColorProvider => implementation.MetadataTextColorProvider;

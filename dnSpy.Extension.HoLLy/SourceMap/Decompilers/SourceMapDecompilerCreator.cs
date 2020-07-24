@@ -12,7 +12,7 @@ using HoLLy.dnSpyExtension.Common.SourceMap;
 namespace HoLLy.dnSpyExtension.SourceMap.Decompilers
 {
     [Export(typeof(IDecompilerCreator))]
-    internal class DecompilerCreator : IDecompilerCreator
+    internal class SourceMapDecompilerCreator : IDecompilerCreator
     {
         private const string DllName = "dnSpy.Decompiler.ILSpy.Core.dll";
         private const string TypeNameFormat = "dnSpy.Decompiler.ILSpy.Core.{0}.DecompilerProvider";
@@ -21,7 +21,7 @@ namespace HoLLy.dnSpyExtension.SourceMap.Decompilers
         private readonly ISourceMapStorage sourceMapStorage;
 
         [ImportingConstructor]
-        public DecompilerCreator(ISourceMapStorage sourceMapStorage)
+        public SourceMapDecompilerCreator(ISourceMapStorage sourceMapStorage)
         {
             this.sourceMapStorage = sourceMapStorage;
         }
@@ -42,7 +42,7 @@ namespace HoLLy.dnSpyExtension.SourceMap.Decompilers
                 }
 
                 foreach (IDecompiler dec in provider.Create())
-                    yield return new DecompilerDecorator(dec, sourceMapStorage);
+                    yield return new SourceMapDecompilerDecorator(dec, sourceMapStorage);
             }
         }
 
