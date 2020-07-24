@@ -13,12 +13,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 - Targets Unity v6.0.16
 - **Include [Echo](https://github.com/washi1337/echo) for better disassembling of native functions without known length**
-  - The plugin may need its own folder for now inside the dnSpy installation (eg. `bin/Extensions/HoLLy/dnSpy.Extension.HoLLy.dll`), and will need all the included DLLs to be present.
+  - The plugin will need all the included Echo DLLs to be present.
 - Namespace and Type are now stored seperately in DLL injection config files, meaning old ones will be invalidated
 - Improved debug command for injecting into arbitrary process
   - It now asks for runtime type
   - It now verifies the input PID while you're typing
   - Automatically assumes process architecture matches (it wouldn't work otherwise)
+
+### Fixed
+- Fix decompiler crash when user tries to sourcemap names containing invalid characters, ie. < 0x20 (#30)
 
 ## [0.3.0] - 2019-07-14
 ### Added
