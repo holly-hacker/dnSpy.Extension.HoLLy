@@ -42,6 +42,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="AutomaticGraphLayout.WpfGraphControl" Version="1.1.7" />
         <PackageReference Include="dnlib" Version="$(DnlibVersion)" />
         <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf" Version="$(MSVSTextVersion)" />
         <PackageReference Include="Iced" Version="$(IcedVersion)" />
@@ -52,7 +53,20 @@
         <ProjectReference Include="..\dnSpy\dnSpy\dnSpy.Contracts.DnSpy\dnSpy.Contracts.DnSpy.csproj" Private="false" />
         <ProjectReference Include="..\dnSpy\dnSpy\dnSpy.Contracts.Logic\dnSpy.Contracts.Logic.csproj" Private="false" />
         <ProjectReference Include="..\Echo\src\Core\Echo.ControlFlow\Echo.ControlFlow.csproj" />
+        <ProjectReference Include="..\Echo\src\Platforms\Echo.Platforms.Dnlib\Echo.Platforms.Dnlib.csproj" />
         <ProjectReference Include="..\Echo\src\Platforms\Echo.Platforms.Iced\Echo.Platforms.Iced.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="ControlFlowGraph\GraphControl.xaml">
+        <Generator />
+      </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="ControlFlowGraph\GraphControl.xaml.cs">
+        <DependentUpon>GraphControl.xaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>
