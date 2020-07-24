@@ -25,6 +25,10 @@ namespace HoLLy.dnSpyExtension.SourceMap
             this.settings = settings;
         }
 
+        /// <summary>
+        /// Tries to resolve the mapped name of a <see cref="IMemberDef"/>.
+        /// </summary>
+        /// <returns>The mapped name, or <c>null</c> if it was not found.</returns>
         public string? GetName(IMemberDef member)
         {
             member = SourceMapUtils.GetDefToMap(member);
@@ -64,6 +68,9 @@ namespace HoLLy.dnSpyExtension.SourceMap
             return null;
         }
 
+        /// <summary>
+        /// Stores a new mapped name for this <paramref name="member"/> in the local cache, and saves it.
+        /// </summary>
         public void SetName(IMemberDef member, string name)
         {
             member = SourceMapUtils.GetDefToMap(member);
@@ -80,6 +87,9 @@ namespace HoLLy.dnSpyExtension.SourceMap
             SaveTo(asm, GetCacheLocation(asm));
         }
 
+        /// <summary>
+        /// Saves the local cache for <paramref name="assembly"/> to <paramref name="location"/>.
+        /// </summary>
         public void SaveTo(IAssembly assembly, string location)
         {
             if (!loadedMaps.ContainsKey(assembly))
@@ -107,6 +117,10 @@ namespace HoLLy.dnSpyExtension.SourceMap
             writer.WriteEndDocument();
         }
 
+        /// <summary>
+        /// Loads the cache for <paramref name="assembly"/> from <paramref name="location"/>, then immediately saves it
+        /// to the default cache location.
+        /// </summary>
         public void LoadFrom(IAssembly assembly, string location)
         {
             LoadFromInternal(assembly, location);

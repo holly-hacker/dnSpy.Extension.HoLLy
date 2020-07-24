@@ -14,7 +14,7 @@ namespace HoLLy.dnSpyExtension.SourceMap.Decompilers
     [Export(typeof(IDecompilerCreator))]
     internal class DecompilerCreator : IDecompilerCreator
     {
-        private const string DLLName = "dnSpy.Decompiler.ILSpy.Core.dll";
+        private const string DllName = "dnSpy.Decompiler.ILSpy.Core.dll";
         private const string TypeNameFormat = "dnSpy.Decompiler.ILSpy.Core.{0}.DecompilerProvider";
         private static readonly string[] LanguageNames = { "CSharp", "IL", "ILAst", "VisualBasic" };
 
@@ -28,6 +28,9 @@ namespace HoLLy.dnSpyExtension.SourceMap.Decompilers
 
         public IEnumerable<IDecompiler> Create()
         {
+            // I would import a IDecompilerService instance in the constructor, but it seems it wouldn't be created yet?
+            // Instead, we have this hacky thing.
+
             foreach (string languageName in LanguageNames) {
                 var provider = TryCreateDecompilerProvider(languageName);
 
@@ -43,12 +46,16 @@ namespace HoLLy.dnSpyExtension.SourceMap.Decompilers
             }
         }
 
+        /// <summary>
+        /// Creates a <see cref="IDecompilerProvider"/> for the given <paramref name="languageName"/> by using
+        /// reflection to load it from the dnSpy binary.
+        /// </summary>
         private static IDecompilerProvider? TryCreateDecompilerProvider(string languageName)
         {
             var dnSpyDir = Path.GetDirectoryName(typeof(IDecompilerCreator).Assembly.Location);
             if (dnSpyDir is null) return null;
 
-            string dllPath = Path.Combine(dnSpyDir, DLLName);
+            string dllPath = Path.Combine(dnSpyDir, DllName);
 
             var asm = Assembly.LoadFile(dllPath);
             var type = asm.GetTypes().SingleOrDefault(x => x.FullName == String.Format(TypeNameFormat, languageName));
