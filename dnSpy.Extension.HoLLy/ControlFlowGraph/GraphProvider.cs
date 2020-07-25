@@ -6,6 +6,7 @@ using Echo.ControlFlow.Construction.Symbolic;
 using Echo.Core.Graphing;
 using Echo.Platforms.Dnlib;
 using Microsoft.Msagl.Core.Layout;
+using Microsoft.Msagl.Core.Routing;
 using Microsoft.Msagl.Drawing;
 using Node = Microsoft.Msagl.Drawing.Node;
 
@@ -25,6 +26,28 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
             return new ControlFlowGraphProvider<Instruction>(cflow);
         }
 
+        private static Graph CreateEmptyGraph()
+        {
+            return new Graph
+            {
+                LayoutAlgorithmSettings =
+                {
+                    PackingMethod = PackingMethod.Columns,
+
+                    EdgeRoutingSettings = new EdgeRoutingSettings
+                    {
+                        EdgeRoutingMode = EdgeRoutingMode.Rectilinear,
+                        CornerRadius = 5.0,
+                    }
+                },
+                Attr =
+                {
+                    BackgroundColor = Color.Transparent,
+                    LayerDirection = LayerDirection.TB, // prefer top-to-bottom layout
+                },
+            };
+        }
+
         private class ControlFlowGraphProvider<TInstruction> : GraphProvider
         {
             private readonly ControlFlowGraph<TInstruction> graph;
@@ -36,13 +59,11 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
             
             public override Graph ToMicrosoftGraph()
             {
-                var newGraph = new Graph();
+                var newGraph = CreateEmptyGraph();
+
                 foreach (var node in graph.Nodes)
                 {
-                    newGraph.AddNode(new Node(getId(node))
-                    {
-                        LabelText = node.Contents.ToString(),
-                    });
+                    newGraph.AddNode(new Node(getId(node)) {LabelText = node.Contents.ToString()});
                 }
                 
                 foreach (var edge in graph.GetEdges())
@@ -57,8 +78,6 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
                         _ => Color.Black,
                     };
                 }
-
-                newGraph.LayoutAlgorithmSettings.PackingMethod = PackingMethod.Columns;
 
                 return newGraph;
 
