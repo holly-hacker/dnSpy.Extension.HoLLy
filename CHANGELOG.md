@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
+### Added
+- **Control Flow Graphs for managed and native methods**
 
 ## [0.4.1] - 2020-07-24
 ### Fixed
@@ -11,7 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [0.4.0] - 2020-07-24
 ### Added
-- **Add Unity x86 DLL injection (#23)**
+- **Unity x86 DLL injection (#23)**
 - **Disassemble native functions and the native entrypoint**
 - Debug command for showing tree node type
 
