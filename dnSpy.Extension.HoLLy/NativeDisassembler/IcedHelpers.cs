@@ -2,6 +2,7 @@
 using System.Linq;
 using dnlib.DotNet;
 using dnSpy.Contracts.Decompiler;
+using Echo.ControlFlow;
 using Echo.ControlFlow.Construction;
 using Echo.ControlFlow.Construction.Static;
 using Echo.Platforms.Iced;
@@ -12,9 +13,9 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler
     public static class IcedHelpers
     {
         public static byte[] ReadNativeMethodBodyBytes(MethodDef method)
-            => EncodeBytes(ReadNativeMethodBody(method), method.Module.IsAMD64 ? 64 : 32);
+            => EncodeBytes(GetInstructionsFromGraph(ReadNativeMethodBody(method)), !method.Module.IsAMD64);
         
-        public static InstructionList ReadNativeMethodBody(MethodDef method)
+        public static ControlFlowGraph<Instruction> ReadNativeMethodBody(MethodDef method)
         {
             var mod = method.Module;
             var loc = mod.Location;
@@ -25,7 +26,7 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler
             return ReadNativeFunction(loc, fileOffset, is32Bit);
         }
 
-        public static InstructionList ReadNativeFunction(string loc, uint fileOffset, bool is32Bit)
+        public static ControlFlowGraph<Instruction> ReadNativeFunction(string loc, uint fileOffset, bool is32Bit)
         {
             using var fs = File.OpenRead(loc);
             fs.Position = fileOffset;
@@ -38,14 +39,17 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler
 
             // pass in a file offset, since we're working on a file on disk. would pass rva (and base addr in provider
             // ctor) for in-memory.
-            var graph = cfgBuilder.ConstructFlowGraph(fileOffset);
-            return new InstructionList(graph.Nodes.SelectMany(n => n.Contents.Instructions).OrderBy(i => i.IP));
+            ControlFlowGraph<Instruction> graph = cfgBuilder.ConstructFlowGraph(fileOffset);
+            return graph;
         }
 
-        public static byte[] EncodeBytes(InstructionList methodBody, int bitness)
+        public static InstructionList GetInstructionsFromGraph(ControlFlowGraph<Instruction> graph)
+            => new InstructionList(graph.Nodes.SelectMany(n => n.Contents.Instructions).OrderBy(i => i.IP));
+
+        public static byte[] EncodeBytes(InstructionList methodBody, bool is32Bit)
         {
             using var ms = new MemoryStream();
-            var encoder = Encoder.Create(bitness, new StreamCodeWriter(ms));
+            var encoder = Encoder.Create(is32Bit ? 32 : 64, new StreamCodeWriter(ms));
 
             foreach (ref var instruction in methodBody)
                 encoder.Encode(instruction, instruction.IP);
