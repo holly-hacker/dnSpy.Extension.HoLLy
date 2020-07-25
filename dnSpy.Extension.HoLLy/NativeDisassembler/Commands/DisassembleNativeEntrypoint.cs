@@ -35,8 +35,9 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler.Commands
 
             var rvaStart = pe.ImageNTHeaders.OptionalHeader.AddressOfEntryPoint;
 
-            var instructions = IcedHelpers.ReadNativeFunction(node.Document.Filename, (uint) pe.ToFileOffset(rvaStart), is32Bit);
-            var encodedBytes = IcedHelpers.EncodeBytes(instructions, is32Bit ? 32 : 64);
+            var graph = IcedHelpers.ReadNativeFunction(node.Document.Filename, (uint) pe.ToFileOffset(rvaStart), is32Bit);
+            var instructions = IcedHelpers.GetInstructionsFromGraph(graph);
+            var encodedBytes = IcedHelpers.EncodeBytes(instructions, is32Bit);
             
             var block = new NativeCodeBlock(NativeCodeBlockKind.Code, (uint)rvaStart, new ArraySegment<byte>(encodedBytes), null);
 

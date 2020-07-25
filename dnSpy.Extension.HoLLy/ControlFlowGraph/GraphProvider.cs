@@ -1,10 +1,12 @@
-﻿using dnlib.DotNet;
+﻿using System;
+using dnlib.DotNet;
 using dnlib.DotNet.Emit;
 using Echo.ControlFlow;
 using Echo.ControlFlow.Construction;
 using Echo.ControlFlow.Construction.Symbolic;
 using Echo.Core.Graphing;
 using Echo.Platforms.Dnlib;
+using HoLLy.dnSpyExtension.NativeDisassembler;
 using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Core.Routing;
 using Microsoft.Msagl.Drawing;
@@ -18,12 +20,24 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
 
         public static GraphProvider Create(MethodDef method)
         {
-            var arch = new CilArchitecture(method);
-            var stateResolver = new CilStateTransitionResolver(arch);
-            var cflowBuilder = new SymbolicFlowGraphBuilder<Instruction>(arch, method.Body.Instructions, stateResolver);
-            var cflow = cflowBuilder.ConstructFlowGraph(0);
-
-            return new ControlFlowGraphProvider<Instruction>(cflow);
+            switch (method.MethodBody)
+            {
+                case CilBody _:
+                {
+                    var arch = new CilArchitecture(method);
+                    var stateResolver = new CilStateTransitionResolver(arch);
+                    var cflowBuilder = new SymbolicFlowGraphBuilder<Instruction>(arch, method.Body.Instructions, stateResolver);
+                    var cflow = cflowBuilder.ConstructFlowGraph(0);
+                    return new ControlFlowGraphProvider<Instruction>(cflow);
+                }
+                case NativeMethodBody _:
+                {
+                    var cflow = IcedHelpers.ReadNativeMethodBody(method);
+                    return new ControlFlowGraphProvider<Iced.Intel.Instruction>(cflow);
+                }
+                default:
+                    throw new Exception("Tried to create graph for method that has neither managed nor native body");
+            }
         }
 
         private static Graph CreateEmptyGraph()

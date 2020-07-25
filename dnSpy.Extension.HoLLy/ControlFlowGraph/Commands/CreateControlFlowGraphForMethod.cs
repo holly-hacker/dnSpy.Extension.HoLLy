@@ -8,20 +8,20 @@ using HoLLy.dnSpyExtension.Common;
 namespace HoLLy.dnSpyExtension.ControlFlowGraph.Commands
 {
     [ExportMenuItem(Header = "Create CFG", Group = Constants.ContextMenuGroupEdit, Order = 10000)]
-    public class CreateControlFlowGraphForManagedMethod : MenuItemBase<MethodDef>
+    public class CreateControlFlowGraphForMethod : MenuItemBase<MethodDef>
     {
         private readonly IDocumentTabService documentTabService;
         protected override object CachedContextKey => new object();
 
         [ImportingConstructor]
-        public CreateControlFlowGraphForManagedMethod(IDocumentTabService documentTabService)
+        public CreateControlFlowGraphForMethod(IDocumentTabService documentTabService)
         {
             this.documentTabService = documentTabService;
         }
 
         protected override MethodDef? CreateContext(IMenuItemContext context)
         {
-            if (context.Find<TextReference>()?.Reference is MethodDef md && md.Body != null)
+            if (context.Find<TextReference>()?.Reference is MethodDef md && md.MethodBody != null)
                 return md;
 
             return null;
