@@ -20,6 +20,7 @@ namespace HoLLy.dnSpyExtension.PluginSettings
             this.settingsService = settingsService;
 
             ISettingsSection sect = settingsService.GetOrCreateSection(Constants.SettingsGuid);
+            UnderlineManagedAssemblies = sect.Attribute<bool?>(nameof(UnderlineManagedAssemblies)) ?? UnderlineManagedAssemblies;
             CopyInjectedDllToTemp = sect.Attribute<bool?>(nameof(CopyInjectedDllToTemp)) ?? CopyInjectedDllToTemp;
             AutoMapDllImports = sect.Attribute<bool?>(nameof(AutoMapDllImports)) ?? AutoMapDllImports;
             AutoMapOverrides = sect.Attribute<bool?>(nameof(AutoMapOverrides)) ?? AutoMapOverrides;
@@ -34,6 +35,7 @@ namespace HoLLy.dnSpyExtension.PluginSettings
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             ISettingsSection sect = settingsService.RecreateSection(Constants.SettingsGuid);
+            sect.Attribute(nameof(UnderlineManagedAssemblies), UnderlineManagedAssemblies);
             sect.Attribute(nameof(CopyInjectedDllToTemp), CopyInjectedDllToTemp);
             sect.Attribute(nameof(AutoMapDllImports), AutoMapDllImports);
             sect.Attribute(nameof(AutoMapOverrides), AutoMapOverrides);

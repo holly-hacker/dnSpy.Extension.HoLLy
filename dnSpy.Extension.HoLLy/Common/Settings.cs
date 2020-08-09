@@ -9,10 +9,22 @@ namespace HoLLy.dnSpyExtension.Common
     {
         private const int MaxRecentInjections = 5;
 
+        private bool underlineManagedAssemblies = true;
         private bool copyInjectedDllToTemp;
         private bool autoMapDllImports = true;
         private bool autoMapOverrides = true;
         private List<InjectionArguments> recentInjections = new List<InjectionArguments>();
+
+        public bool UnderlineManagedAssemblies
+        {
+            get => underlineManagedAssemblies;
+            set {
+                if (value != underlineManagedAssemblies) {
+                    underlineManagedAssemblies = value;
+                    OnPropertyChanged(nameof(UnderlineManagedAssemblies));
+                }
+            }
+        }
 
         public bool CopyInjectedDllToTemp
         {
@@ -70,6 +82,7 @@ namespace HoLLy.dnSpyExtension.Common
 
         public Settings CopyTo(Settings other)
         {
+            other.UnderlineManagedAssemblies = UnderlineManagedAssemblies;
             other.CopyInjectedDllToTemp = CopyInjectedDllToTemp;
             other.AutoMapOverrides = AutoMapOverrides;
             other.AutoMapDllImports = AutoMapDllImports;

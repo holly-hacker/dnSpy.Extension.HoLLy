@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using dnSpy.Contracts.Documents.TreeView;
 using dnSpy.Contracts.Text.Classification;
 using dnSpy.Contracts.TreeView.Text;
+using HoLLy.dnSpyExtension.Common;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
@@ -42,20 +43,33 @@ namespace HoLLy.dnSpyExtension.Misc
     internal sealed class TreeViewNodeColorizerProvider : ITextClassifierProvider
     {
         private readonly IClassificationTypeRegistryService classificationTypeRegistryService;
+        private readonly Settings settings;
 
         [ImportingConstructor]
-        private TreeViewNodeColorizerProvider(IClassificationTypeRegistryService classificationTypeRegistryService) => this.classificationTypeRegistryService = classificationTypeRegistryService;
+        private TreeViewNodeColorizerProvider(IClassificationTypeRegistryService classificationTypeRegistryService, Settings settings)
+        {
+            this.classificationTypeRegistryService = classificationTypeRegistryService;
+            this.settings = settings;
+        }
 
-        public ITextClassifier? Create(IContentType contentType) => new TreeViewNodeColorizer(classificationTypeRegistryService);
+        public ITextClassifier? Create(IContentType contentType) => new TreeViewNodeColorizer(classificationTypeRegistryService, settings);
 
         private class TreeViewNodeColorizer : ITextClassifier
         {
             private readonly IClassificationTypeRegistryService classificationTypeRegistryService;
+            private readonly Settings settings;
 
-            public TreeViewNodeColorizer(IClassificationTypeRegistryService classificationTypeRegistryService) => this.classificationTypeRegistryService = classificationTypeRegistryService;
+            public TreeViewNodeColorizer(IClassificationTypeRegistryService classificationTypeRegistryService, Settings settings)
+            {
+                this.classificationTypeRegistryService = classificationTypeRegistryService;
+                this.settings = settings;
+            }
 
             public IEnumerable<TextClassificationTag> GetTags(TextClassifierContext context)
             {
+                if (!settings.UnderlineManagedAssemblies)
+                    yield break;
+
                 if (!(context is TreeViewNodeClassifierContext tvContext))
                     yield break;
 

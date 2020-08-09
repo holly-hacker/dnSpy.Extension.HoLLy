@@ -18,5 +18,10 @@
                 <CheckBox Margin="0 5 0 0" Content="Automatically map overridden methods" IsChecked="{Binding AutoMapOverrides}" />
             </StackPanel>
         </GroupBox>
+        <GroupBox Header="Miscellaneous">
+            <StackPanel>
+                <CheckBox Margin="0 5 0 0" Content="Underline managed assemblies (restart required)" IsChecked="{Binding UnderlineManagedAssemblies}" />
+            </StackPanel>
+        </GroupBox>
     </StackPanel>
 </UserControl>
