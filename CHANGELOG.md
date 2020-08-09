@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **Control Flow Graphs for managed and native methods**
 - Option to disable underlining of managed assemblies
 
+### Changed
+- Use `<<EMPTY_NAME>>` for disassembler if name is empty
+
 ## [0.4.1] - 2020-07-24
 ### Fixed
 - Native disassembly used incorrect values for architecture, causing disassembly to fail in some cases
