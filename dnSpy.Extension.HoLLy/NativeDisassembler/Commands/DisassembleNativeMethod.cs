@@ -33,9 +33,12 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler.Commands
             for (var i = 0; i < method.Parameters.Count; i++)
                 vars[i] = new NativeVariableInfo(false, i, method.Parameters[i].Name);
 
+            const string emptyName = "<<EMPTY_NAME>>";
+            static string replaceIfEmpty(string s) => !string.IsNullOrEmpty(s) ? s : emptyName;
+
             var native = new NativeCode(is32Bit ? NativeCodeKind.X86_32 : NativeCodeKind.X86_64,
                 NativeCodeOptimization.Unknown, new[] {block}, null, vars,
-                method.FullName, method.Name, method.Module.Name);
+                replaceIfEmpty(method.FullName), replaceIfEmpty(method.Name), method.Module.Name);
 
             var contentProvider = fac.Create(native, DisassemblyContentFormatterOptions.None, null, null);
             disassemblyViewerService.Value.Show(contentProvider, true);
