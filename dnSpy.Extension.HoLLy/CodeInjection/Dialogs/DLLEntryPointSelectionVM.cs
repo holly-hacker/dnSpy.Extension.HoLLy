@@ -6,7 +6,7 @@ using dnSpy.Contracts.MVVM;
 
 namespace HoLLy.dnSpyExtension.CodeInjection.Dialogs
 {
-    public class DLLEntryPointSelectionVM : ViewModelBase
+    public class DllEntryPointSelectionVm : ViewModelBase
     {
         public bool HasSelection => SelectedMethod != null;
         public AssemblyDef Assembly { set => ProcessAssembly(value); }
@@ -37,7 +37,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Dialogs
         private MethodDef? selectedMethod;
         private string? parameter;
 
-        public DLLEntryPointSelectionVM()
+        public DllEntryPointSelectionVm()
         {
             PropertyChanged += OnPropertyChanged;
         }

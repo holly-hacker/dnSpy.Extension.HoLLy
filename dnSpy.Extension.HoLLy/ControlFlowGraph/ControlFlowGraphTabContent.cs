@@ -20,7 +20,7 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
 
         public override DocumentTabUIContext CreateUIContext(IDocumentTabUIContextLocator locator)
         {
-            return new ControlFlowGraphTabUIContext(graphProvider);
+            return new ControlFlowGraphTabUiContext(graphProvider);
         }
     }
 }

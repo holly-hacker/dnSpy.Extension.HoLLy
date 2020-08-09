@@ -51,7 +51,7 @@ namespace HoLLy.dnSpyExtension.SourceMap
 
             // if there was no mapped name found, see if we can get a sensible name in another way
             if (member is MethodDef md) {
-                if (settings.AutoMapDLLImports && md.HasImplMap)
+                if (settings.AutoMapDllImports && md.HasImplMap)
                     return md.ImplMap.Name;
 
                 if (settings.AutoMapOverrides && md.HasOverrides) {

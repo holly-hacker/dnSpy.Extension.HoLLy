@@ -20,8 +20,8 @@ namespace HoLLy.dnSpyExtension.PluginSettings
             this.settingsService = settingsService;
 
             ISettingsSection sect = settingsService.GetOrCreateSection(Constants.SettingsGuid);
-            CopyInjectedDLLToTemp = sect.Attribute<bool?>(nameof(CopyInjectedDLLToTemp)) ?? CopyInjectedDLLToTemp;
-            AutoMapDLLImports = sect.Attribute<bool?>(nameof(AutoMapDLLImports)) ?? AutoMapDLLImports;
+            CopyInjectedDllToTemp = sect.Attribute<bool?>(nameof(CopyInjectedDllToTemp)) ?? CopyInjectedDllToTemp;
+            AutoMapDllImports = sect.Attribute<bool?>(nameof(AutoMapDllImports)) ?? AutoMapDllImports;
             AutoMapOverrides = sect.Attribute<bool?>(nameof(AutoMapOverrides)) ?? AutoMapOverrides;
 
             var sectInjections = sect.TryGetSection(SectionRecentInjections);
@@ -34,8 +34,8 @@ namespace HoLLy.dnSpyExtension.PluginSettings
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             ISettingsSection sect = settingsService.RecreateSection(Constants.SettingsGuid);
-            sect.Attribute(nameof(CopyInjectedDLLToTemp), CopyInjectedDLLToTemp);
-            sect.Attribute(nameof(AutoMapDLLImports), AutoMapDLLImports);
+            sect.Attribute(nameof(CopyInjectedDllToTemp), CopyInjectedDllToTemp);
+            sect.Attribute(nameof(AutoMapDllImports), AutoMapDllImports);
             sect.Attribute(nameof(AutoMapOverrides), AutoMapOverrides);
 
             ISettingsSection sectInjections = sect.GetOrCreateSection(SectionRecentInjections);

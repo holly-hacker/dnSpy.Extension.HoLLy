@@ -14,7 +14,7 @@ using Microsoft.Win32;
 namespace HoLLy.dnSpyExtension.CodeInjection.Commands
 {
     [ExportMenuItem(OwnerGuid = MenuConstants.APP_MENU_DEBUG_GUID, Group = Constants.AppMenuGroupDebuggerInject, Order = 10)]
-    internal class InjectDLL : MenuItemBase
+    internal class InjectDll : MenuItemBase
     {
         private DbgManager DbgManager => dbgManagerLazy.Value;
         private DbgProcess CurrentProcess => DbgManager.CurrentProcess.Current
@@ -25,7 +25,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
         private readonly Settings settings;
 
         [ImportingConstructor]
-        public InjectDLL(Lazy<DbgManager> dbgManagerLazy, IManagedInjector injector, Settings settings)
+        public InjectDll(Lazy<DbgManager> dbgManagerLazy, IManagedInjector injector, Settings settings)
         {
             this.dbgManagerLazy = dbgManagerLazy;
             this.injector = injector;
@@ -64,7 +64,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
                 return false;
             }
 
-            var vm = new DLLEntryPointSelectionVM { Assembly = asm, };
+            var vm = new DllEntryPointSelectionVm { Assembly = asm, };
 
             if (!vm.AllItems.Any()) {
                 MsgBox.Instance.Show("Couldn't find any suitable entry points in that assembly.\n" +
@@ -72,7 +72,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
                 return false;
             }
 
-            if (new DLLEntryPointSelection(vm).ShowDialog() != true)
+            if (new DllEntryPointSelection(vm).ShowDialog() != true)
                 return false;
 
             args = InjectionArguments.FromMethodDef(vm.SelectedMethod!, vm.Parameter);

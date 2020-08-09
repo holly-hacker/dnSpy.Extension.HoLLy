@@ -11,12 +11,12 @@ using HoLLy.dnSpyExtension.Common.CodeInjection;
 namespace HoLLy.dnSpyExtension.CodeInjection.Commands.Debug
 {
     [ExportMenuItem(Header = "DBG: Inject DLL", OwnerGuid = MenuConstants.APP_MENU_DEBUG_GUID, Group = Constants.AppMenuGroupDebuggerDebug)]
-    internal class InjectDLLDebug : MenuItemBase
+    internal class InjectDllDebug : MenuItemBase
     {
         private readonly IManagedInjector injector;
 
         [ImportingConstructor]
-        public InjectDLLDebug(IManagedInjector injector) => this.injector = injector;
+        public InjectDllDebug(IManagedInjector injector) => this.injector = injector;
 
         public override void Execute(IMenuItemContext context)
         {
@@ -31,7 +31,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands.Debug
             var rt = MsgBox.Instance.Ask<RuntimeType?>("Runtime type?");
             if (rt is null) return;
 
-            if (!InjectDLL.AskForEntryPoint(out InjectionArguments args))
+            if (!InjectDll.AskForEntryPoint(out InjectionArguments args))
                 return;
 
             injector.Log = s => MsgBox.Instance.Show(s);

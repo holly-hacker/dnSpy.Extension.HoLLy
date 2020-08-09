@@ -66,12 +66,12 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
         {
             const string buildFlavor = "wks";    // WorkStation
 
-            var clsidCLRRuntimeHost = new Guid(0x90F1A06E, 0x7712, 0x4762, 0x86, 0xB5, 0x7A, 0x5E, 0xBA, 0x6B, 0xDB, 0x02);
-            var  iidICLRRuntimeHost = new Guid(0x90F1A06C, 0x7712, 0x4762, 0x86, 0xB5, 0x7A, 0x5E, 0xBA, 0x6B, 0xDB, 0x02);
+            var clsidClrRuntimeHost = new Guid(0x90F1A06E, 0x7712, 0x4762, 0x86, 0xB5, 0x7A, 0x5E, 0xBA, 0x6B, 0xDB, 0x02);
+            var  iidIclrRuntimeHost = new Guid(0x90F1A06C, 0x7712, 0x4762, 0x86, 0xB5, 0x7A, 0x5E, 0xBA, 0x6B, 0xDB, 0x02);
 
             IntPtr ppv = alloc(IntPtr.Size);
-            IntPtr riid = allocBytes(iidICLRRuntimeHost.ToByteArray());
-            IntPtr rcslid = allocBytes(clsidCLRRuntimeHost.ToByteArray());
+            IntPtr riid = allocBytes(iidIclrRuntimeHost.ToByteArray());
+            IntPtr rcslid = allocBytes(clsidClrRuntimeHost.ToByteArray());
             IntPtr pwszBuildFlavor = allocString(buildFlavor);
             IntPtr pwszVersion = allocString(clrVersion);
 

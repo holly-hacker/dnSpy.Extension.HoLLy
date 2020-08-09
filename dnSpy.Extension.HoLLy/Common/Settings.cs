@@ -9,29 +9,29 @@ namespace HoLLy.dnSpyExtension.Common
     {
         private const int MaxRecentInjections = 5;
 
-        private bool copyInjectedDLLToTemp;
-        private bool autoMapDLLImports = true;
+        private bool copyInjectedDllToTemp;
+        private bool autoMapDllImports = true;
         private bool autoMapOverrides = true;
         private List<InjectionArguments> recentInjections = new List<InjectionArguments>();
 
-        public bool CopyInjectedDLLToTemp
+        public bool CopyInjectedDllToTemp
         {
-            get => copyInjectedDLLToTemp;
+            get => copyInjectedDllToTemp;
             set {
-                if (value != copyInjectedDLLToTemp) {
-                    copyInjectedDLLToTemp = value;
-                    OnPropertyChanged(nameof(CopyInjectedDLLToTemp));
+                if (value != copyInjectedDllToTemp) {
+                    copyInjectedDllToTemp = value;
+                    OnPropertyChanged(nameof(CopyInjectedDllToTemp));
                 }
             }
         }
 
-        public bool AutoMapDLLImports
+        public bool AutoMapDllImports
         {
-            get => autoMapDLLImports;
+            get => autoMapDllImports;
             set {
-                if (value != autoMapDLLImports) {
-                    autoMapDLLImports = value;
-                    OnPropertyChanged(nameof(AutoMapDLLImports));
+                if (value != autoMapDllImports) {
+                    autoMapDllImports = value;
+                    OnPropertyChanged(nameof(AutoMapDllImports));
                 }
             }
         }
@@ -70,9 +70,9 @@ namespace HoLLy.dnSpyExtension.Common
 
         public Settings CopyTo(Settings other)
         {
-            other.CopyInjectedDLLToTemp = CopyInjectedDLLToTemp;
+            other.CopyInjectedDllToTemp = CopyInjectedDllToTemp;
             other.AutoMapOverrides = AutoMapOverrides;
-            other.AutoMapDLLImports = AutoMapDLLImports;
+            other.AutoMapDllImports = AutoMapDllImports;
             other.RecentInjections = RecentInjections.ToList();
             return other;
         }

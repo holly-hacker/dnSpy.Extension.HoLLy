@@ -42,7 +42,7 @@ namespace HoLLy.dnSpyExtension.PluginSettings
         public void OnApply(IAppRefreshSettings appRefreshSettings)
         {
             if (globalSettings.AutoMapOverrides != newSettings.AutoMapOverrides
-                || globalSettings.AutoMapDLLImports != newSettings.AutoMapDLLImports)
+                || globalSettings.AutoMapDllImports != newSettings.AutoMapDllImports)
                 appRefreshSettings.Add(Constants.SourceMapSettingsChanged);
 
             newSettings.CopyTo(globalSettings);

@@ -3,11 +3,11 @@ using dnSpy.Contracts.Documents.Tabs;
 
 namespace HoLLy.dnSpyExtension.ControlFlowGraph
 {
-    public class ControlFlowGraphTabUIContext : DocumentTabUIContext
+    public class ControlFlowGraphTabUiContext : DocumentTabUIContext
     {
         readonly GraphControl content;
 
-        public ControlFlowGraphTabUIContext(GraphProvider graph)
+        public ControlFlowGraphTabUiContext(GraphProvider graph)
         {
             content = new GraphControl(graph);
         }

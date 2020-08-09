@@ -2,9 +2,9 @@ using System.Windows.Input;
 
 namespace HoLLy.dnSpyExtension.CodeInjection.Dialogs
 {
-    internal partial class DLLEntryPointSelection
+    internal partial class DllEntryPointSelection
     {
-        public DLLEntryPointSelection(DLLEntryPointSelectionVM vm)
+        public DllEntryPointSelection(DllEntryPointSelectionVm vm)
         {
             DataContext = vm;
             Title = "Select an entry point";
@@ -13,7 +13,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Dialogs
 
         private void ListView_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (!((DLLEntryPointSelectionVM)DataContext).HasSelection)
+            if (!((DllEntryPointSelectionVm)DataContext).HasSelection)
                 return;
 
             ClickOK();

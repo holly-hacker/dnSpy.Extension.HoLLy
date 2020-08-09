@@ -26,7 +26,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             var injector = GetInjector(runtimeType);
             injector.Log = Log;
 
-            if (!settings.CopyInjectedDLLToTemp) {
+            if (!settings.CopyInjectedDllToTemp) {
                 injector.Inject(pid, args, x86);
             } else {
                 injector.Inject(pid, new InjectionArguments {
