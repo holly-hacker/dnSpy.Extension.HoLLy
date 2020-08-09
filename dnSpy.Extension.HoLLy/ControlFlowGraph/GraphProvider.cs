@@ -104,14 +104,16 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
                 {
                     var newNode = new Node(getId(node))
                     {
-                        LabelText = node.Contents.ToString(),
+                        LabelText = node.Contents.ToString().TrimEnd(),
                         Attr =
                         {
                             FillColor = fillColor,
+                            LabelMargin = 4,
                         },
                         Label =
                         {
                             FontColor = textColor,
+                            FontName = "Consolas",
                         },
                     };
                     newGraph.AddNode(newNode);
