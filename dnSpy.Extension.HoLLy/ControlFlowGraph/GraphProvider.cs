@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Windows.Media;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
+using dnSpy.Contracts.App;
+using dnSpy.Contracts.Themes;
 using Echo.ControlFlow;
 using Echo.ControlFlow.Construction;
 using Echo.ControlFlow.Construction.Symbolic;
@@ -10,13 +13,15 @@ using HoLLy.dnSpyExtension.NativeDisassembler;
 using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Core.Routing;
 using Microsoft.Msagl.Drawing;
+using Color = Microsoft.Msagl.Drawing.Color;
+using Label = Microsoft.Msagl.Drawing.Label;
 using Node = Microsoft.Msagl.Drawing.Node;
 
 namespace HoLLy.dnSpyExtension.ControlFlowGraph
 {
     public abstract class GraphProvider
     {
-        public abstract Graph ToMicrosoftGraph();
+        public abstract Graph ToMicrosoftGraph(ITheme theme);
 
         public static GraphProvider Create(MethodDef method)
         {
@@ -71,13 +76,45 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
                 this.graph = graph;
             }
             
-            public override Graph ToMicrosoftGraph()
+            public override Graph ToMicrosoftGraph(ITheme theme)
             {
                 var newGraph = CreateEmptyGraph();
 
+                Color textColor = theme.GetColor(ColorType.Text).Foreground is SolidColorBrush sb
+                    ? BrushToColor(sb)
+                    : theme.IsDark
+                        ? Color.LightGray
+                        : Color.DarkGray;
+                Color fillColor = theme.GetColor(ColorType.Text).Background is SolidColorBrush sb2
+                    ? BrushToColor(sb2)
+                    : theme.IsDark
+                        ? Color.Black
+                        : Color.White;
+                Color green = theme.GetColor(ColorType.Green).Foreground is SolidColorBrush sb3
+                    ? BrushToColor(sb3)
+                    : Color.Green;
+                Color red = theme.GetColor(ColorType.Red).Foreground is SolidColorBrush sb4
+                    ? BrushToColor(sb4)
+                    : Color.Red;
+                Color gray = theme.GetColor(ColorType.Gray).Foreground is SolidColorBrush sb5
+                    ? BrushToColor(sb5)
+                    : Color.Gray;
+
                 foreach (var node in graph.Nodes)
                 {
-                    newGraph.AddNode(new Node(getId(node)) {LabelText = node.Contents.ToString()});
+                    var newNode = new Node(getId(node))
+                    {
+                        LabelText = node.Contents.ToString(),
+                        Attr =
+                        {
+                            FillColor = fillColor,
+                        },
+                        Label =
+                        {
+                            FontColor = textColor,
+                        },
+                    };
+                    newGraph.AddNode(newNode);
                 }
                 
                 foreach (var edge in graph.GetEdges())
@@ -85,11 +122,11 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
                     var newEdge = newGraph.AddEdge(getId(edge.Origin), getId(edge.Target));
                     newEdge.Attr.Color = edge.Type switch
                     {
-                        ControlFlowEdgeType.Abnormal => Color.Gray,
-                        ControlFlowEdgeType.FallThrough when edge.Origin.ConditionalEdges.Count > 0 => Color.Red,
-                        ControlFlowEdgeType.Conditional => Color.Green,
-                        ControlFlowEdgeType.FallThrough => Color.Black,
-                        _ => Color.Black,
+                        ControlFlowEdgeType.Abnormal => gray,
+                        ControlFlowEdgeType.FallThrough when edge.Origin.ConditionalEdges.Count > 0 => red,
+                        ControlFlowEdgeType.Conditional => green,
+                        ControlFlowEdgeType.FallThrough => textColor,
+                        _ => throw new IndexOutOfRangeException("Unknown edge type: " + edge.Type),
                     };
                 }
 
@@ -97,6 +134,13 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
 
                 static string getId(INode node) => node.Id.ToString("X16");
             }
+        }
+
+        private static Color BrushToColor(SolidColorBrush brush)
+        {
+            var c = brush.Color;
+            // MsgBox.Instance.Show($"Color: {c.R}, {c.G}, {c.B}, {c.A}");
+            return new Color(c.A, c.R, c.G, c.B);
         }
     }
 }

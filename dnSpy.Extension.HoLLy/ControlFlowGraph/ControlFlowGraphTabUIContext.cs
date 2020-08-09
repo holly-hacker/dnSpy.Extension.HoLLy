@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using dnSpy.Contracts.Documents.Tabs;
+using dnSpy.Contracts.Themes;
 
 namespace HoLLy.dnSpyExtension.ControlFlowGraph
 {
@@ -7,9 +8,9 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
     {
         readonly GraphControl content;
 
-        public ControlFlowGraphTabUiContext(GraphProvider graph)
+        public ControlFlowGraphTabUiContext(GraphProvider graph, ITheme theme)
         {
-            content = new GraphControl(graph);
+            content = new GraphControl(graph, theme);
         }
 
         public override object? UIObject => content;
