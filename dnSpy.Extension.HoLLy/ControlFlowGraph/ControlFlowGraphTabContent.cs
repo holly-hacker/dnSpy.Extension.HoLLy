@@ -10,7 +10,7 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
         private readonly ITheme theme;
         private readonly FontSettings font;
 
-        public override string Title => "CFG";
+        public override string Title => $"CFG: {graphProvider.MethodName}";
 
         public ControlFlowGraphTabContent(GraphProvider graphProvider, ITheme theme, FontSettings font)
         {

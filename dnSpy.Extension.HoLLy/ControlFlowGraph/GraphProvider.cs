@@ -2,7 +2,7 @@
 using System.Windows.Media;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
-using dnSpy.Contracts.App;
+using dnSpy.Contracts.Decompiler;
 using dnSpy.Contracts.Settings.Fonts;
 using dnSpy.Contracts.Themes;
 using Echo.ControlFlow;
@@ -15,17 +15,18 @@ using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Core.Routing;
 using Microsoft.Msagl.Drawing;
 using Color = Microsoft.Msagl.Drawing.Color;
-using Label = Microsoft.Msagl.Drawing.Label;
 using Node = Microsoft.Msagl.Drawing.Node;
 
 namespace HoLLy.dnSpyExtension.ControlFlowGraph
 {
     public abstract class GraphProvider
     {
+        public abstract string MethodName { get; }
         public abstract Graph ToMicrosoftGraph(ITheme theme, FontSettings font);
 
         public static GraphProvider Create(MethodDef method)
         {
+            var methodName = IdentifierEscaper.Escape(method.Name);
             switch (method.MethodBody)
             {
                 case CilBody _:
@@ -34,12 +35,12 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
                     var stateResolver = new CilStateTransitionResolver(arch);
                     var cflowBuilder = new SymbolicFlowGraphBuilder<Instruction>(arch, method.Body.Instructions, stateResolver);
                     var cflow = cflowBuilder.ConstructFlowGraph(0);
-                    return new ControlFlowGraphProvider<Instruction>(cflow);
+                    return new ControlFlowGraphProvider<Instruction>(methodName, cflow);
                 }
                 case NativeMethodBody _:
                 {
                     var cflow = IcedHelpers.ReadNativeMethodBody(method);
-                    return new ControlFlowGraphProvider<Iced.Intel.Instruction>(cflow);
+                    return new ControlFlowGraphProvider<Iced.Intel.Instruction>(methodName, cflow);
                 }
                 default:
                     throw new Exception("Tried to create graph for method that has neither managed nor native body");
@@ -72,10 +73,13 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
         {
             private readonly ControlFlowGraph<TInstruction> graph;
 
-            public ControlFlowGraphProvider(ControlFlowGraph<TInstruction> graph)
+            public ControlFlowGraphProvider(string methodName, ControlFlowGraph<TInstruction> graph)
             {
+                MethodName = methodName;
                 this.graph = graph;
             }
+            
+            public override string MethodName { get; }
             
             public override Graph ToMicrosoftGraph(ITheme theme, FontSettings font)
             {
