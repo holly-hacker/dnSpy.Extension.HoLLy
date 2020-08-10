@@ -3,6 +3,7 @@ using System.Windows.Media;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
 using dnSpy.Contracts.App;
+using dnSpy.Contracts.Settings.Fonts;
 using dnSpy.Contracts.Themes;
 using Echo.ControlFlow;
 using Echo.ControlFlow.Construction;
@@ -21,7 +22,7 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
 {
     public abstract class GraphProvider
     {
-        public abstract Graph ToMicrosoftGraph(ITheme theme);
+        public abstract Graph ToMicrosoftGraph(ITheme theme, FontSettings font);
 
         public static GraphProvider Create(MethodDef method)
         {
@@ -76,7 +77,7 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
                 this.graph = graph;
             }
             
-            public override Graph ToMicrosoftGraph(ITheme theme)
+            public override Graph ToMicrosoftGraph(ITheme theme, FontSettings font)
             {
                 var newGraph = CreateEmptyGraph();
 
@@ -113,7 +114,8 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
                         Label =
                         {
                             FontColor = textColor,
-                            FontName = "Consolas",
+                            FontName = font.FontFamily.ToString(),
+                            FontSize = font.FontSize,
                         },
                     };
                     newGraph.AddNode(newNode);
