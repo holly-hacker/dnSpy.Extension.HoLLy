@@ -121,6 +121,7 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
                             FontName = font.FontFamily.ToString(),
                             FontSize = font.FontSize,
                         },
+                        UserData = ((INode) node).Id,
                     };
                     newGraph.AddNode(newNode);
                 }
