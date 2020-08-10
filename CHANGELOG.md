@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Option to disable underlining of managed assemblies
 
 ### Changed
-- Use `<<EMPTY_NAME>>` for disassembler if name is empty
+- Escape method name for disassembly tab header
 
 ## [0.4.1] - 2020-07-24
 ### Fixed
