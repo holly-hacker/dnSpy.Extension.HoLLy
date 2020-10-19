@@ -18,8 +18,8 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
             InitializeComponent();
 
             // could set LastChildFill to true, doesn't seem to matter
-            Panel.HorizontalAlignment = HorizontalAlignment.Center;
-            Panel.VerticalAlignment = VerticalAlignment.Center;
+            Panel.HorizontalAlignment = HorizontalAlignment.Stretch;
+            Panel.VerticalAlignment = VerticalAlignment.Stretch;
 
             var viewer = new GraphViewer();
             viewer.BindToPanel(Panel);
