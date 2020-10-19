@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Windows.Media;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
@@ -6,6 +7,7 @@ using dnSpy.Contracts.Decompiler;
 using dnSpy.Contracts.Settings.Fonts;
 using dnSpy.Contracts.Themes;
 using Echo.ControlFlow;
+using Echo.ControlFlow.Blocks;
 using Echo.ControlFlow.Construction;
 using Echo.ControlFlow.Construction.Symbolic;
 using Echo.Core.Graphing;
@@ -121,7 +123,7 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
                             FontName = font.FontFamily.ToString(),
                             FontSize = font.FontSize,
                         },
-                        UserData = ((INode) node).Id,
+                        UserData = node.Id,
                     };
                     newGraph.AddNode(newNode);
                 }
@@ -135,13 +137,14 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
                         ControlFlowEdgeType.FallThrough when edge.Origin.ConditionalEdges.Count > 0 => red,
                         ControlFlowEdgeType.Conditional => green,
                         ControlFlowEdgeType.FallThrough => textColor,
+                        ControlFlowEdgeType.None => throw new InvalidOperationException("Found a None node in control flow graph, Echo bug?"),
                         _ => throw new IndexOutOfRangeException("Unknown edge type: " + edge.Type),
                     };
                 }
 
                 return newGraph;
 
-                static string getId(INode node) => node.Id.ToString("X16");
+                static string getId(IIdentifiedNode node) => node.Id.ToString("X16");
             }
         }
 
