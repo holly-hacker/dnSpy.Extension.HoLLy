@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Option to disable underlining of managed assemblies
 
 ### Changed
+- Targets dnSpy v6.0.17
 - Escape method name for disassembly tab header
 
 ## [0.4.1] - 2020-07-24
