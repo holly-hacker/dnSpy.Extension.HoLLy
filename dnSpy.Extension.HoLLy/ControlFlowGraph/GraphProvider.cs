@@ -111,7 +111,7 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
                 {
                     var newNode = new Node(getId(node))
                     {
-                        LabelText = node.Contents.ToString().TrimEnd(),
+                        LabelText = GetBlockText(node.Contents),
                         Attr =
                         {
                             FillColor = fillColor,
@@ -145,6 +145,33 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
                 return newGraph;
 
                 static string getId(IIdentifiedNode node) => node.Id.ToString("X16");
+            }
+
+            private static string GetBlockText(BasicBlock<TInstruction> nodeContents)
+            {
+                var sb = new StringBuilder();
+
+                switch (nodeContents)
+                {
+                    case BasicBlock<Instruction> cilBlock:
+                    {
+                        sb.AppendLine($"IL_{cilBlock.Header.Offset:X8}:\n");
+
+                        foreach (var cilInstruction in cilBlock.Instructions)
+                        {
+                            sb.Append(cilInstruction.OpCode.Name);
+                            InstructionPrinter.AddOperandString(sb, cilInstruction, " ");
+                            sb.AppendLine();
+                        }
+
+                        break;
+                    }
+                    default:
+                        sb.Append(nodeContents);
+                        break;
+                }
+
+                return sb.ToString().TrimEnd();
             }
         }
 
