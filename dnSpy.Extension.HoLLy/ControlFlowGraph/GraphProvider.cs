@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Windows.Media;
 using dnlib.DotNet;
@@ -31,12 +32,13 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
             var methodName = IdentifierEscaper.Escape(method.Name);
             switch (method.MethodBody)
             {
-                case CilBody _:
+                case CilBody cilBody:
                 {
                     var arch = new CilArchitecture(method);
                     var stateResolver = new CilStateTransitionResolver(arch);
                     var cflowBuilder = new SymbolicFlowGraphBuilder<Instruction>(arch, method.Body.Instructions, stateResolver);
-                    var cflow = cflowBuilder.ConstructFlowGraph(0);
+                    var handlers = cilBody.ExceptionHandlers.Select(DnlibExtensions.ToEchoRange);
+                    var cflow = cflowBuilder.ConstructFlowGraph(0, handlers);
                     return new ControlFlowGraphProvider<Instruction>(methodName, cflow);
                 }
                 case NativeMethodBody _:
