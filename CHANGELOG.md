@@ -12,6 +12,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Targets dnSpy v6.0.17
 - Escape method name for disassembly tab header
 
+### Fixed
+- Assembly resolving on .NET Framework. You can now put the DLL into the Extensions directory again.
+
 ## [0.4.1] - 2020-07-24
 ### Fixed
 - Native disassembly used incorrect values for architecture, causing disassembly to fail in some cases
