@@ -12,6 +12,32 @@ A dnSpy extension to aid reversing of obfuscated assemblies.
 - Underline managed assemblies in the treeview.
 - Several commands to help with extension development in debug mode
 
+### Installation
+Download the [latest release](https://github.com/holly-hacker/dnspy.extension.holly/releases/latest) for your dnSpy version (net472 or netcoreapp3.1) and extract it to the `bin/Extensions/dnSpy.Extensions.HoLLy` directory. You may need to create this folder.
+
+Make sure that you copied all the dependency DLLs too. Your directory structure will look something like this:
+```
+dnSpy-netcore-win64/
+├─ dnSpy.exe
+├─ dnSpy.Console.exe
+└─ bin/
+  ├─ Extensions/
+  │ └─ dnSpy.Extension.HoLLy/
+  │   ├─ AutomaticGraphLayout.dll
+  │   ├─ dnSpy.Extension.HoLLy.x.dll
+  │   ├─ Echo.Core.dll
+  │   └─ ...
+  ├─ LicenseInfo/
+  ├─ FileLists/
+  ├─ Themes/
+  ├─ dnSpy.Analyzer.x.dll
+  ├─ dnSpy.Contracts.Debugger.dll
+  ├─ ...
+```
+
+Also make sure that you are using the correct version of dnSpy that matches the plugin! This should be mentioned in the [release notes](https://github.com/holly-hacker/dnspy.extension.holly/releases/latest) or the [changelog](https://github.com/HoLLy-HaCKeR/dnSpy.Extension.HoLLy/blob/master/CHANGELOG.md).
+The plugin **will not work** with certain mismatched versions due to strong-name signing of some dependencies.
+
 ### License
 Due to dnSpy being licensed under the GPLv3 license, this plugin is too.
 
