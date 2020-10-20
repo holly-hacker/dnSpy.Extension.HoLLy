@@ -32,7 +32,7 @@ dnSpy-netcore-win64/
   ├─ Themes/
   ├─ dnSpy.Analyzer.x.dll
   ├─ dnSpy.Contracts.Debugger.dll
-  ├─ ...
+  └─ ...
 ```
 
 Also make sure that you are using the correct version of dnSpy that matches the plugin! This should be mentioned in the [release notes](https://github.com/holly-hacker/dnspy.extension.holly/releases/latest) or the [changelog](https://github.com/HoLLy-HaCKeR/dnSpy.Extension.HoLLy/blob/master/CHANGELOG.md).
