@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using System.Windows.Media;
 using dnlib.DotNet;
@@ -9,8 +8,6 @@ using dnSpy.Contracts.Settings.Fonts;
 using dnSpy.Contracts.Themes;
 using Echo.ControlFlow;
 using Echo.ControlFlow.Blocks;
-using Echo.ControlFlow.Construction;
-using Echo.ControlFlow.Construction.Symbolic;
 using Echo.Core.Graphing;
 using Echo.Platforms.Dnlib;
 using HoLLy.dnSpyExtension.NativeDisassembler;
@@ -34,11 +31,7 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
             {
                 case CilBody cilBody:
                 {
-                    var arch = new CilArchitecture(method);
-                    var stateResolver = new CilStateTransitionResolver(arch);
-                    var cflowBuilder = new SymbolicFlowGraphBuilder<Instruction>(arch, method.Body.Instructions, stateResolver);
-                    var handlers = cilBody.ExceptionHandlers.Select(DnlibExtensions.ToEchoRange);
-                    var cflow = cflowBuilder.ConstructFlowGraph(0, handlers);
+                    var cflow = method.ConstructStaticFlowGraph();
                     return new ControlFlowGraphProvider<Instruction>(methodName, cflow);
                 }
                 case NativeMethodBody _:
