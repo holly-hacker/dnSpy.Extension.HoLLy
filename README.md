@@ -38,12 +38,12 @@ dnSpy-netcore-win64/
 Also make sure that you are using the correct version of dnSpy that matches the plugin! This should be mentioned in the [release notes](https://github.com/holly-hacker/dnspy.extension.holly/releases/latest) or the [changelog](https://github.com/HoLLy-HaCKeR/dnSpy.Extension.HoLLy/blob/master/CHANGELOG.md).
 The plugin **will not work** with certain mismatched versions due to strong-name signing of some dependencies.
 
-### License
-Due to dnSpy being licensed under the GPLv3 license, this plugin is too.
-
 ### Developing
 To test the extension, you can launch dnSpy with the `--extension-directory {direcory}` argument, where `{directory}` is the build directory (ie. `.../bin/Release/net472`).
 JetBrains Rider supports launch profiles, allowing you to specify dnSpy as the executable to start. This means you can launch and debug the extension from within the IDE.
+
+### License
+Due to dnSpy being licensed under the GPLv3 license, this plugin is too.
 
 ### Used libraries
 - [dnSpy](https://github.com/0xd4d/dnSpy) and its [dependencies](https://github.com/dnSpy/dnSpy#list-of-other-open-source-libraries-used-by-dnspy), licensed under the [GPLv3 license](https://github.com/0xd4d/dnSpy/blob/master/dnSpy/dnSpy/LicenseInfo/LICENSE.txt) and [others](https://github.com/dnSpy/dnSpy/tree/master/dnSpy/dnSpy/LicenseInfo)
