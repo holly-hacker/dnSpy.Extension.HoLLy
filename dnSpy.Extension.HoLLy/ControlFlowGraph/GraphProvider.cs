@@ -162,10 +162,8 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
                         foreach (var cilInstruction in cilBlock.Instructions)
                         {
                             sb.Append(cilInstruction.OpCode.Name);
-                            /*
-                             * If I'm not mistaken, no matter what you do with the string, if you pass the "\n" to the renderer, it will render it as a new line.
-                             * I'm replacing the backslash (\) with a similar character (⧵) to bypass that. It's dirty, but it works.
-                             */
+                             // MSAGL appears to replace any "\n" with a newline, even if it's escaped.
+                             // I'm replacing the backslash (\) with a similar character (⧵) to bypass that.
                             if (cilInstruction.OpCode == OpCodes.Ldstr)
                             {
                                 var operand = (string) cilInstruction.Operand;
