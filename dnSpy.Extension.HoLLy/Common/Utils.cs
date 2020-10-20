@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using dnSpy.Contracts.App;
 using dnSpy.Contracts.Debugger;
 using HoLLy.dnSpyExtension.Common.CodeInjection;
 
@@ -44,6 +45,34 @@ namespace HoLLy.dnSpyExtension.Common
             string newPath = Path.Combine(dir, Guid.NewGuid() + Path.GetExtension(path));
             File.Copy(path, newPath);
             return newPath;
+        }
+
+        /// <summary>
+        /// Install assembly resolver that looks in the directory of the extension. This is required on .NET Framework,
+        /// not on .NET Core.
+        /// </summary>
+        public static void InstallLocalAssemblyResolver()
+        {
+            string? extensionDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? null;
+
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            {
+                if (extensionDirectory is null || args?.Name is null) return null;
+
+                var asmName = new AssemblyName(args.Name);
+                string dllPath = Path.Combine(extensionDirectory, asmName.Name + ".dll");
+
+                if (!File.Exists(dllPath)) return null;
+
+                try
+                {
+                    return Assembly.LoadFile(dllPath);
+                }
+                catch
+                {
+                    return null;
+                }
+            };
         }
 
         /// <remarks>https://stackoverflow.com/a/2186634</remarks>

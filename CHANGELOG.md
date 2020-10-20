@@ -26,7 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **Targets dnSpy v6.0.16, both .NET 4.7.2 and .NET Core**
 - **Include [Echo](https://github.com/washi1337/echo) for better disassembling of native functions without known length**
   - The plugin will need all the included Echo DLLs to be present.
-- Namespace and Type are now stored seperately in DLL injection config files, meaning old ones will be invalidated
+- Namespace and Type are now stored separately in DLL injection config files, meaning old ones will be invalidated
 - Improved debug command for injecting into arbitrary process
   - It now asks for runtime type
   - It now verifies the input PID while you're typing

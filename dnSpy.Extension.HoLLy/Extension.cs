@@ -7,6 +7,11 @@ namespace HoLLy.dnSpyExtension
     [ExportExtension]
     public class Extension : IExtension
     {
+        static Extension()
+        {
+            Utils.InstallLocalAssemblyResolver();
+        }
+
         public IEnumerable<string> MergedResourceDictionaries { get { yield break; } }
 
         public ExtensionInfo ExtensionInfo => new ExtensionInfo {
