@@ -1,7 +1,7 @@
 dnSpy.Extension.HoLLy
 =====================
 
-A dnSpy extension to aid reversing of obfuscated assemblies.
+A [dnSpy](https://github.com/dnSpy/dnSpy) extension to aid reversing of obfuscated assemblies.
 
 ### Features
 - **Change the displayed symbol name of types, methods, properties or fields, without modifying the binary.** These modified names are saved in an xml file, meaning you can write a tool to generate them automatically.
@@ -42,7 +42,7 @@ The plugin **will not work** with certain mismatched versions due to strong-name
 Due to dnSpy being licensed under the GPLv3 license, this plugin is too.
 
 ### Used libraries
-- [dnSpy](https://github.com/0xd4d/dnSpy) and its dependencies, licensed under the [GPLv3 license](https://github.com/0xd4d/dnSpy/blob/master/dnSpy/dnSpy/LicenseInfo/LICENSE.txt)
+- [dnSpy](https://github.com/0xd4d/dnSpy) and its [dependencies](https://github.com/dnSpy/dnSpy#list-of-other-open-source-libraries-used-by-dnspy), licensed under the [GPLv3 license](https://github.com/0xd4d/dnSpy/blob/master/dnSpy/dnSpy/LicenseInfo/LICENSE.txt) and [others](https://github.com/dnSpy/dnSpy/tree/master/dnSpy/dnSpy/LicenseInfo)
 - [iced](https://github.com/0xd4d/iced), licensed under the [MIT license](https://github.com/0xd4d/iced/blob/master/LICENSE.txt)
 - [dnlib](https://github.com/0xd4d/dnlib), licensed under the [MIT license](https://github.com/0xd4d/dnlib/blob/master/LICENSE.txt)
 - [Echo](https://github.com/Washi1337/Echo), licensed under the [LGPLv3 license](https://github.com/Washi1337/Echo/blob/master/LICENSE.md)
