@@ -168,8 +168,9 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
                             {
                                 var operand = (string) cilInstruction.Operand;
                                 operand = operand.Replace("\n", "⧵n")
-                                                 .Replace("\r", "⧵r");
-                                sb.Append($" {operand}");
+                                                 .Replace("\r", "⧵r")
+                                                 .Replace("\"", "⧵\"");
+                                sb.Append($" \"{operand}\"");
                             }
                             else 
                                 InstructionPrinter.AddOperandString(sb, cilInstruction, " ");
