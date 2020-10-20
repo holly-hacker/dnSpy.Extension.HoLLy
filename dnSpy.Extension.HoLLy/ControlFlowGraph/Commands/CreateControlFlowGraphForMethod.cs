@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.Composition;
 using dnlib.DotNet;
-using dnSpy.Contracts.App;
 using dnSpy.Contracts.Documents.Tabs;
 using dnSpy.Contracts.Documents.Tabs.DocViewer;
 using dnSpy.Contracts.Menus;
