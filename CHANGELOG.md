@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+- Add debug output pane. This can be accessed with View -> Output and selecting the `dnSpy.Extension.HoLLy` pane.
+
 ## [0.5.0] - 2020-10-20
 ### Added
 - **Control Flow Graphs for managed and native methods**
