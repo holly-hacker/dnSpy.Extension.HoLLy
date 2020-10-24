@@ -39,8 +39,10 @@ Also make sure that you are using the correct version of dnSpy that matches the 
 The plugin **will not work** with certain mismatched versions due to strong-name signing of some dependencies.
 
 ### Developing
-To test the extension, you can launch dnSpy with the `--extension-directory {direcory}` argument, where `{directory}` is the build directory (ie. `.../bin/Release/net472`).
+To test the extension, you can launch dnSpy with the `--extension-directory {direcory}` argument, where `{directory}` is the build directory (ie. `.../bin/Debug/netcoreapp3.1`).
 JetBrains Rider supports launch profiles, allowing you to specify dnSpy as the executable to start. This means you can launch and debug the extension from within the IDE.
+
+Due to how the .NET Framework does assembly resolving, this method may only work on .NET Core.
 
 ### License
 Due to dnSpy being licensed under the GPLv3 license, this plugin is too.
