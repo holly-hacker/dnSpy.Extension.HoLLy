@@ -23,7 +23,7 @@ namespace HoLLy.dnSpyExtension.Common.Commands.Debug
             sb.AppendLine();
 
             // if we have access to an IDocumentViewer, try to find the clicked item
-            TextReference? textRef = context.Find<TextReference>();
+            TextReference? textRef = context.Find<TextReference?>();
             if (textRef != null)
                 sb.AppendLine($"TextReference.Reference type: {textRef.Reference?.GetType()}");
 
