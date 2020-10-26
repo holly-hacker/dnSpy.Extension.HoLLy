@@ -10,12 +10,12 @@ namespace HoLLy.dnSpyExtension.Native
     [ExportTreeNodeDataProvider(Guid = DocumentTreeViewConstants.PEDOCUMENT_NODE_GUID)]
     public class NativeAssemblyTreeNodeDataProvider : ITreeNodeDataProvider
     {
-        private readonly DisassemblyContentProviderFactory _fac;
+        private readonly DisassemblyContentProviderFactory fac;
 
         [ImportingConstructor]
         public NativeAssemblyTreeNodeDataProvider(DisassemblyContentProviderFactory fac)
         {
-            _fac = fac;
+            this.fac = fac;
         }
 
         public IEnumerable<TreeNodeData> Create(TreeNodeDataProviderContext context)
@@ -34,7 +34,7 @@ namespace HoLLy.dnSpyExtension.Native
                 if (exportTableDirectory.Size != 0)
                 {
                     var exportTable = ExportTable.Read(peImage.DataReaderFactory, peImage, exportTableDirectory);
-                    yield return new ExportTableTreeNode(peImage, exportTable, _fac);
+                    yield return new ExportTableTreeNode(peImage, exportTable, fac);
                 }
             }
         }
