@@ -43,7 +43,7 @@ namespace HoLLy.dnSpyExtension.Native
         {
             bool is32Bit = peImage.ImageNTHeaders.FileHeader.Machine.IsAMD64();
 
-            var graph = IcedHelpers.ReadNativeFunction(peImage.Filename, (uint) peImage.ToFileOffset(rva), is32Bit);
+            var graph = IcedHelpers.ReadNativeFunction(peImage, rva, is32Bit);
             var instructions = IcedHelpers.GetInstructionsFromGraph(graph);
             var encodedBytes = IcedHelpers.EncodeBytes(instructions, is32Bit);
             

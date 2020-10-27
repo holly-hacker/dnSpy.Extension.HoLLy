@@ -1,7 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using dnlib.DotNet;
-using dnSpy.Contracts.Decompiler;
+using dnlib.PE;
 using Echo.ControlFlow;
 using Echo.ControlFlow.Construction;
 using Echo.ControlFlow.Construction.Static;
@@ -18,28 +19,32 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler
         public static ControlFlowGraph<Instruction> ReadNativeMethodBody(MethodDef method)
         {
             var mod = method.Module;
-            var loc = mod.Location;
+            if (!(mod is ModuleDefMD md))
+                throw new NotSupportedException($"Cannot read native function of a {mod.GetType()}");
+
             bool is32Bit = !method.Module.IsAMD64;
-            var rva = (uint)method.NativeBody.RVA;
-            var fileOffset = mod.ToFileOffset(rva)!.Value;
-            
-            return ReadNativeFunction(loc, fileOffset, is32Bit);
+            var rva = method.NativeBody.RVA;
+            var image = md.Metadata.PEImage;
+
+            return ReadNativeFunction(image, rva, is32Bit);
         }
 
-        public static ControlFlowGraph<Instruction> ReadNativeFunction(string loc, uint fileOffset, bool is32Bit)
+        public static ControlFlowGraph<Instruction> ReadNativeFunction(IPEImage image, RVA rva, bool is32Bit)
         {
-            using var fs = File.OpenRead(loc);
-            fs.Position = fileOffset;
+            var reader = image.CreateReader(rva);
+            var stream = reader.AsStream(); // does not need to be disposed by the caller
 
             var architecture = new X86Architecture();
-            var instructionProvider = new X86DecoderInstructionProvider(architecture, fs, is32Bit ? 32 : 64);
+            // NOTE: the InstructionProvider will seek based on the value passed to ConstructFlowGraph. Therefore, we
+            // pass it as the base address in the ctor, meaning the first instruction will be at index
+            // (entrypoint - BaseAddress) == 0 in the stream derived from the reader.
+            // Position 0 of the stream is position 0 of the reader, which is the file offset calculated from the rva.
+            var instructionProvider = new X86DecoderInstructionProvider(architecture, stream, is32Bit ? 32 : 64, (uint)rva, DecoderOptions.None);
             var cfgBuilder = new StaticFlowGraphBuilder<Instruction>(
                 instructionProvider,
                 new X86StaticSuccessorResolver());
 
-            // pass in a file offset, since we're working on a file on disk. would pass rva (and base addr in provider
-            // ctor) for in-memory.
-            ControlFlowGraph<Instruction> graph = cfgBuilder.ConstructFlowGraph(fileOffset);
+            ControlFlowGraph<Instruction> graph = cfgBuilder.ConstructFlowGraph((uint)rva);
             return graph;
         }
 
