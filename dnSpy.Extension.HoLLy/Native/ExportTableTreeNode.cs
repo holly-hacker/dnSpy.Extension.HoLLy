@@ -31,7 +31,7 @@ namespace HoLLy.dnSpyExtension.Native
 
         protected override void WriteCore(ITextColorWriter output, IDecompiler decompiler, DocumentNodeWriteOptions options)
         {
-            output.Write(BoxedTextColor.HexPeDosHeader, "Export table");
+            output.Write(BoxedTextColor.Text, "Export table");
         }
 
         public bool Decompile(IDecompileNodeContext context)
