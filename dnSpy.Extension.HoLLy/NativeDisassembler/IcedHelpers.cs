@@ -39,6 +39,10 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler
             // pass it as the base address in the ctor, meaning the first instruction will be at index
             // (entrypoint - BaseAddress) == 0 in the stream derived from the reader.
             // Position 0 of the stream is position 0 of the reader, which is the file offset calculated from the rva.
+
+            // TODO: create our own X86StaticSuccessorResolver or ask Washi for help
+            // The current implementation will simply seek to the operand of the jmp. Instead, we want to resolve the
+            // operand as an RVA to a FileOffset.
             var instructionProvider = new X86DecoderInstructionProvider(architecture, stream, is32Bit ? 32 : 64, (uint)rva, DecoderOptions.None);
             var cfgBuilder = new StaticFlowGraphBuilder<Instruction>(
                 instructionProvider,
