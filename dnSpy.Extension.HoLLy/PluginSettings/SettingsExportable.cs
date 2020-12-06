@@ -24,6 +24,7 @@ namespace HoLLy.dnSpyExtension.PluginSettings
             CopyInjectedDllToTemp = sect.Attribute<bool?>(nameof(CopyInjectedDllToTemp)) ?? CopyInjectedDllToTemp;
             AutoMapDllImports = sect.Attribute<bool?>(nameof(AutoMapDllImports)) ?? AutoMapDllImports;
             AutoMapOverrides = sect.Attribute<bool?>(nameof(AutoMapOverrides)) ?? AutoMapOverrides;
+            DiePath = sect.Attribute<string?>(nameof(DiePath)) ?? DiePath;
 
             var sectInjections = sect.TryGetSection(SectionRecentInjections);
             if (!(sectInjections is null))
@@ -39,6 +40,7 @@ namespace HoLLy.dnSpyExtension.PluginSettings
             sect.Attribute(nameof(CopyInjectedDllToTemp), CopyInjectedDllToTemp);
             sect.Attribute(nameof(AutoMapDllImports), AutoMapDllImports);
             sect.Attribute(nameof(AutoMapOverrides), AutoMapOverrides);
+            sect.Attribute(nameof(DiePath), DiePath);
 
             ISettingsSection sectInjections = sect.GetOrCreateSection(SectionRecentInjections);
             foreach (var injection in RecentInjections) {

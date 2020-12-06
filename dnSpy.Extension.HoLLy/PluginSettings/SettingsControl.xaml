@@ -6,21 +6,32 @@
              xmlns:common="clr-namespace:HoLLy.dnSpyExtension.Common"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance common:Settings}">
+    <UserControl.Resources>
+        <Style TargetType="CheckBox">
+            <Setter Property="Margin" Value="0 5 0 0" />
+        </Style>
+    </UserControl.Resources>
     <StackPanel Margin="5">
         <GroupBox Header="DLL Injection">
             <StackPanel>
-                <CheckBox Margin="0 5 0 0" Content="Copy injected DLLs to temporary directory" IsChecked="{Binding CopyInjectedDllToTemp}" />
+                <CheckBox Content="Copy injected DLLs to temporary directory" IsChecked="{Binding CopyInjectedDllToTemp}" />
             </StackPanel>
         </GroupBox>
         <GroupBox Header="SourceMapping">
             <StackPanel>
-                <CheckBox Margin="0 5 0 0" Content="Automatically map DLL imports" IsChecked="{Binding AutoMapDllImports}" />
-                <CheckBox Margin="0 5 0 0" Content="Automatically map overridden methods" IsChecked="{Binding AutoMapOverrides}" />
+                <CheckBox Content="Automatically map DLL imports" IsChecked="{Binding AutoMapDllImports}" />
+                <CheckBox Content="Automatically map overridden methods" IsChecked="{Binding AutoMapOverrides}" />
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Integration">
+            <StackPanel>
+                <Label>Detect-It-Easy path</Label>
+                <TextBox Margin="5 -2 0 0" Text="{Binding DiePath}" />
             </StackPanel>
         </GroupBox>
         <GroupBox Header="Miscellaneous">
             <StackPanel>
-                <CheckBox Margin="0 5 0 0" Content="Underline managed assemblies (restart required)" IsChecked="{Binding UnderlineManagedAssemblies}" />
+                <CheckBox Content="Underline managed assemblies (restart required)" IsChecked="{Binding UnderlineManagedAssemblies}" />
             </StackPanel>
         </GroupBox>
     </StackPanel>

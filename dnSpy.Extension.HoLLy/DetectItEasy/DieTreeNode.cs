@@ -13,15 +13,16 @@ namespace HoLLy.dnSpyExtension.DetectItEasy
 {
     public class DieTreeNode : DocumentTreeNodeData, IDecompileSelf
     {
-        private const string DiePath = @"D:\Tools\Executable Analysis\die_win64_portable\diec.exe";
         private readonly string _filePath;
+        private readonly string _diePath;
 
         public override Guid Guid => Constants.DetectItEasyNodeGuid;
         public override NodePathName NodePathName => new NodePathName(Guid);
 
-        public DieTreeNode(string filePath)
+        public DieTreeNode(string filePath, string diePath)
         {
             _filePath = filePath;
+            _diePath = diePath;
         }
 
         protected override ImageReference GetIcon(IDotNetImageService dnImgMgr) => DsImages.Binary;
@@ -31,7 +32,7 @@ namespace HoLLy.dnSpyExtension.DetectItEasy
 
         public bool Decompile(IDecompileNodeContext context)
         {
-            var startInfo = new ProcessStartInfo(DiePath, $"-d -j \"{_filePath}\"")
+            var startInfo = new ProcessStartInfo(_diePath, $"-d -j \"{_filePath}\"")
             {
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,
