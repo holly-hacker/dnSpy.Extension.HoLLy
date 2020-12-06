@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using dnSpy.Contracts.MVVM;
 using HoLLy.dnSpyExtension.Common.CodeInjection;
@@ -76,6 +77,8 @@ namespace HoLLy.dnSpyExtension.Common
                 }
             }
         }
+
+        public bool IsDiePathValid => !string.IsNullOrWhiteSpace(DiePath) && File.Exists(DiePath);
 
         public void AddRecentInjection(InjectionArguments injectionArguments)
         {

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.IO;
 using dnSpy.Contracts.Documents.TreeView;
 using dnSpy.Contracts.TreeView;
 using HoLLy.dnSpyExtension.Common;
@@ -20,7 +19,7 @@ namespace HoLLy.dnSpyExtension.DetectItEasy
 
         public IEnumerable<TreeNodeData> Create(TreeNodeDataProviderContext context)
         {
-            if (string.IsNullOrEmpty(_settings.DiePath) || !File.Exists(_settings.DiePath))
+            if (!_settings.IsDiePathValid)
                 yield break;
 
             var data = (DsDocumentNode) context.Owner.Data;
@@ -44,7 +43,7 @@ namespace HoLLy.dnSpyExtension.DetectItEasy
 
         public IEnumerable<TreeNodeData> Create(TreeNodeDataProviderContext context)
         {
-            if (string.IsNullOrEmpty(_settings.DiePath) || !File.Exists(_settings.DiePath))
+            if (!_settings.IsDiePathValid)
                 yield break;
 
             var data = (DsDocumentNode) context.Owner.Data;
