@@ -21,5 +21,6 @@ namespace HoLLy.dnSpyExtension.Common
 
         public static readonly Guid AssemblyExportNodeGuid = new Guid("B5317D58-B498-4B30-BF8D-C2E13A129116");
         public static readonly Guid AssemblyExportTableNodeGuid = new Guid("8032E2E4-EAD8-402A-A232-711E2A1ACA70");
+        public static readonly Guid DetectItEasyNodeGuid = new Guid("D8C33C25-FE2F-4BA2-ABA8-01623439CF52");
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using dnSpy.Contracts.MVVM;
 using HoLLy.dnSpyExtension.Common.CodeInjection;
@@ -14,6 +15,7 @@ namespace HoLLy.dnSpyExtension.Common
         private bool autoMapDllImports = true;
         private bool autoMapOverrides = true;
         private List<InjectionArguments> recentInjections = new List<InjectionArguments>();
+        private string? diePath = string.Empty;
 
         public bool UnderlineManagedAssemblies
         {
@@ -65,6 +67,19 @@ namespace HoLLy.dnSpyExtension.Common
             protected set => recentInjections = (List<InjectionArguments>)value;
         }
 
+        public string? DiePath
+        {
+            get => diePath;
+            set {
+                if (value != diePath) {
+                    diePath = value;
+                    OnPropertyChanged(nameof(DiePath));
+                }
+            }
+        }
+
+        public bool IsDiePathValid => !string.IsNullOrWhiteSpace(DiePath) && File.Exists(DiePath);
+
         public void AddRecentInjection(InjectionArguments injectionArguments)
         {
             while (recentInjections.Contains(injectionArguments))
@@ -87,6 +102,7 @@ namespace HoLLy.dnSpyExtension.Common
             other.AutoMapOverrides = AutoMapOverrides;
             other.AutoMapDllImports = AutoMapDllImports;
             other.RecentInjections = RecentInjections.ToList();
+            other.DiePath = DiePath;
             return other;
         }
     }
