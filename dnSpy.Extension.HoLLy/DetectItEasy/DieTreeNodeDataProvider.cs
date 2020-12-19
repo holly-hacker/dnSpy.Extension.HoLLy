@@ -36,6 +36,7 @@ namespace HoLLy.dnSpyExtension.DetectItEasy
     {
         private readonly Settings _settings;
 
+        [ImportingConstructor]
         public DiePeTreeNodeDataProvider(Settings settings)
         {
             _settings = settings;
