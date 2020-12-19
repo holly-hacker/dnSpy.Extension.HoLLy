@@ -53,3 +53,9 @@ Due to dnSpy being licensed under the GPLv3 license, this plugin is too.
 - [dnlib](https://github.com/0xd4d/dnlib), licensed under the [MIT license](https://github.com/0xd4d/dnlib/blob/master/LICENSE.txt)
 - [Echo](https://github.com/Washi1337/Echo), licensed under the [LGPLv3 license](https://github.com/Washi1337/Echo/blob/master/LICENSE.md)
 - [Microsoft Automatic Graph Layout](https://github.com/microsoft/automatic-graph-layout), licensed under the [MIT license](https://github.com/microsoft/automatic-graph-layout/blob/master/LICENSE)
+
+### Credits
+
+<a href="https://www.jetbrains.com/?from=dnSpyExtension"><img src="https://i.imgur.com/aisYu8h.png" alt="JetBrains Logo" width=128 /></a>
+
+Thanks to [JetBrains](https://www.jetbrains.com/?from=dnSpyExtension) for providing this project with an [All Product Pack](https://www.jetbrains.com/all/) license!
