@@ -3,10 +3,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased]
+## [0.6.0] - Unreleased
 
 ### Added
 - Add debug output pane. This can be accessed with View -> Output and selecting the `dnSpy.Extension.HoLLy` pane.
+
+### Changed
+- Targets dnSpy 6.1.8
 
 ## [0.5.0] - 2020-10-20
 ### Added

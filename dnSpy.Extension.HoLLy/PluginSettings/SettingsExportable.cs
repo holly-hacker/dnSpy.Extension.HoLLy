@@ -33,7 +33,7 @@ namespace HoLLy.dnSpyExtension.PluginSettings
             PropertyChanged += OnPropertyChanged;
         }
 
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             ISettingsSection sect = settingsService.RecreateSection(Constants.SettingsGuid);
             sect.Attribute(nameof(UnderlineManagedAssemblies), UnderlineManagedAssemblies);

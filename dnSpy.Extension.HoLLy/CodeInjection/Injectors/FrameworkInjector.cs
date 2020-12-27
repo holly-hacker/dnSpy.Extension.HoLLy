@@ -52,7 +52,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
         private static IntPtr GetCorBindToRuntimeExAddress(int pid, IntPtr hProc, bool x86)
         {
             var proc = Process.GetProcessById(pid);
-            var mod = proc.Modules.OfType<ProcessModule>().FirstOrDefault(m => m.ModuleName.Equals("mscoree.dll", StringComparison.InvariantCultureIgnoreCase));
+            var mod = proc.Modules.OfType<ProcessModule>().FirstOrDefault(m => m.ModuleName?.Equals("mscoree.dll", StringComparison.InvariantCultureIgnoreCase) == true);
 
             if (mod is null)
                 throw new Exception("Couldn't find MSCOREE.DLL, arch mismatch?");

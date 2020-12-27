@@ -21,7 +21,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
 
             var module = Process.GetProcessById(pid).Modules
                 .OfType<ProcessModule>()
-                .FirstOrDefault(m => m.ModuleName.Equals("mono.dll", StringComparison.OrdinalIgnoreCase) || m.ModuleName.Equals("mono-2.0-bdwgc.dll", StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefault(m => m.ModuleName?.Equals("mono.dll", StringComparison.OrdinalIgnoreCase) == true || m.ModuleName?.Equals("mono-2.0-bdwgc.dll", StringComparison.OrdinalIgnoreCase) == true)
                 ?? throw new Exception("Could not find Mono module in process");
             var exports = CodeInjectionUtils.GetAllExportAddresses(hProc, module.BaseAddress, x86);    // TODO: maybe don't return 800+ functions
             Log($"Got {exports.Count} exports in module {module.ModuleName}.");

@@ -16,7 +16,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
     {
         private DbgManager DbgManager => dbgManagerLazy.Value;
         private DbgProcess CurrentProcess => DbgManager.CurrentProcess.Current
-                                             ?? DbgManager.Processes.FirstOrDefault();
+                                             ?? DbgManager.Processes.First();
 
         private readonly Lazy<DbgManager> dbgManagerLazy;
         private readonly IManagedInjector injector;
@@ -60,7 +60,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
             public override void Execute(IMenuItemContext context)
             {
                 parent.settings.AddRecentInjection(injectionArguments);
-                DbgProcess proc = parent.CurrentProcess;
+                DbgProcess proc = parent.CurrentProcess ?? throw new Exception("Couldn't get current process");
                 parent.injector.Log = parent.DbgManager.WriteMessage;
                 parent.injector.Inject(proc.Id, injectionArguments, proc.Bitness == 32, proc.Runtimes.First().GetRuntimeType());
             }

@@ -13,7 +13,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
     {
         private DbgManager DbgManager => dbgManagerLazy.Value;
         private DbgProcess CurrentProcess => DbgManager.CurrentProcess.Current
-                                             ?? DbgManager.Processes.FirstOrDefault();
+                                             ?? DbgManager.Processes.First();
 
         private readonly Settings settings;
         private readonly Lazy<DbgManager> dbgManagerLazy;

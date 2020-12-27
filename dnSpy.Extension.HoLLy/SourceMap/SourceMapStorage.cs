@@ -163,18 +163,18 @@ namespace HoLLy.dnSpyExtension.SourceMap
             var dic = new Dictionary<(MapType, string), string>();
 
             using (var reader = XmlReader.Create(location)) {
-                while (reader.Read()) {
-                    if (reader.IsStartElement()) {
-                        if (Enum.TryParse(reader.Name, true, out MapType type))
-                        {
-                            string orig = reader.GetAttribute("encoding") == "base64"
-                                ? Encoding.UTF8.GetString(Convert.FromBase64String(reader["original"]))
-                                : reader["original"];
-                            string mapped = reader["mapped"];
+                while (reader.Read())
+                {
+                    if (!reader.IsStartElement()) continue;
+                    if (!Enum.TryParse(reader.Name, true, out MapType type)) continue;
+                    
+                    var orig = reader["original"] ?? throw new Exception("Couldn't find 'original' field");;
+                    var mapped = reader["mapped"] ?? throw new Exception("Couldn't find 'mapped' field");
 
-                            dic[(type, orig)] = mapped;
-                        }
-                    }
+                    if (reader.GetAttribute("encoding") == "base64")
+                        orig = Encoding.UTF8.GetString(Convert.FromBase64String(orig));
+
+                    dic[(type, orig)] = mapped;
                 }
             }
 
