@@ -33,6 +33,11 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
       <DebugType>none</DebugType>
     </PropertyGroup>
+    
+    <!-- .NET 5.0 doesn't seem to copy nuget packages dll -->
+    <PropertyGroup Condition=" '$(IsDotNetFramework)' != 'true' ">
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    </PropertyGroup>
 
     <ItemGroup Condition=" '$(IsDotNetFramework)' == 'true' ">
         <Reference Include="PresentationCore" />
@@ -43,10 +48,12 @@
 
     <ItemGroup>
         <PackageReference Include="AutomaticGraphLayout.WpfGraphControl" Version="1.1.7" />
+        <PackageReference Include="System.Text.Json" Version="5.0.0" />
+
+        <!-- Also included in dnSpy -->
         <PackageReference Include="dnlib" Version="$(DnlibVersion)" />
         <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf" Version="$(MSVSTextVersion)" />
         <PackageReference Include="Iced" Version="$(IcedVersion)" />
-        <PackageReference Include="System.Text.Json" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>

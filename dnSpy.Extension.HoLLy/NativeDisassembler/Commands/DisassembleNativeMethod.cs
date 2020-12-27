@@ -25,7 +25,7 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler.Commands
         
         public override void Execute(IMenuItemContext context)
         {
-            var method = (MethodDef)context.Find<TextReference>().Reference!;
+            var method = (MethodDef)context.Find<TextReference?>()?.Reference!;
             var encodedBytes = IcedHelpers.ReadNativeMethodBodyBytes(method);
             var is32Bit = !method.Module.IsAMD64;
 
@@ -42,6 +42,6 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler.Commands
             disassemblyViewerService.Value.Show(contentProvider, true);
         }
 
-        public override bool IsVisible(IMenuItemContext context) => context.Find<TextReference>().Reference is MethodDef { IsNative: true };
+        public override bool IsVisible(IMenuItemContext context) => context.Find<TextReference?>()?.Reference is MethodDef { IsNative: true };
     }
 }

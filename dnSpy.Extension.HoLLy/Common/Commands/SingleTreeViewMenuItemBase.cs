@@ -15,8 +15,8 @@ namespace HoLLy.dnSpyExtension.Common.Commands
             if (context.CreatorObject.Guid != new Guid(MenuConstants.GUIDOBJ_DOCUMENTS_TREEVIEW_GUID))
                 return null;
 
-            var selectedNodes = context.Find<TreeNodeData[]>();
-            if (selectedNodes.Length != 1)
+            var selectedNodes = context.Find<TreeNodeData[]?>();
+            if (selectedNodes is null || selectedNodes.Length != 1)
                 return null;
 
             return selectedNodes.Single();

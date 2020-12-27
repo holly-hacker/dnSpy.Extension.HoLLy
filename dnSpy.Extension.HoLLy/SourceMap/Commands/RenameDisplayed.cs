@@ -25,10 +25,10 @@ namespace HoLLy.dnSpyExtension.SourceMap.Commands
 
         public override void Execute(IMenuItemContext context)
         {
-            var textReference = context.Find<TextReference>();
-            var docViewer = context.Find<IDocumentViewer>();
+            var textReference = context.Find<TextReference?>();
+            var docViewer = context.Find<IDocumentViewer?>();
 
-            if (!(textReference.Reference is IMemberDef m))
+            if (textReference?.Reference is not IMemberDef m)
                 return;
 
             string newName = MsgBox.Instance.Ask<string>(string.Empty, title: $"New name for {SourceMapUtils.GetDefToMap(m)}");
@@ -38,7 +38,7 @@ namespace HoLLy.dnSpyExtension.SourceMap.Commands
 
             sourceMapStorage.SetName(m, newName);
 
-            var documentTabService = docViewer.DocumentTab?.DocumentTabService;
+            var documentTabService = docViewer?.DocumentTab?.DocumentTabService;
             documentTabService?.RefreshModifiedDocument(documentTabService.DocumentTreeView.FindNode(m.Module)!.Document);
         }
 
@@ -47,7 +47,7 @@ namespace HoLLy.dnSpyExtension.SourceMap.Commands
             if (!(decompilerService.Decompiler is SourceMapDecompilerDecorator))
                 return false;
 
-            return context.Find<TextReference>().Reference is IMemberDef;
+            return context.Find<TextReference?>()?.Reference is IMemberDef;
         }
     }
 }

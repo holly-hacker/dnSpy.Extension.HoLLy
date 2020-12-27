@@ -27,7 +27,7 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph.Commands
 
         protected override MethodDef? CreateContext(IMenuItemContext context)
         {
-            if (context.Find<TextReference>().Reference is MethodDef {MethodBody: { }} md)
+            if (context.Find<TextReference?>()?.Reference is MethodDef {MethodBody: { }} md)
                 return md;
 
             return null;
