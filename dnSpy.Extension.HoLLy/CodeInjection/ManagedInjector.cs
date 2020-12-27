@@ -11,7 +11,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
     [Export(typeof(IManagedInjector))]
     internal class ManagedInjector : IManagedInjector
     {
-        public Action<string> Log { private get; set; } = s => { };
+        public Action<string> Log { private get; set; } = _ => { };
 
         private readonly Settings settings;
 
@@ -53,7 +53,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             }
         }
 
-        public bool IsProcessSupported(DbgProcess process, out string? reason)
+        public bool IsProcessSupported(DbgProcess? process, out string? reason)
         {
             if (process is null) {
                 reason = "no process found";

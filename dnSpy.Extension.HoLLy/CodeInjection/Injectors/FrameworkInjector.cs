@@ -20,7 +20,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
     internal abstract class FrameworkInjector : IInjector
     {
         protected abstract string ClrVersion { get; }
-        public Action<string> Log { private get; set; } = s => { };
+        public Action<string> Log { private get; set; } = _ => { };
 
         public void Inject(int pid, in InjectionArguments args, bool x86)
         {

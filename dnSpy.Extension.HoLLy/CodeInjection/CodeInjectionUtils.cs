@@ -176,7 +176,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
         }
 
         private sealed class CodeWriterImpl : CodeWriter {
-	        private readonly List<byte> allBytes = new List<byte>();
+	        private readonly List<byte> allBytes = new();
 	        public override void WriteByte(byte value) => allBytes.Add(value);
 	        public byte[] ToArray() => allBytes.ToArray();
         }

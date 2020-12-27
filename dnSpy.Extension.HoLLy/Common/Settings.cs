@@ -14,7 +14,7 @@ namespace HoLLy.dnSpyExtension.Common
         private bool copyInjectedDllToTemp;
         private bool autoMapDllImports = true;
         private bool autoMapOverrides = true;
-        private List<InjectionArguments> recentInjections = new List<InjectionArguments>();
+        private List<InjectionArguments> recentInjections = new();
         private string? diePath = string.Empty;
 
         public bool UnderlineManagedAssemblies

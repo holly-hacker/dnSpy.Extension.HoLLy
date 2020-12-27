@@ -27,7 +27,7 @@ namespace HoLLy.dnSpyExtension.PluginSettings
             DiePath = sect.Attribute<string?>(nameof(DiePath)) ?? DiePath;
 
             var sectInjections = sect.TryGetSection(SectionRecentInjections);
-            if (!(sectInjections is null))
+            if (sectInjections is not null)
                 RecentInjections = sectInjections.SectionsWithName(SectionRecentInjectionsInjection).Select(InjectionArguments.FromSection).ToList();
 
             PropertyChanged += OnPropertyChanged;

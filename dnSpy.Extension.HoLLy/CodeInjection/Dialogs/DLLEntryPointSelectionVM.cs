@@ -10,7 +10,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Dialogs
     {
         public bool HasSelection => SelectedMethod != null;
         public AssemblyDef Assembly { set => ProcessAssembly(value); }
-        public List<MethodDef> AllItems { get; private set; } = new List<MethodDef>();
+        public List<MethodDef> AllItems { get; private set; } = new();
 
         public MethodDef? SelectedMethod
         {

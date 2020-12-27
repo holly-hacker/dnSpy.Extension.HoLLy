@@ -14,11 +14,11 @@ namespace HoLLy.dnSpyExtension.Common.CodeInjection
 
         public string TypeFull => Namespace is null ? Type : Namespace + "." + Type;
 
-        public static InjectionArguments FromMethodDef(MethodDef method, string? parameter) => new InjectionArguments {
+        public static InjectionArguments FromMethodDef(MethodDef method, string? parameter) => new() {
             Path = method.Module.Location, Namespace = method.DeclaringType.Namespace, Type = method.DeclaringType.Name, Method = method.Name, Argument = parameter
         };
 
-        public static InjectionArguments FromSection(ISettingsSection section) => new InjectionArguments {
+        public static InjectionArguments FromSection(ISettingsSection section) => new() {
             Path = section.Attribute<string?>(nameof(Path)) ?? throw new Exception($"Couldn't find {nameof(Path)} attribute in settings section"),
             Namespace = section.Attribute<string?>(nameof(Namespace)),
             Type = section.Attribute<string?>(nameof(Type)) ?? throw new Exception($"Couldn't find {nameof(Type)} attribute in settings section"),

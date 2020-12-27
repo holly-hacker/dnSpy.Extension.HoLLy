@@ -87,6 +87,6 @@ namespace HoLLy.dnSpyExtension.Native
         }
 
         public static ExportTable Read(DataReaderFactory reader, IRvaFileOffsetConverter rvaConverter, ImageDataDirectory dataDirectory)
-            => new ExportTable(reader, rvaConverter, dataDirectory);
+            => new(reader, rvaConverter, dataDirectory);
     }
 }

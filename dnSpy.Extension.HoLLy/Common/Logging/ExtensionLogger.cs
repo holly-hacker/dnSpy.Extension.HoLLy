@@ -8,7 +8,7 @@ namespace HoLLy.dnSpyExtension.Common.Logging
     public static class ExtensionLogger
     {
         public static ITextColorWriter Instance => CachedInstance;
-        private static readonly CachedTextColorWriter CachedInstance = new CachedTextColorWriter();
+        private static readonly CachedTextColorWriter CachedInstance = new();
 
         [ExportAutoLoaded(LoadType = AutoLoadedLoadType.AppLoaded, Order = double.MinValue)]
         private sealed class InitializeLogger : IAutoLoaded

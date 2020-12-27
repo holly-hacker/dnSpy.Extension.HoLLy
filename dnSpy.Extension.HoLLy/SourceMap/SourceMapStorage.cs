@@ -17,7 +17,7 @@ namespace HoLLy.dnSpyExtension.SourceMap
     {
         public string CacheFolder => Path.Combine(AppDirectories.DataDirectory, "SourceMaps");
 
-        private readonly Dictionary<IAssembly, Dictionary<(MapType, string), string>?> loadedMaps = new Dictionary<IAssembly, Dictionary<(MapType, string), string>?>();
+        private readonly Dictionary<IAssembly, Dictionary<(MapType, string), string>?> loadedMaps = new();
         private readonly Settings settings;
 
         [ImportingConstructor]
@@ -168,7 +168,7 @@ namespace HoLLy.dnSpyExtension.SourceMap
                     if (!reader.IsStartElement()) continue;
                     if (!Enum.TryParse(reader.Name, true, out MapType type)) continue;
                     
-                    var orig = reader["original"] ?? throw new Exception("Couldn't find 'original' field");;
+                    var orig = reader["original"] ?? throw new Exception("Couldn't find 'original' field");
                     var mapped = reader["mapped"] ?? throw new Exception("Couldn't find 'mapped' field");
 
                     if (reader.GetAttribute("encoding") == "base64")
@@ -193,10 +193,10 @@ namespace HoLLy.dnSpyExtension.SourceMap
 
         private static MapType GetMapType(IMemberDef member) =>
             member switch {
-                MethodDef _ => MapType.MethodDef,
-                TypeDef _ => MapType.TypeDef,
-                FieldDef _ => MapType.FieldDef,
-                PropertyDef _ => MapType.PropertyDef,
+                MethodDef => MapType.MethodDef,
+                TypeDef => MapType.TypeDef,
+                FieldDef => MapType.FieldDef,
+                PropertyDef => MapType.PropertyDef,
                 _ => MapType.Other,
             };
 

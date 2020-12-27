@@ -53,7 +53,7 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler
         }
 
         public static InstructionList GetInstructionsFromGraph(ControlFlowGraph<Instruction> graph)
-            => new InstructionList(graph.Nodes.SelectMany(n => n.Contents.Instructions).OrderBy(i => i.IP));
+            => new(graph.Nodes.SelectMany(n => n.Contents.Instructions).OrderBy(i => i.IP));
 
         public static byte[] EncodeBytes(InstructionList methodBody, bool is32Bit)
         {

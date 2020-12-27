@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using dnSpy.Contracts.App;
 using dnSpy.Contracts.Debugger;
 using HoLLy.dnSpyExtension.Common.CodeInjection;
 
@@ -13,7 +12,7 @@ namespace HoLLy.dnSpyExtension.Common
     {
         public static bool IsDebugBuild => IsDebugBuildLazy.Value;
 
-        private static readonly Lazy<bool> IsDebugBuildLazy = new Lazy<bool>(() => IsAssemblyDebugBuild(typeof(Utils).Assembly));
+        private static readonly Lazy<bool> IsDebugBuildLazy = new(() => IsAssemblyDebugBuild(typeof(Utils).Assembly));
 
         public static Guid XorGuid(this Guid g1, Guid g2)
         {
@@ -55,9 +54,9 @@ namespace HoLLy.dnSpyExtension.Common
         {
             string? extensionDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? null;
 
-            AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            AppDomain.CurrentDomain.AssemblyResolve += (_, args) =>
             {
-                if (extensionDirectory is null || args?.Name is null) return null;
+                if (extensionDirectory is null) return null;
 
                 var asmName = new AssemblyName(args.Name);
                 string dllPath = Path.Combine(extensionDirectory, asmName.Name + ".dll");

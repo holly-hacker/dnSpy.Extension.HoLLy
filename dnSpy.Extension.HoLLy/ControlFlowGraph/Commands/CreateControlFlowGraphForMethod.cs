@@ -15,7 +15,7 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph.Commands
         private readonly IDocumentTabService documentTabService;
         private readonly IThemeService themeService;
         private readonly ThemeFontSettingsService fontService;
-        protected override object CachedContextKey => new object();
+        protected override object CachedContextKey => new();
 
         [ImportingConstructor]
         public CreateControlFlowGraphForMethod(IDocumentTabService documentTabService, IThemeService themeService, ThemeFontSettingsService fontService)
@@ -27,7 +27,7 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph.Commands
 
         protected override MethodDef? CreateContext(IMenuItemContext context)
         {
-            if (context.Find<TextReference>()?.Reference is MethodDef md && md.MethodBody != null)
+            if (context.Find<TextReference>().Reference is MethodDef {MethodBody: { }} md)
                 return md;
 
             return null;

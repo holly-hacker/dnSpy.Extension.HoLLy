@@ -6,7 +6,7 @@ namespace HoLLy.dnSpyExtension.SourceMap
     {
         public static IMemberDef GetDefToMap(IMemberDef def)
         {
-            if (def is MethodDef md && md.IsConstructor)
+            if (def is MethodDef {IsConstructor: true})
                 return def.DeclaringType;
 
             return def;

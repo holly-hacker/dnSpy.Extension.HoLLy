@@ -25,7 +25,7 @@ namespace HoLLy.dnSpyExtension.Native
 
             var peImage = data.Document.PEImage;
 
-            if (peImage is { })
+            if (peImage is not null)
             {
                 var dataDirectories = peImage.ImageNTHeaders.OptionalHeader.DataDirectories;
                 Debug.Assert(dataDirectories.Length == 16);

@@ -42,6 +42,6 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler.Commands
             disassemblyViewerService.Value.Show(contentProvider, true);
         }
 
-        public override bool IsVisible(IMenuItemContext context) => context.Find<TextReference>()?.Reference is MethodDef md && md.IsNative;
+        public override bool IsVisible(IMenuItemContext context) => context.Find<TextReference>().Reference is MethodDef { IsNative: true };
     }
 }

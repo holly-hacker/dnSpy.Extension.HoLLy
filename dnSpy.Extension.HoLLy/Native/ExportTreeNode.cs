@@ -20,7 +20,7 @@ namespace HoLLy.dnSpyExtension.Native
         private readonly DisassemblyContentProviderFactory factory;
 
         public override Guid Guid => Constants.AssemblyExportNodeGuid;
-        public override NodePathName NodePathName => new NodePathName(Guid);
+        public override NodePathName NodePathName => new(Guid);
 
         public ExportTreeNode(IPEImage peImage, string name, RVA rva, DisassemblyContentProviderFactory factory)
         {

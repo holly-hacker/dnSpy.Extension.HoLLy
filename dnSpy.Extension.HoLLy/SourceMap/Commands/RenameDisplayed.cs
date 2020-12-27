@@ -47,8 +47,7 @@ namespace HoLLy.dnSpyExtension.SourceMap.Commands
             if (!(decompilerService.Decompiler is SourceMapDecompilerDecorator))
                 return false;
 
-            var tf = context.Find<TextReference>();
-            return tf?.Reference is IMemberDef;
+            return context.Find<TextReference>().Reference is IMemberDef;
         }
     }
 }

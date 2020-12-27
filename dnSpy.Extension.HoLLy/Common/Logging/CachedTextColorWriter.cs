@@ -8,7 +8,7 @@ namespace HoLLy.dnSpyExtension.Common.Logging
     internal class CachedTextColorWriter : ITextColorWriter
     {
         private ITextColorWriter? writer;
-        private readonly Queue<(object color, string? text, bool usesObject)> queue = new Queue<(object color, string? text, bool usesObject)>();
+        private readonly Queue<(object color, string? text, bool usesObject)> queue = new();
 
         public ITextColorWriter Writer
         {

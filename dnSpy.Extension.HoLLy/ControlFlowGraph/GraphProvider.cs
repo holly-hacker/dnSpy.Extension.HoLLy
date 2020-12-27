@@ -29,12 +29,12 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
             var methodName = IdentifierEscaper.Escape(method.Name);
             switch (method.MethodBody)
             {
-                case CilBody cilBody:
+                case CilBody:
                 {
                     var cflow = method.ConstructStaticFlowGraph();
                     return new ControlFlowGraphProvider<Instruction>(methodName, cflow);
                 }
-                case NativeMethodBody _:
+                case NativeMethodBody:
                 {
                     var cflow = IcedHelpers.ReadNativeMethodBody(method);
                     return new ControlFlowGraphProvider<Iced.Intel.Instruction>(methodName, cflow);
@@ -46,7 +46,7 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
 
         private static Graph CreateEmptyGraph()
         {
-            return new Graph
+            return new()
             {
                 LayoutAlgorithmSettings =
                 {

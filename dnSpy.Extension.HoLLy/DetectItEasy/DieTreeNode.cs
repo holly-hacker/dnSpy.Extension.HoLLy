@@ -17,7 +17,7 @@ namespace HoLLy.dnSpyExtension.DetectItEasy
         private readonly string _diePath;
 
         public override Guid Guid => Constants.DetectItEasyNodeGuid;
-        public override NodePathName NodePathName => new NodePathName(Guid);
+        public override NodePathName NodePathName => new(Guid);
 
         public DieTreeNode(string filePath, string diePath)
         {

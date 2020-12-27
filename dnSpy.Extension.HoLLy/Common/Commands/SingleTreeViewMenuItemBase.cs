@@ -7,7 +7,7 @@ namespace HoLLy.dnSpyExtension.Common.Commands
 {
     public abstract class SingleTreeViewMenuItemBase : MenuItemBase<TreeNodeData>
     {
-        protected override object CachedContextKey => new object();
+        protected override object CachedContextKey => new();
 
         protected override TreeNodeData? CreateContext(IMenuItemContext context)
         {

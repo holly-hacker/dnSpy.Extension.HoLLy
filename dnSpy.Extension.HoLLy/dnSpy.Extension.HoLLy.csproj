@@ -21,7 +21,7 @@
         <AssemblyName>dnSpy.Extension.HoLLy.x</AssemblyName>
         <RootNamespace>HoLLy.dnSpyExtension</RootNamespace>
 
-        <LangVersion>8</LangVersion>
+        <LangVersion>9</LangVersion>
         <NullableContextOptions>enable</NullableContextOptions>
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>

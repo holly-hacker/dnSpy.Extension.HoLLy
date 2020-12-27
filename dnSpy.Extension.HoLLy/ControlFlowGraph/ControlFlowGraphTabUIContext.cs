@@ -7,15 +7,15 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
 {
     public class ControlFlowGraphTabUiContext : DocumentTabUIContext
     {
-        readonly GraphControl content;
+        private readonly GraphControl content;
 
         public ControlFlowGraphTabUiContext(GraphProvider graph, ITheme theme, FontSettings font)
         {
             content = new GraphControl(graph, theme, font);
         }
 
-        public override object? UIObject => content;
-        public override IInputElement? FocusedElement => content;
-        public override FrameworkElement? ZoomElement => content;
+        public override object UIObject => content;
+        public override IInputElement FocusedElement => content;
+        public override FrameworkElement ZoomElement => content;
     }
 }

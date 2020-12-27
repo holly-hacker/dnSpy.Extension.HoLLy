@@ -10,7 +10,7 @@ namespace HoLLy.dnSpyExtension.Common.Commands.Debug
     {
         public override bool IsVisible(TreeNodeData context) => Utils.IsDebugBuild;
 
-        public override string? GetHeader(TreeNodeData context) => $"DBG: {context.GetType().Name} info";
+        public override string GetHeader(TreeNodeData context) => $"DBG: {context.GetType().Name} info";
 
         public override void Execute(TreeNodeData context)
         {

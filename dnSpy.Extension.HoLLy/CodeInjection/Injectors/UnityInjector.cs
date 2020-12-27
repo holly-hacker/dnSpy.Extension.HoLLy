@@ -9,7 +9,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Injectors
 {
     internal class UnityInjector : IInjector
     {
-        public Action<string> Log { private get; set; } = s => { };
+        public Action<string> Log { private get; set; } = _ => { };
 
         public void Inject(int pid, in InjectionArguments args, bool x86)
         {

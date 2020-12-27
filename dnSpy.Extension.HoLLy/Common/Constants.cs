@@ -13,14 +13,14 @@ namespace HoLLy.dnSpyExtension.Common
         public const string AppMenuGroupSourceMap = "9320D902-D245-40DD-BF23-8887D0C83292";
         public const string AppMenuGroupSourceMapSaveLoad = "0,HoLLy.AppMenu.SourceMap.SaveLoad";
 
-        public static readonly Guid DecompilerGuid = new Guid("590164A4-53F4-4677-B1E3-CC6500C273F6");
-        public static readonly Guid SettingsGuid = new Guid("146D6180-E468-493F-BCBD-F778E761C58C");
-        public static readonly Guid SettingsPageGuid = new Guid("4F026CFE-442B-4126-9FD7-E6469360A3A3");
-        public static readonly Guid SourceMapSettingsChanged = new Guid("4F026CFE-442B-4126-9FD7-E6469360A3A3");
-        public static readonly Guid LoggerOutputPane = new Guid("D0DDB27B-5379-4B0F-812C-616FDB20A909");
+        public static readonly Guid DecompilerGuid = new("590164A4-53F4-4677-B1E3-CC6500C273F6");
+        public static readonly Guid SettingsGuid = new("146D6180-E468-493F-BCBD-F778E761C58C");
+        public static readonly Guid SettingsPageGuid = new("4F026CFE-442B-4126-9FD7-E6469360A3A3");
+        public static readonly Guid SourceMapSettingsChanged = new("4F026CFE-442B-4126-9FD7-E6469360A3A3");
+        public static readonly Guid LoggerOutputPane = new("D0DDB27B-5379-4B0F-812C-616FDB20A909");
 
-        public static readonly Guid AssemblyExportNodeGuid = new Guid("B5317D58-B498-4B30-BF8D-C2E13A129116");
-        public static readonly Guid AssemblyExportTableNodeGuid = new Guid("8032E2E4-EAD8-402A-A232-711E2A1ACA70");
-        public static readonly Guid DetectItEasyNodeGuid = new Guid("D8C33C25-FE2F-4BA2-ABA8-01623439CF52");
+        public static readonly Guid AssemblyExportNodeGuid = new("B5317D58-B498-4B30-BF8D-C2E13A129116");
+        public static readonly Guid AssemblyExportTableNodeGuid = new("8032E2E4-EAD8-402A-A232-711E2A1ACA70");
+        public static readonly Guid DetectItEasyNodeGuid = new("D8C33C25-FE2F-4BA2-ABA8-01623439CF52");
     }
 }

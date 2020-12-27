@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HoLLy.dnSpyExtension.DetectItEasy.Models
+﻿namespace HoLLy.dnSpyExtension.DetectItEasy.Models
 {
     public class Detection
     {
