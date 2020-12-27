@@ -12,6 +12,11 @@ A [dnSpy](https://github.com/dnSpy/dnSpy) extension to aid reversing of obfuscat
 - Underline managed assemblies in the treeview.
 - Several commands to help with extension development in debug mode
 
+### Other extensions
+I have developed some other extensions which are linked here for convenience:
+- [dnSpy.Extension.DiscordRPC](https://github.com/HoLLy-HaCKeR/dnSpy.Extension.DiscordRPC/tree/master)
+- [dnSpy.Extension.ThemeHotReload](https://github.com/HoLLy-HaCKeR/dnSpy.Extension.ThemeHotReload/tree/master)
+
 ### Installation
 Download the [latest release](https://github.com/holly-hacker/dnspy.extension.holly/releases/latest) for your dnSpy version (net472 or netcoreapp3.1) and extract it to the `bin/Extensions/dnSpy.Extensions.HoLLy` directory. You may need to create this folder.
 
@@ -43,11 +48,6 @@ To test the extension, you can launch dnSpy with the `--extension-directory {dir
 JetBrains Rider supports launch profiles, allowing you to specify dnSpy as the executable to start. This means you can launch and debug the extension from within the IDE.
 
 Due to how the .NET Framework does assembly resolving, this method may only work on .NET Core.
-
-### Other extensions
-I have developed some other extensions which I have linked here for convenience:
-- [dnSpy.Extension.DiscordRPC](https://github.com/HoLLy-HaCKeR/dnSpy.Extension.DiscordRPC/tree/master)
-- [dnSpy.Extension.ThemeHotReload](https://github.com/HoLLy-HaCKeR/dnSpy.Extension.ThemeHotReload/tree/master)
 
 ### License
 Due to dnSpy being licensed under the GPLv3 license, this plugin is too.
