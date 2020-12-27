@@ -44,6 +44,11 @@ JetBrains Rider supports launch profiles, allowing you to specify dnSpy as the e
 
 Due to how the .NET Framework does assembly resolving, this method may only work on .NET Core.
 
+### Other extensions
+I have developed some other extensions which I have linked here for convenience:
+- [dnSpy.Extension.DiscordRPC](https://github.com/HoLLy-HaCKeR/dnSpy.Extension.DiscordRPC/tree/master)
+- [dnSpy.Extension.ThemeHotReload](https://github.com/HoLLy-HaCKeR/dnSpy.Extension.ThemeHotReload/tree/master)
+
 ### License
 Due to dnSpy being licensed under the GPLv3 license, this plugin is too.
 
