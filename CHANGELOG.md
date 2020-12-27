@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.6.0] - Unreleased
 
 ### Added
+- **Detect-It-Easy integration**
+  - TODO: document
 - Add debug output pane. This can be accessed with View -> Output and selecting the `dnSpy.Extension.HoLLy` pane.
 
 ### Changed
