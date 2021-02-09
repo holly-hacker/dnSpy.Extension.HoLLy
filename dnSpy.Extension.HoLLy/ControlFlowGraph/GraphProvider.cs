@@ -75,9 +75,9 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
                 MethodName = methodName;
                 this.graph = graph;
             }
-            
+
             public override string MethodName { get; }
-            
+
             public override Graph ToMicrosoftGraph(ITheme theme, FontSettings font)
             {
                 var newGraph = CreateEmptyGraph();
@@ -122,7 +122,7 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
                     };
                     newGraph.AddNode(newNode);
                 }
-                
+
                 foreach (var edge in graph.GetEdges())
                 {
                     var newEdge = newGraph.AddEdge(getId(edge.Origin), getId(edge.Target));
@@ -132,6 +132,7 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
                         ControlFlowEdgeType.FallThrough when edge.Origin.ConditionalEdges.Count > 0 => red,
                         ControlFlowEdgeType.Conditional => green,
                         ControlFlowEdgeType.FallThrough => textColor,
+                        ControlFlowEdgeType.Unconditional => textColor,
                         ControlFlowEdgeType.None => throw new InvalidOperationException("Found a None node in control flow graph, Echo bug?"),
                         _ => throw new IndexOutOfRangeException("Unknown edge type: " + edge.Type),
                     };
@@ -165,7 +166,7 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
                                                  .Replace("\"", "⧵\"");
                                 sb.Append($" \"{operand}\"");
                             }
-                            else 
+                            else
                                 InstructionPrinter.AddOperandString(sb, cilInstruction, " ");
                             sb.AppendLine();
                         }
