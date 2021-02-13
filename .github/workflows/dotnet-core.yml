@@ -19,6 +19,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.301
+    - name: Clean nuget locals
+      run: dotnet clean ./dnSpy.Extension.HoLLy.sln --configuration Release && dotnet nuget locals all --clear
     - name: Build
       run: dotnet build --configuration Release
     - name: Test
