@@ -5,8 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [0.5.1] - 2021-02-17
 ### Added
-- Add debug output pane. This can be accessed with View -> Output and selecting the `dnSpy.Extension.HoLLy` pane.
+- Allow opening CFGs from the tree view context menu
+- Add debug output pane. This can be accessed with View -> Output and selecting the `dnSpy.Extension.HoLLy` pane
+
+### Fixed
+- Fixed CFGs for unconditional jumps (#61, by [ElektroKill](https://github.com/ElektroKill))
 
 ## [0.5.0] - 2020-10-20
 ### Added
