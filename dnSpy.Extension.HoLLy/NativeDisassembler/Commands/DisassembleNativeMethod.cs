@@ -7,11 +7,12 @@ using dnSpy.Contracts.Disassembly.Viewer;
 using dnSpy.Contracts.Documents.Tabs.DocViewer;
 using dnSpy.Contracts.Menus;
 using HoLLy.dnSpyExtension.Common;
+using HoLLy.dnSpyExtension.Common.Commands;
 
 namespace HoLLy.dnSpyExtension.NativeDisassembler.Commands
 {
     [ExportMenuItem(Header = "Disassemble", Group = Constants.ContextMenuGroupEdit, Order = 10000)]
-    public class DisassembleNativeMethod : MenuItemBase
+    public class DisassembleNativeMethod : MethodMenuItemBase
     {
         private readonly DisassemblyContentProviderFactory fac;
         private readonly Lazy<DisassemblyViewerService> disassemblyViewerService;
@@ -22,10 +23,11 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler.Commands
             this.fac = fac;
             this.disassemblyViewerService = disassemblyViewerService;
         }
+
+        protected override bool IsVisible(MethodDef md) => md.IsNative;
         
-        public override void Execute(IMenuItemContext context)
+        protected override void Execute(MethodDef method)
         {
-            var method = (MethodDef)context.Find<TextReference?>()?.Reference!;
             var encodedBytes = IcedHelpers.ReadNativeMethodBodyBytes(method);
             var is32Bit = !method.Module.IsAMD64;
 
@@ -41,7 +43,5 @@ namespace HoLLy.dnSpyExtension.NativeDisassembler.Commands
             var contentProvider = fac.Create(native, DisassemblyContentFormatterOptions.None, null, null);
             disassemblyViewerService.Value.Show(contentProvider, true);
         }
-
-        public override bool IsVisible(IMenuItemContext context) => context.Find<TextReference?>()?.Reference is MethodDef { IsNative: true };
     }
 }

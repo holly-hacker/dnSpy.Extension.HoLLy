@@ -8,10 +8,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - **Detect-It-Easy integration**
   - TODO: document
-- Add debug output pane. This can be accessed with View -> Output and selecting the `dnSpy.Extension.HoLLy` pane.
 
 ### Changed
 - Targets dnSpy 6.1.8
+
+## [0.5.1] - 2021-02-17
+### Added
+- Allow opening CFGs and disassembling native methods from the tree view context menu
+- Add debug output pane. This can be accessed with View -> Output and selecting the `dnSpy.Extension.HoLLy` pane
+
+### Fixed
+- Fixed CFGs for unconditional jumps (#61, by [ElektroKill](https://github.com/ElektroKill))
 
 ## [0.5.0] - 2020-10-20
 ### Added

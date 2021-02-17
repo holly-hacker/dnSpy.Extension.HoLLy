@@ -12,6 +12,11 @@ A [dnSpy](https://github.com/dnSpy/dnSpy) extension to aid reversing of obfuscat
 - Underline managed assemblies in the treeview.
 - Several commands to help with extension development in debug mode
 
+### Other extensions
+I have developed some other extensions which are linked here for convenience:
+- [dnSpy.Extension.DiscordRPC](https://github.com/HoLLy-HaCKeR/dnSpy.Extension.DiscordRPC/tree/master)
+- [dnSpy.Extension.ThemeHotReload](https://github.com/HoLLy-HaCKeR/dnSpy.Extension.ThemeHotReload/tree/master)
+
 ### Installation
 Download the [latest release](https://github.com/holly-hacker/dnspy.extension.holly/releases/latest) for your dnSpy version (net472 or netcoreapp3.1) and extract it to the `bin/Extensions/dnSpy.Extensions.HoLLy` directory. You may need to create this folder.
 
@@ -53,3 +58,9 @@ Due to dnSpy being licensed under the GPLv3 license, this plugin is too.
 - [dnlib](https://github.com/0xd4d/dnlib), licensed under the [MIT license](https://github.com/0xd4d/dnlib/blob/master/LICENSE.txt)
 - [Echo](https://github.com/Washi1337/Echo), licensed under the [LGPLv3 license](https://github.com/Washi1337/Echo/blob/master/LICENSE.md)
 - [Microsoft Automatic Graph Layout](https://github.com/microsoft/automatic-graph-layout), licensed under the [MIT license](https://github.com/microsoft/automatic-graph-layout/blob/master/LICENSE)
+
+### Credits
+
+<a href="https://www.jetbrains.com/?from=dnSpyExtension"><img src="https://i.imgur.com/aisYu8h.png" alt="JetBrains Logo" width=128 /></a>
+
+Thanks to [JetBrains](https://www.jetbrains.com/?from=dnSpyExtension) for providing this project with an [All Product Pack](https://www.jetbrains.com/all/) license!
