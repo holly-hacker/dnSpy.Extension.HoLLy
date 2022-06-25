@@ -53,7 +53,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection
             }
         }
 
-        public bool IsProcessSupported(DbgProcess process, out string? reason)
+        public bool IsProcessSupported(DbgProcess? process, out string? reason)
         {
             if (process is null) {
                 reason = "no process found";

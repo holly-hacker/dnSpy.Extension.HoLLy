@@ -7,6 +7,6 @@ namespace HoLLy.dnSpyExtension.Common.CodeInjection
     {
         Action<string> Log { set; }
         void Inject(int pid, in InjectionArguments args, bool x86, RuntimeType runtimeType);
-        bool IsProcessSupported(DbgProcess process, out string? reason);
+        bool IsProcessSupported(DbgProcess? process, out string? reason);
     }
 }

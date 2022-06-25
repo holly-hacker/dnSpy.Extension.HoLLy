@@ -12,8 +12,8 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
     internal class InjectRecentHeader : MenuItemBase
     {
         private DbgManager DbgManager => dbgManagerLazy.Value;
-        private DbgProcess CurrentProcess => DbgManager.CurrentProcess.Current
-                                             ?? DbgManager.Processes.FirstOrDefault();
+        private DbgProcess? CurrentProcess => DbgManager.CurrentProcess.Current
+                                              ?? DbgManager.Processes.FirstOrDefault();
 
         private readonly Settings settings;
         private readonly Lazy<DbgManager> dbgManagerLazy;

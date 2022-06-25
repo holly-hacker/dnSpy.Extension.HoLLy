@@ -167,12 +167,15 @@ namespace HoLLy.dnSpyExtension.SourceMap
                     if (reader.IsStartElement()) {
                         if (Enum.TryParse(reader.Name, true, out MapType type))
                         {
-                            string orig = reader.GetAttribute("encoding") == "base64"
-                                ? Encoding.UTF8.GetString(Convert.FromBase64String(reader["original"]))
-                                : reader["original"];
-                            string mapped = reader["mapped"];
+                            string? original = reader["original"];
+                            string? mapped = reader["mapped"];
+                            if (original is not null && mapped is not null)
+                            {
+                                if (reader.GetAttribute("encoding") == "base64")
+                                    original = Encoding.UTF8.GetString(Convert.FromBase64String(original));
 
-                            dic[(type, orig)] = mapped;
+                                dic[(type, original)] = mapped;
+                            }
                         }
                     }
                 }

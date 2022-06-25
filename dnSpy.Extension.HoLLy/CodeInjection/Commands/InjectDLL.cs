@@ -17,8 +17,8 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
     internal class InjectDll : MenuItemBase
     {
         private DbgManager DbgManager => dbgManagerLazy.Value;
-        private DbgProcess CurrentProcess => DbgManager.CurrentProcess.Current
-                                             ?? DbgManager.Processes.FirstOrDefault();
+        private DbgProcess? CurrentProcess => DbgManager.CurrentProcess.Current
+                                              ?? DbgManager.Processes.FirstOrDefault();
 
         private readonly Lazy<DbgManager> dbgManagerLazy;
         private readonly IManagedInjector injector;
@@ -34,6 +34,10 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
 
         public override void Execute(IMenuItemContext context)
         {
+            // TODO: Tell the user something went wrong.
+            if (CurrentProcess is null)
+                return;
+
             if (!AskForEntryPoint(out InjectionArguments args))
                 return;
 
