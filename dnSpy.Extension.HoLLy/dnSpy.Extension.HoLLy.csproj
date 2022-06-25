@@ -53,8 +53,15 @@
         <ProjectReference Include="..\dnSpy\dnSpy\dnSpy.Contracts.DnSpy\dnSpy.Contracts.DnSpy.csproj" Private="false" />
         <ProjectReference Include="..\dnSpy\dnSpy\dnSpy.Contracts.Logic\dnSpy.Contracts.Logic.csproj" Private="false" />
         <ProjectReference Include="..\Echo\src\Core\Echo.ControlFlow\Echo.ControlFlow.csproj" />
-        <ProjectReference Include="..\Echo\src\Platforms\Echo.Platforms.Dnlib\Echo.Platforms.Dnlib.csproj" />
-        <ProjectReference Include="..\Echo\src\Platforms\Echo.Platforms.Iced\Echo.Platforms.Iced.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="..\Echo\src\Platforms\Echo.Platforms.Dnlib\*.cs">
+            <Link>EchoPlatforms\dnlib\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+        </Compile>
+        <Compile Include="..\Echo\src\Platforms\Echo.Platforms.Iced\*.cs">
+            <Link>EchoPlatforms\Iced\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>
