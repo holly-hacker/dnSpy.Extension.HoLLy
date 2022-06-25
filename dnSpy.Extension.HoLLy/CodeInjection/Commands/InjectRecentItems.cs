@@ -15,8 +15,8 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
     internal class InjectRecentItems : MenuItemBase, IMenuItemProvider
     {
         private DbgManager DbgManager => dbgManagerLazy.Value;
-        private DbgProcess CurrentProcess => DbgManager.CurrentProcess.Current
-                                             ?? DbgManager.Processes.FirstOrDefault();
+        private DbgProcess? CurrentProcess => DbgManager.CurrentProcess.Current
+                                              ?? DbgManager.Processes.FirstOrDefault();
 
         private readonly Lazy<DbgManager> dbgManagerLazy;
         private readonly IManagedInjector injector;
@@ -55,12 +55,12 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
             public override string GetHeader(IMenuItemContext context) => NameUtilities
                 .CleanName($"{Path.GetFileName(injectionArguments.Path)} {injectionArguments.TypeFull}.{injectionArguments.Method}({Quote(injectionArguments.Argument) ?? "null"})")
                 .Replace("_", "__");
-            public override bool IsEnabled(IMenuItemContext context) => File.Exists(injectionArguments.Path);
+            public override bool IsEnabled(IMenuItemContext context) => File.Exists(injectionArguments.Path) && parent.CurrentProcess is not null;
 
             public override void Execute(IMenuItemContext context)
             {
+                DbgProcess proc = parent.CurrentProcess!;
                 parent.settings.AddRecentInjection(injectionArguments);
-                DbgProcess proc = parent.CurrentProcess;
                 parent.injector.Log = parent.DbgManager.WriteMessage;
                 parent.injector.Inject(proc.Id, injectionArguments, proc.Bitness == 32, proc.Runtimes.First().GetRuntimeType());
             }

@@ -42,7 +42,7 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Dialogs
             PropertyChanged += OnPropertyChanged;
         }
 
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(SelectedMethod))
                 OnPropertyChanged(nameof(HasSelection));

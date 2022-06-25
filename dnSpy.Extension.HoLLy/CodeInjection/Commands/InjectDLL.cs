@@ -17,8 +17,8 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
     internal class InjectDll : MenuItemBase
     {
         private DbgManager DbgManager => dbgManagerLazy.Value;
-        private DbgProcess CurrentProcess => DbgManager.CurrentProcess.Current
-                                             ?? DbgManager.Processes.FirstOrDefault();
+        private DbgProcess? CurrentProcess => DbgManager.CurrentProcess.Current
+                                              ?? DbgManager.Processes.FirstOrDefault();
 
         private readonly Lazy<DbgManager> dbgManagerLazy;
         private readonly IManagedInjector injector;
@@ -39,8 +39,10 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
 
             settings.AddRecentInjection(args);
 
+            DbgProcess proc = CurrentProcess!;
+
             injector.Log = DbgManager.WriteMessage;
-            injector.Inject(CurrentProcess.Id, args, CurrentProcess.Bitness == 32, CurrentProcess.Runtimes.First().GetRuntimeType());
+            injector.Inject(proc.Id, args, proc.Bitness == 32, proc.Runtimes.First().GetRuntimeType());
         }
 
         public static bool AskForEntryPoint(out InjectionArguments args)
