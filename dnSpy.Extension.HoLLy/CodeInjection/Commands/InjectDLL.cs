@@ -34,17 +34,15 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
 
         public override void Execute(IMenuItemContext context)
         {
-            // TODO: Tell the user something went wrong.
-            if (CurrentProcess is null)
-                return;
-
             if (!AskForEntryPoint(out InjectionArguments args))
                 return;
 
             settings.AddRecentInjection(args);
 
+            DbgProcess proc = CurrentProcess!;
+
             injector.Log = DbgManager.WriteMessage;
-            injector.Inject(CurrentProcess.Id, args, CurrentProcess.Bitness == 32, CurrentProcess.Runtimes.First().GetRuntimeType());
+            injector.Inject(proc.Id, args, proc.Bitness == 32, proc.Runtimes.First().GetRuntimeType());
         }
 
         public static bool AskForEntryPoint(out InjectionArguments args)

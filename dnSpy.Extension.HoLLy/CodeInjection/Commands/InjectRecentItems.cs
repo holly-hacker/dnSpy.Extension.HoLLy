@@ -55,14 +55,11 @@ namespace HoLLy.dnSpyExtension.CodeInjection.Commands
             public override string GetHeader(IMenuItemContext context) => NameUtilities
                 .CleanName($"{Path.GetFileName(injectionArguments.Path)} {injectionArguments.TypeFull}.{injectionArguments.Method}({Quote(injectionArguments.Argument) ?? "null"})")
                 .Replace("_", "__");
-            public override bool IsEnabled(IMenuItemContext context) => File.Exists(injectionArguments.Path);
+            public override bool IsEnabled(IMenuItemContext context) => File.Exists(injectionArguments.Path) && parent.CurrentProcess is not null;
 
             public override void Execute(IMenuItemContext context)
             {
-                DbgProcess? proc = parent.CurrentProcess;
-                // TODO: Tell the user something went wrong.
-                if (proc is null)
-                    return;
+                DbgProcess proc = parent.CurrentProcess!;
                 parent.settings.AddRecentInjection(injectionArguments);
                 parent.injector.Log = parent.DbgManager.WriteMessage;
                 parent.injector.Inject(proc.Id, injectionArguments, proc.Bitness == 32, proc.Runtimes.First().GetRuntimeType());
