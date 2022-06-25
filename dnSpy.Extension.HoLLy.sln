@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Echo.DataFlow", "Echo\src\C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Echo.Concrete", "Echo\src\Core\Echo.Concrete\Echo.Concrete.csproj", "{BE696B15-581D-40EF-ADA2-D09F0AE6F080}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dnSpy.Extension.HoLLy.EchoPlatforms", "dnSpy.Extension.HoLLy.EchoPlatforms\dnSpy.Extension.HoLLy.EchoPlatforms.csproj", "{1D2363EA-7D9B-457B-AC15-88CFA47BAE2F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{BE696B15-581D-40EF-ADA2-D09F0AE6F080}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE696B15-581D-40EF-ADA2-D09F0AE6F080}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE696B15-581D-40EF-ADA2-D09F0AE6F080}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D2363EA-7D9B-457B-AC15-88CFA47BAE2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D2363EA-7D9B-457B-AC15-88CFA47BAE2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D2363EA-7D9B-457B-AC15-88CFA47BAE2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D2363EA-7D9B-457B-AC15-88CFA47BAE2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{59387AA7-7DEC-41B5-9F82-13172A0C4058} = {AACF54E7-A947-4C62-A6A3-AEADE2777F14}

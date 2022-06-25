@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!-- Imports dnlib version -->
+    <Import Project="../dnSpy/DnSpyCommon.props" />
+
+    <PropertyGroup>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="dnlib" Version="$(DnlibVersion)" />
+        <PackageReference Include="Iced" Version="$(IcedVersion)" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\Echo\src\Core\Echo.ControlFlow\Echo.ControlFlow.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="..\Echo\src\Platforms\Echo.Platforms.Dnlib\*.cs">
+            <Link>EchoPlatforms\dnlib\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+        </Compile>
+        <Compile Include="..\Echo\src\Platforms\Echo.Platforms.Iced\*.cs">
+            <Link>EchoPlatforms\Iced\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+        </Compile>
+    </ItemGroup>
+
+</Project>
