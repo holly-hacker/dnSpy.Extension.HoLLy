@@ -4,14 +4,14 @@
     <Import Project="../dnSpy/DnSpyCommon.props" />
 
     <PropertyGroup>
-        <Title>dnSpy Extension</Title>
-        <Description>A dnSpy Extension</Description>
+        <Title>dnSpyEx Extension</Title>
+        <Description>A dnSpyEx Extension</Description>
         <Authors>HoLLy</Authors>
-        <Copyright>Copyright © HoLLy 2019-2021</Copyright>
-        <FileVersion>0.5.1.0</FileVersion>
+        <Copyright>Copyright © HoLLy 2019-2022</Copyright>
+        <FileVersion>0.5.1.0-dnSpyEx</FileVersion>
         <AssemblyVersion>0.5.1</AssemblyVersion>
 
-        <PackageVersion>0.5.1</PackageVersion>
+        <PackageVersion>0.5.1-dnSpyEx</PackageVersion>
         <PackageProjectUrl>https://github.com/HoLLy-HaCKeR/dnSpy.Extension.HoLLy</PackageProjectUrl>
         <PackageLicenseUrl>https://github.com/HoLLy-HaCKeR/dnSpy.Extension.HoLLy/blob/master/LICENSE</PackageLicenseUrl>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
