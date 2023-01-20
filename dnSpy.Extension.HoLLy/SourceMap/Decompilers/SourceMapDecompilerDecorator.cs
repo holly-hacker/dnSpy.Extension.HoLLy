@@ -36,7 +36,7 @@ namespace HoLLy.dnSpyExtension.SourceMap.Decompilers
 
         public void WriteName(ITextColorWriter output, TypeDef type) => implementation.WriteName(output, type);
         public void WriteName(ITextColorWriter output, PropertyDef property, bool? isIndexer) => implementation.WriteName(output, property, isIndexer);
-        public void WriteType(ITextColorWriter output, ITypeDefOrRef? type, bool includeNamespace, ParamDef? pd = null) => implementation.WriteType(output, type, includeNamespace, pd);
+        public void WriteType(ITextColorWriter output, ITypeDefOrRef? type, bool includeNamespace, IHasCustomAttribute? customAttributeProvider = null) => implementation.WriteType(output, type, includeNamespace, customAttributeProvider);
         public void WriteToolTip(ITextColorWriter output, IMemberRef member, IHasCustomAttribute? typeAttributes) => implementation.WriteToolTip(output, member, typeAttributes);
         public void WriteToolTip(ITextColorWriter output, ISourceVariable variable) => implementation.WriteToolTip(output, variable);
         public void WriteNamespaceToolTip(ITextColorWriter output, string? @namespace) => implementation.WriteNamespaceToolTip(output, @namespace);
