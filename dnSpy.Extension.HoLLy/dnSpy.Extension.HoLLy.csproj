@@ -42,7 +42,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutomaticGraphLayout.WpfGraphControl" Version="1.1.7" />
+        <PackageReference Include="AutomaticGraphLayout.WpfGraphControl" Version="1.1.12" />
         <PackageReference Include="dnlib" Version="$(DnlibVersion)" />
         <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf" Version="$(MSVSTextVersion)" />
         <PackageReference Include="Iced" Version="$(IcedVersion)" />
