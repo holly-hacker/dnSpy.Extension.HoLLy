@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -20,6 +20,7 @@ namespace HoLLy.dnSpyExtension.ControlFlowGraph
             // could set LastChildFill to true, doesn't seem to matter
             Panel.HorizontalAlignment = HorizontalAlignment.Stretch;
             Panel.VerticalAlignment = VerticalAlignment.Stretch;
+            Panel.ClipToBounds = true;
 
             var viewer = new GraphViewer();
             viewer.BindToPanel(Panel);
