@@ -1,7 +1,7 @@
 dnSpy.Extension.HoLLy
 =====================
 
-A [dnSpy](https://github.com/dnSpy/dnSpy) extension to aid reversing of obfuscated assemblies.
+A [dnSpyEx](https://github.com/dnSpyEx/dnSpy) extension to aid reversing of obfuscated assemblies.
 
 ### Features
 - **Change the displayed symbol name of types, methods, properties or fields, without modifying the binary.** These modified names are saved in an xml file, meaning you can write a tool to generate them automatically.
@@ -18,11 +18,11 @@ I have developed some other extensions which are linked here for convenience:
 - [dnSpy.Extension.ThemeHotReload](https://github.com/HoLLy-HaCKeR/dnSpy.Extension.ThemeHotReload/tree/master)
 
 ### Installation
-Download the [latest release](https://github.com/holly-hacker/dnspy.extension.holly/releases/latest) for your dnSpy version (net472 or netcoreapp3.1) and extract it to the `bin/Extensions/dnSpy.Extensions.HoLLy` directory. You may need to create this folder.
+Download the [latest release](https://github.com/holly-hacker/dnspy.extension.holly/releases/latest) for your dnSpyEx version (`net48` or `net6.0-windows`) and extract it to the `bin/Extensions/dnSpy.Extensions.HoLLy` directory. You may need to create this folder.
 
 Make sure that you copied all the dependency DLLs too. Your directory structure will look something like this:
 ```
-dnSpy-netcore-win64/
+dnSpy-net-win64/
 ├─ dnSpy.exe
 ├─ dnSpy.Console.exe
 └─ bin/
@@ -53,7 +53,7 @@ Due to how the .NET Framework does assembly resolving, this method may only work
 Due to dnSpy being licensed under the GPLv3 license, this plugin is too.
 
 ### Used libraries
-- [dnSpy](https://github.com/0xd4d/dnSpy) and its [dependencies](https://github.com/dnSpy/dnSpy#list-of-other-open-source-libraries-used-by-dnspy), licensed under the [GPLv3 license](https://github.com/0xd4d/dnSpy/blob/master/dnSpy/dnSpy/LicenseInfo/LICENSE.txt) and [others](https://github.com/dnSpy/dnSpy/tree/master/dnSpy/dnSpy/LicenseInfo)
+- [dnSpyEx](https://github.com/dnSpyEx/dnSpy) and its [dependencies](https://github.com/dnSpyEx/dnSpy#list-of-other-open-source-libraries-used-by-dnspy), licensed under the [GPLv3 license](https://github.com/dnSpyEx/dnSpy/blob/master/dnSpy/dnSpy/LicenseInfo/LICENSE.txt) and [others](https://github.com/dnSpyEx/dnSpy/tree/master/dnSpy/dnSpy/LicenseInfo)
 - [iced](https://github.com/0xd4d/iced), licensed under the [MIT license](https://github.com/0xd4d/iced/blob/master/LICENSE.txt)
 - [dnlib](https://github.com/0xd4d/dnlib), licensed under the [MIT license](https://github.com/0xd4d/dnlib/blob/master/LICENSE.txt)
 - [Echo](https://github.com/Washi1337/Echo), licensed under the [LGPLv3 license](https://github.com/Washi1337/Echo/blob/master/LICENSE.md)

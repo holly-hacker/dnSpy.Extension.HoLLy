@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [0.5.2] - 2023-01-20
+
+### Changed
+- Targets dnSpyEx v6.3.0
+
+### Fixed
+- Fix CFG nodes rendering out of bounds (#75, by [ElektroKill](https://github.com/ElektroKill))
+
 ## [0.5.1] - 2021-02-17
 ### Added
 - Allow opening CFGs and disassembling native methods from the tree view context menu
